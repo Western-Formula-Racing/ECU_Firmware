@@ -2,6 +2,8 @@
 #include <FlexCAN_T4.h>
 #include "arduino_freertos.h"
 #include "avr/pgmspace.h"
+#include "TeensyDebug.h"
+#pragma GCC optimize ("O0")
 
 #define Serial if(Serial)Serial //fixes issue where prints in ISR hangs the program, might wanna look into a threadsafe alternative though
 
@@ -27,19 +29,22 @@ static void task2(void*) {
     }
 }
 void canSniff(const CAN_message_t &msg) {
-//   Serial.print(msg.id);
-//   Serial.print(" ");
-//   for ( uint8_t i = 0; i < msg.len; i++ ) {
-//     Serial.print(msg.buf[i]); Serial.print(" ");
-//   } Serial.println();
+  Serial.print(msg.id);
+  Serial.print(" ");
+  for ( uint8_t i = 0; i < msg.len; i++ ) {
+    Serial.print(msg.buf[i]); Serial.print(" ");
+  } Serial.println();
 }
 
 
 FLASHMEM __attribute__((noinline)) void setup() {
     
+    debug.begin(SerialUSB1);
+    halt_cpu();
+
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
-
+    
     delay(5'000);
 
     if (CrashReport) {
