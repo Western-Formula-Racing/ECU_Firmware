@@ -40,7 +40,7 @@ void canSniff(const CAN_message_t &msg) {
 FLASHMEM __attribute__((noinline)) void setup() {
     
     debug.begin(SerialUSB1);
-    halt_cpu();
+    //halt_cpu();
 
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
