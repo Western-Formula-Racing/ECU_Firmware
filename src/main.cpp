@@ -3,13 +3,20 @@
 #include "arduino_freertos.h"
 #include "avr/pgmspace.h"
 #include "TeensyDebug.h"
+#include "FS_CAN.h"
 #pragma GCC optimize ("O0")
 
 #define Serial if(Serial)Serial //fixes issue where prints in ISR hangs the program, might wanna look into a threadsafe alternative though
 
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
-
+FS_CAN FS_CAN0(&Can0); 
 static void task1(void*) {
+    FS_CAN::CAN_MSG testMsg;
+    testMsg.id = 256;
+    testMsg.signal_count = 1;
+    FS_CAN::CAN_SIGNAL testSignal{&testMsg, 0, 8};
+    Serial.printf("didnt' crash yet\n");
+    FS_CAN0.subscribe_to_message(&testMsg);
     while (true) {
         digitalWriteFast(LED_BUILTIN, LOW);
         vTaskDelay(pdMS_TO_TICKS(500));
@@ -29,11 +36,7 @@ static void task2(void*) {
     }
 }
 void canSniff(const CAN_message_t &msg) {
-  Serial.print(msg.id);
-  Serial.print(" ");
-  for ( uint8_t i = 0; i < msg.len; i++ ) {
-    Serial.print(msg.buf[i]); Serial.print(" ");
-  } Serial.println();
+  FS_CAN0.CAN_RX_ISR(msg);
 }
 
 
