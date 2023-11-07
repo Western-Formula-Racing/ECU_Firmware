@@ -22,6 +22,7 @@ static void task1(void*) {
     testMsg.signals.push_back(&testSignal2);
     Serial.printf("didnt' crash yet\n");
     FS_CAN0.subscribe_to_message(&testMsg);
+    
     while (true) {
         digitalWriteFast(LED_BUILTIN, LOW);
         vTaskDelay(pdMS_TO_TICKS(500));
