@@ -4,6 +4,8 @@
 #include "avr/pgmspace.h"
 #include "TeensyDebug.h"
 #include "FS_CAN.h"
+#include "interfaces/inverter.h"
+#include "interfaces/bms.h"
 #pragma GCC optimize ("O0")
 
 #define Serial if(Serial)Serial //fixes issue where prints in ISR hangs the program, might wanna look into a threadsafe alternative though

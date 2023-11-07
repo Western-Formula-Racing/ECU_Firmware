@@ -14,15 +14,15 @@
 class Inverter
 {
 private:
-    /* data */
-public:
-/***public variables**/
-
 //Commmand Variables
 uint16_t torqueRequest;
 uint8_t directionCommand;
 uint8_t modeSelectByte; // look at page 32 of the CAN documentation
 uint8_t torqueLimit;
+public:
+/***public variables**/
+
+
 //Inverter Status Variables:
 uint16_t commandedTorque;
 uint16_t torqueFeedback;
@@ -36,7 +36,7 @@ struct INVERTER_FAULTS{
 //public function declarations
 Inverter(FS_CAN FS_CAN_handle);
 
-void torqueRequest(uint16_t torque);
+void setTorqueRequest(uint16_t torque);
 
 
 
