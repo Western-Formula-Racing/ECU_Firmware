@@ -9,11 +9,11 @@
 #include "interfaces/bms.h"
 #include "black_box.h"
 #include "helpers/logging.h"
+
 #pragma GCC optimize("O0")
 
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
 FS_CAN FS_CAN0(&Can0);
-static QueueHandle_t queue = NULL;
 
 void can_sniff(const CAN_message_t &msg)
 {
@@ -38,7 +38,7 @@ static void task1(void *)
     {
         digitalWriteFast(LED_BUILTIN, LOW);
         vTaskDelay(pdMS_TO_TICKS(500));
-        BlackBox::log(queue, LOG_INFO, std::format("data1: {} data2: {}", testData, testData2).c_str());
+        BlackBox::log(LOG_INFO, std::format("data1: {} data2: {}", testData, testData2).c_str());
         digitalWriteFast(LED_BUILTIN, HIGH);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
@@ -46,8 +46,6 @@ static void task1(void *)
 
 void setup_task(void *)
 {
-    queue = xQueueCreate(50, sizeof(LogMessage_t));
-
     Can0.begin();
     Can0.setBaudRate(500000);
     Can0.setMaxMB(64);
@@ -56,10 +54,11 @@ void setup_task(void *)
     Can0.enableFIFOInterrupt();
     Can0.onReceive(can_sniff);
 
+    BlackBox::begin(100, tskIDLE_PRIORITY + 1);
+
     // Delay to allow the serial port to be opened and queue to be created (for some reason it needs this)
     vTaskDelay(pdMS_TO_TICKS(5000));
 
-    xTaskCreate(BlackBox::task, "black_box_task", 1024, &queue, tskIDLE_PRIORITY + 1, nullptr);
     xTaskCreate(task1, "task1", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 
     vTaskDelete(nullptr);

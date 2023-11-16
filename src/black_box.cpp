@@ -1,7 +1,40 @@
+#include <SD.h>
+#include <TimeLib.h>
+
 #include "black_box.h"
 #include "helpers/logging.h"
 
-void BlackBox::log(QueueHandle_t queue, LogMessage_t msg)
+QueueHandle_t BlackBox::queue = NULL;
+File BlackBox::logFile = NULL;
+
+void BlackBox::begin(int queueSize, int taskPriority)
+{
+    // Create the queue
+    BlackBox::queue = xQueueCreate(queueSize, sizeof(LogMessage_t));
+
+    // Setup SD card
+    if (!SD.begin(BUILTIN_SDCARD))
+    {
+        Serial.println("setup(): failed to initialize SD card");
+    }
+
+    BlackBox::logFile = SD.open("log.txt", FILE_WRITE);
+
+    if (!BlackBox::logFile)
+    {
+        Serial.println("setup(): failed to open log file");
+    }
+    else
+    {
+        BlackBox::logFile.println("BlackBox initialized!");
+        BlackBox::logFile.flush();
+    }
+
+    // Create the task
+    xTaskCreate(BlackBox::task, "BlackBox", 1024, nullptr, taskPriority, nullptr);
+}
+
+void BlackBox::log(LogMessage_t msg)
 {
     if (queue != NULL)
     {
@@ -12,13 +45,14 @@ void BlackBox::log(QueueHandle_t queue, LogMessage_t msg)
     }
 }
 
-void BlackBox::log(QueueHandle_t queue, LogLevel level, const char *message)
+void BlackBox::log(LogLevel level, const char *message)
 {
-    if (queue != NULL)
+    if (BlackBox::queue != NULL)
     {
         LogMessage_t msg;
 
         msg.level = level;
+        msg.time = now();
         strncpy(msg.message, message, 256);
 
         // Ensure the message is null terminated
@@ -27,21 +61,22 @@ void BlackBox::log(QueueHandle_t queue, LogLevel level, const char *message)
             msg.message[sizeof(msg.message) - 1] = 0;
         }
 
-        BlackBox::log(queue, msg);
+        BlackBox::log(msg);
     }
 }
 
-void BlackBox::task(void *queuePtr)
+void BlackBox::task(void *)
 {
-    QueueHandle_t queue = *(QueueHandle_t *)queuePtr;
-
     while (true)
     {
-        if (queue != NULL)
+        if (BlackBox::queue != NULL)
         {
             LogMessage_t msg;
-            while (xQueueReceive(queue, &msg, 0) == pdTRUE)
+            while (xQueueReceive(BlackBox::queue, &msg, 0) == pdTRUE)
             {
+                Serial.print(msg.time);
+                Serial.print(" - ");
+
                 switch (msg.level)
                 {
                 case LOG_INFO:
@@ -59,6 +94,31 @@ void BlackBox::task(void *queuePtr)
                 }
 
                 Serial.println(msg.message);
+
+                if (BlackBox::logFile)
+                {
+                    BlackBox::logFile.print(msg.time);
+                    BlackBox::logFile.print(" - ");
+
+                    switch (msg.level)
+                    {
+                    case LOG_INFO:
+                        BlackBox::logFile.print("INFO: ");
+                        break;
+                    case LOG_WARNING:
+                        BlackBox::logFile.print("WARNING: ");
+                        break;
+                    case LOG_ERROR:
+                        BlackBox::logFile.print("ERROR: ");
+                        break;
+                    default:
+                        BlackBox::logFile.print("UNKNOWN: ");
+                        break;
+                    }
+
+                    BlackBox::logFile.println(msg.message);
+                    BlackBox::logFile.flush();
+                }
             }
         }
         vTaskDelay(pdMS_TO_TICKS(1'000));
