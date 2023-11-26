@@ -93,7 +93,7 @@ void setup()
 
 time_t getTeensy3Time()
 {
-  return Teensy3Clock.get()+ 3600*5+1;//shift time forward 5 hours and 1s because that's needed for some reason
+  return Teensy3Clock.get()+ 3600*5;//shift time forward 5 hours and 1s because that's needed for some reason
 }
 
 
