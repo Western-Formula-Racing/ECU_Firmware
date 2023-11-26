@@ -75,9 +75,10 @@ void setup()
 
     if (CrashReport)
     {
-        Serial2.print(CrashReport);
-        Serial2.println();
-        Serial2.flush();
+        while(!Serial);
+        Serial.print(CrashReport);
+        Serial.println();
+        Serial.flush();
     }
 
     Serial.println(PSTR("\r\nBooting FreeRTOS kernel " tskKERNEL_VERSION_NUMBER ". Built by gcc " __VERSION__ " (newlib " _NEWLIB_VERSION ") on " __DATE__ ". ***\r\n"));
