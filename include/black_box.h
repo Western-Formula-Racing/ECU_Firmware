@@ -1,6 +1,8 @@
 #include <iostream>
 #include <arduino_freertos.h>
 #include "helpers/logging.h"
+#include <SD.h>
+#include <TimeLib.h>
 
 namespace BlackBox
 {

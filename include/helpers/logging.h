@@ -1,3 +1,6 @@
+#ifndef _LOGGING_
+#define _LOGGING_
+
 #pragma once
 
 enum LogLevel
@@ -16,3 +19,4 @@ typedef struct
     // Fixed length of 256 characters
     char message[256];
 } LogMessage_t;
+#endif

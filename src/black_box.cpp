@@ -1,8 +1,5 @@
-#include <SD.h>
-#include <TimeLib.h>
-
 #include "black_box.h"
-#include "helpers/logging.h"
+
 
 static QueueHandle_t queue = NULL;
 static File logFile = NULL;

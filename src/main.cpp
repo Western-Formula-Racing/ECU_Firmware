@@ -8,12 +8,12 @@
 #include "interfaces/inverter.h"
 #include "interfaces/bms.h"
 #include "black_box.h"
-#include "helpers/logging.h"
 
 #pragma GCC optimize("O0")
 
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
 FS_CAN FS_CAN0(&Can0);
+time_t getTeensy3Time();
 
 void can_sniff(const CAN_message_t &msg)
 {
@@ -58,22 +58,26 @@ void setup_task(void *)
 
     // Delay to allow the serial port to be opened and queue to be created (for some reason it needs this)
     vTaskDelay(pdMS_TO_TICKS(5000));
-
+    if (timeStatus()!= timeSet) {
+        while(!Serial);
+        Serial.printf("my god this sh borked\n");
+    }
     xTaskCreate(task1, "task1", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 
     vTaskDelete(nullptr);
 }
 
-FLASHMEM __attribute__((noinline)) void setup()
+void setup()
 {
+    setSyncProvider(getTeensy3Time);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
 
     if (CrashReport)
     {
-        Serial.print(CrashReport);
-        Serial.println();
-        Serial.flush();
+        Serial2.print(CrashReport);
+        Serial2.println();
+        Serial2.flush();
     }
 
     Serial.println(PSTR("\r\nBooting FreeRTOS kernel " tskKERNEL_VERSION_NUMBER ". Built by gcc " __VERSION__ " (newlib " _NEWLIB_VERSION ") on " __DATE__ ". ***\r\n"));
@@ -85,5 +89,11 @@ FLASHMEM __attribute__((noinline)) void setup()
 
     vTaskStartScheduler();
 }
+
+time_t getTeensy3Time()
+{
+  return Teensy3Clock.get()+ 3600*5+1;//shift time forward 5 hours and 1s because that's needed for some reason
+}
+
 
 void loop() {}
