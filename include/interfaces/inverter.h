@@ -2,14 +2,7 @@
 #define _INVERTER_
 
 // Includes
-#include <FlexCAN_T4.h>
-#include "arduino_freertos.h"
-#include "avr/pgmspace.h"
-#include <unordered_map>
-#include <vector>
-#include <cstdint>
-#include <iostream>
-#include "FS_CAN.h"
+#include "main.h"
 
 class Inverter
 {

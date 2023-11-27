@@ -1,3 +1,6 @@
+#ifndef _BLACK_BOX_
+#define _BLACK_BOX_
+
 #include <iostream>
 #include <arduino_freertos.h>
 #include "helpers/logging.h"
@@ -15,3 +18,5 @@ namespace BlackBox
     // Log a message to the black box
     void log(LogLevel level, const char *message);
 }
+
+#endif
