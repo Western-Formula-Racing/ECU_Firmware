@@ -15,7 +15,7 @@ void setup_task(void *)
     vTaskDelete(nullptr);
 }
 
-static void task1(void *) // mostly just a task for testing 
+void task1(void *) // mostly just a task for testing 
 {
     uint32_t testData = 0;
     uint32_t testData2 = 0;
@@ -37,4 +37,12 @@ static void task1(void *) // mostly just a task for testing
         digitalWriteFast(LED_BUILTIN, HIGH);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
+}
+void DAQ_task(void *){
+
+}
+
+
+void VCU_stateMachine(void *){
+    
 }

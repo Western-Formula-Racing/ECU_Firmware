@@ -5,6 +5,8 @@
 
 
 void setup_task(void *);
-static void task1(void *);
+void task1(void *);
+void VCU_stateMachine (void *);
+void DAQ_task(void *);
 
 #endif
