@@ -20,12 +20,17 @@ void task1(void *) // mostly just a task for testing
     uint32_t testData = 0;
     uint32_t testData2 = 0;
     FS_CAN::CAN_MSG testMsg;
+    FS_CAN::CAN_MSG testMsgTx;
     testMsg.id = 256;
+    testMsgTx.id = 200;
     testMsg.signal_count = 1;
     FS_CAN::CAN_SIGNAL testSignal{&testData, 0, 16, false};
     FS_CAN::CAN_SIGNAL testSignal2{&testData2, 8, 8, false};
+    FS_CAN::CAN_SIGNAL testSignal3{&testData, 0, 16, false};
     testMsg.signals.push_back(&testSignal);
     testMsg.signals.push_back(&testSignal2);
+    testMsgTx.signals.push_back(&testSignal3);
+    FS_CAN0.publish_CAN_msg(&testMsgTx, FS_CAN::ONE_MS);
     Serial.printf("didnt' crash yet\n");
     FS_CAN0.subscribe_to_message(&testMsg);
 
