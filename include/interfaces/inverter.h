@@ -8,10 +8,12 @@ class Inverter
 {
 private:
     // Commmand Variables
+    bool directionCommand;
+    bool inverterDischarge = false; // we don't use the discharge
+    bool inverterEnable;
+    bool speedModeEnable = false;// look at page 32 of the CAN documentation
     uint16_t torqueRequest;
-    uint8_t directionCommand;
-    uint8_t modeSelectByte; // look at page 32 of the CAN documentation
-    uint8_t torqueLimit;
+    uint16_t torqueLimit;
 
 public:
     /***public variables**/
@@ -21,7 +23,6 @@ public:
     uint16_t torqueFeedback;
     uint16_t motorSpeed;
     uint16_t dcBusVoltage;
-
     struct INVERTER_FAULTS
     {
         //@todo fill this in with all the fault states

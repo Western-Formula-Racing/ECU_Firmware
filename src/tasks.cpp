@@ -17,20 +17,20 @@ void setup_task(void *)
 
 void task1(void *) // mostly just a task for testing 
 {
-    uint32_t testData = 0;
-    uint32_t testData2 = 0;
+    float testData = 0;
+    float testData2 = 0;
     FS_CAN::CAN_MSG testMsg;
     FS_CAN::CAN_MSG testMsgTx;
     testMsg.id = 256;
     testMsgTx.id = 200;
     testMsg.signal_count = 1;
-    FS_CAN::CAN_SIGNAL testSignal{&testData, 0, 16, false};
-    FS_CAN::CAN_SIGNAL testSignal2{&testData2, 8, 8, false};
-    FS_CAN::CAN_SIGNAL testSignal3{&testData, 0, 16, false};
+    FS_CAN::CAN_SIGNAL testSignal{&testData, 0, 16, false,1,0};
+    FS_CAN::CAN_SIGNAL testSignal2{&testData2, 8, 8, false,1,0};
+    FS_CAN::CAN_SIGNAL testSignal3{&testData, 0, 16, false,1,0};
     testMsg.signals.push_back(&testSignal);
     testMsg.signals.push_back(&testSignal2);
     testMsgTx.signals.push_back(&testSignal3);
-    FS_CAN0.publish_CAN_msg(&testMsgTx, FS_CAN::ONE_MS);
+    FS_CAN0.publish_CAN_msg(&testMsgTx, FS_CAN::HUNDRED_MS);
     Serial.printf("didnt' crash yet\n");
     FS_CAN0.subscribe_to_message(&testMsg);
 
@@ -38,7 +38,7 @@ void task1(void *) // mostly just a task for testing
     {
         digitalWriteFast(LED_BUILTIN, LOW);
         vTaskDelay(pdMS_TO_TICKS(500));
-        BlackBox::log(LOG_INFO, std::format("data1: {} data2: {}", testData, testData2).c_str());
+        BlackBox::log(LOG_INFO, std::format("data1: {:.2f} data2: {:.2f}", testData, testData2).c_str());
         digitalWriteFast(LED_BUILTIN, HIGH);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
