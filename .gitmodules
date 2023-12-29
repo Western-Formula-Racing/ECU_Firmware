@@ -1,3 +1,0 @@
-[submodule "lib/FS-CAN"]
-	path = lib/FS-CAN
-	url = https://github.com/yamaan93/FS-CAN.git

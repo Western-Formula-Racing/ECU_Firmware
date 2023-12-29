@@ -7,7 +7,7 @@
 #include "arduino_freertos.h"
 #include "avr/pgmspace.h"
 #include "TeensyDebug.h"
-#include "FS_CAN.h"
+#include "CAN/FS_CAN.h"
 #include "interfaces/inverter.h"
 #include "interfaces/bms.h"
 #include "black_box.h"
