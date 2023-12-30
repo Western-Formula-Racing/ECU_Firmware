@@ -35,7 +35,6 @@ public:
     struct CAN_MSG
     {
         u_int16_t id;
-        uint8_t signal_count;
         std::vector<CAN_SIGNAL *> signals;
     };
     uint16_t txCallBackCounter;
