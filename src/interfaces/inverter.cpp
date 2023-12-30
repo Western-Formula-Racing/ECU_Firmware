@@ -1,12 +1,17 @@
 #include "interfaces/inverter.h"
 
-Inverter::Inverter(FS_CAN FS_CAN_handle){
-    FS_CAN::CAN_MSG commandMessage;
-    FS_CAN::CAN_SIGNAL directionCommandSignal;
-    FS_CAN::CAN_SIGNAL inverterDischargeSignal;
-    FS_CAN::CAN_SIGNAL inverterEnableSignal;
-    FS_CAN::CAN_SIGNAL speedModeEnableSignal;
-    FS_CAN::CAN_SIGNAL torqueRequestSignal;
-    FS_CAN::CAN_SIGNAL torqueLimitSignal; 
+Inverter::Inverter()
+{
+    torqueRequest = 100.0f;
+    inverterEnable = 1.0f;
+    commandMessage.signals.push_back(&directionCommandSignal);
+    commandMessage.signals.push_back(&inverterDischargeSignal);
+    commandMessage.signals.push_back(&inverterEnableSignal);
+    commandMessage.signals.push_back(&speedModeEnableSignal);
+    commandMessage.signals.push_back(&torqueRequestSignal);
+    commandMessage.signals.push_back(&torqueLimitSignal);
 
+    FS_CAN0.publish_CAN_msg(&commandMessage, FS_CAN::TEN_MS);
+
+    
 }

@@ -33,6 +33,7 @@ void task1(void *) // mostly just a task for testing
     FS_CAN0.publish_CAN_msg(&testMsgTx, FS_CAN::HUNDRED_MS);
     Serial.printf("didnt' crash yet\n");
     FS_CAN0.subscribe_to_message(&testMsg);
+    Inverter inverter = Inverter();
 
     while (true)
     {

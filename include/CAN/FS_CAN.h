@@ -21,9 +21,10 @@ public:
         HUNDRED_MS = 100,
         THOUSAND_MS = 1000
     };
+    
     struct CAN_SIGNAL
     {
-        float *data;
+        float* data;
         uint8_t start_bit;
         uint8_t data_length;
         bool isIntel;

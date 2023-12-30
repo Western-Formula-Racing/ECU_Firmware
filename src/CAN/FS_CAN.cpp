@@ -1,5 +1,5 @@
 #include "CAN/FS_CAN.h"
-#define SERIAL_PRINT 1
+#define SERIAL_PRINT 0
 #if SERIAL_PRINT == 1
 #define debug(x) \
     if (Serial)  \
@@ -39,10 +39,11 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
     CAN_message_t flex_msg; // message format for FlexCAN library
 
     flex_msg.id = msg->id;
+    debugf("transmitting message ID: %d \n", msg->id);
     for (const auto &signal : msg->signals)
     {
-        //debugf("signal: %f factor: %f, offset:%f \n", *signal->data ,signal->factor, signal->offset);
-        can_setSignal<uint32_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
+        debugf("signal: %f factor: %f, offset:%f \n", *signal->data ,signal->factor, signal->offset);
+        can_setSignal<int32_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
     
     }
     can->write(flex_msg);
@@ -98,6 +99,7 @@ void FS_CAN::subscribe_to_message(CAN_MSG *msg)
 }
 void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
 {
+    debugf("message with ID %d published at address\n ", msg->id);
     if (frequency == THOUSAND_MS)
     {
         CAN_TX_1000ms.insert(CAN_TX_1000ms.end(), msg);
@@ -139,11 +141,11 @@ void FS_CAN::CAN_RX_ISR(const CAN_message_t &msg)
         debugf("message found\n");
         CAN_MSG *CAN_msg = CAN_msg_lookup[msg.id];
         int signalCount = 0;
-        for (auto &signal : CAN_msg->signals)
+        for (const auto &signal : CAN_msg->signals)
         {
             debugf("signal#%d\n", signalCount);
             float data = 0;
-            data = can_getSignal<uint32_t>(msg.buf, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
+            data = can_getSignal<int32_t>(msg.buf, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
             debugf("data: %.2f\n",data);
             *signal->data = data;
             signalCount++;
