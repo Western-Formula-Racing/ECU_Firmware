@@ -39,7 +39,8 @@ void task1(void *) // mostly just a task for testing
     {
         digitalWriteFast(LED_BUILTIN, LOW);
         vTaskDelay(pdMS_TO_TICKS(500));
-        BlackBox::log(LOG_INFO, std::format("data1: {:.2f} data2: {:.2f}", testData, testData2).c_str());
+        BlackBox::log(LOG_INFO, std::format("data1: {:.1f} data2: {:.1f}", testData, testData2).c_str());
+        BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque).c_str());
         digitalWriteFast(LED_BUILTIN, HIGH);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
