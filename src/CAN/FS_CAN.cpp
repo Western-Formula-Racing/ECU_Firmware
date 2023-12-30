@@ -43,7 +43,7 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
     for (const auto &signal : msg->signals)
     {
         debugf("signal: %f factor: %f, offset:%f \n", *signal->data ,signal->factor, signal->offset);
-        can_setSignal<int32_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
+        can_setSignal<int16_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
     
     }
     can->write(flex_msg);
@@ -145,7 +145,7 @@ void FS_CAN::CAN_RX_ISR(const CAN_message_t &msg)
         {
             debugf("signal#%d\n", signalCount);
             float data = 0;
-            data = can_getSignal<int32_t>(msg.buf, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
+            data = can_getSignal<int16_t>(msg.buf, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
             debugf("data: %.2f\n",data);
             *signal->data = data;
             signalCount++;
