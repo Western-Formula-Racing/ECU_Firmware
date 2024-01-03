@@ -1,4 +1,6 @@
 #include "tasks.h"
+extern State state;
+extern std::array<state_function_t, 8> states;
 
 void setup_task(void *)
 {
@@ -11,15 +13,12 @@ void setup_task(void *)
         Serial.printf("my god this sh borked\n");
     }
     xTaskCreate(task1, "task1", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
-
+    xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     vTaskDelete(nullptr);
 }
 
 void task1(void *) // mostly just a task for testing 
 {
-
-    Inverter inverter = Inverter();
-
     while (true)
     {
         digitalWriteFast(LED_BUILTIN, LOW);
@@ -36,5 +35,11 @@ void DAQ_task(void *){
 
 
 void VCU_stateMachine(void *){
-    
+    state = START;
+    while(true){
+        state = states[state]();
+        BlackBox::log(LOG_INFO, std::format("currentState: {}",static_cast<int>(state)).c_str());
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+
 }

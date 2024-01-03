@@ -2,8 +2,9 @@
 #define _INVERTER_
 
 // Includes
-#include "main.h"
-#include <format>
+
+#include "required_includes.h"
+extern FS_CAN FS_CAN0;
 
 class Inverter
 {
@@ -37,7 +38,7 @@ private:
     
     FS_CAN::CAN_SIGNAL enableStateSignal{&enableState, 48, 1, true, 1.0f, 0};
     FS_CAN::CAN_SIGNAL runModeSignal{&runMode, 32, 1, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL stateSignal{&state, 16, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL stateSignal{&inverterState, 16, 8, true, 1.0f, 0};
     FS_CAN::CAN_MSG internalStatesMessage{170, {&enableStateSignal,&runModeSignal, &stateSignal}};
 
 public:
@@ -51,7 +52,7 @@ public:
 
     float enableState;
     float runMode;
-    float state;
+    float inverterState;
     struct INVERTER_FAULTS
     {
         //@todo fill this in with all the fault states

@@ -5,6 +5,8 @@
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
 FS_CAN FS_CAN0(&Can0);
 time_t getTeensy3Time();
+Inverter inverter;
+
 
 void can_sniff(const CAN_message_t &msg)
 {

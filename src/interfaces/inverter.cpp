@@ -29,5 +29,5 @@ void Inverter::disableInverter(){
 }
 
 Inverter::INVERTER_STATE Inverter::getInverterState(){
-    return static_cast<Inverter::INVERTER_STATE>(state);
+    return static_cast<Inverter::INVERTER_STATE>(inverterState);
 }
