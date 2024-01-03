@@ -4,6 +4,8 @@
 // Includes
 
 #include "required_includes.h"
+#include "state_machine.h"
+
 extern FS_CAN FS_CAN0;
 
 class Inverter

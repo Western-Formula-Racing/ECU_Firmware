@@ -23,7 +23,7 @@ void task1(void *) // mostly just a task for testing
     {
         digitalWriteFast(LED_BUILTIN, LOW);
         vTaskDelay(pdMS_TO_TICKS(500));
-        BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque).c_str());
+        BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}, requested torque: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque, inverter.getTorqueRequest()).c_str());
         BlackBox::log(LOG_INFO, std::format("inverter state: {}, run mode {:.1f} enable state {:.1f}", static_cast<int> (inverter.getInverterState()), inverter.runMode, inverter.enableState).c_str());
         digitalWriteFast(LED_BUILTIN, HIGH);
         vTaskDelay(pdMS_TO_TICKS(500));

@@ -1,7 +1,7 @@
 #include "state_machine.h"
 
 State state = START;
-
+extern Inverter inverter;
 std::array<state_function_t, 8> states = {
     handle_start,
     handle_startup_delay,
@@ -16,7 +16,8 @@ std::array<state_function_t, 8> states = {
 
 
 State handle_start(){
-    return DRIVE;
+    inverter.setTorqueRequest(10.0f);
+    return START;
 }
 State handle_startup_delay(){
     return START;
@@ -25,7 +26,7 @@ State handle_precharge_enable(){
     return START;
 }
 State handle_drive(){
-
+    inverter.setTorqueRequest(10.0f);
     return DRIVE;
 }
 State handle_pedal_implausability(){

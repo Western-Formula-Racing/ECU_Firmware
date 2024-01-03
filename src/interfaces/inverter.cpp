@@ -1,5 +1,5 @@
 #include "interfaces/inverter.h"
-
+extern State state;
 Inverter::Inverter()
 {
 
@@ -11,9 +11,12 @@ Inverter::Inverter()
 }
 
 void Inverter::setTorqueRequest(float torque){
-    //it might be nice if there is an easy way to check the 
-    //global state to prevent this from being called outside specific states
-    torqueRequest = torque;
+    if (state == DRIVE){
+        torqueRequest = torque;
+    }
+    else{
+        torqueRequest = 0;
+    }
 }
 
 float Inverter::getTorqueRequest(){
