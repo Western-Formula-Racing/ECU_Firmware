@@ -2,34 +2,87 @@
 #define _INVERTER_
 
 // Includes
-#include "main.h"
+
+#include "required_includes.h"
+#include "state_machine.h"
+
+extern FS_CAN FS_CAN0;
 
 class Inverter
 {
 private:
     // Commmand Variables
-    uint16_t torqueRequest;
-    uint8_t directionCommand;
-    uint8_t modeSelectByte; // look at page 32 of the CAN documentation
-    uint8_t torqueLimit;
+    float directionCommand;
+    float inverterDischarge = 0; // we don't use the discharge
+    float inverterEnable;
+    float speedModeEnable = 0;// look at page 32 of the CAN documentation
+    float torqueRequest;
+    float torqueLimit;
+
+    //command message
+    
+    FS_CAN::CAN_SIGNAL directionCommandSignal{&directionCommand, 32, 1, true, 1, 0}; // need to figure out how to cast boolean pointer to float
+    FS_CAN::CAN_SIGNAL inverterDischargeSignal{&inverterDischarge, 41, 1, true, 1, 0};
+    FS_CAN::CAN_SIGNAL inverterEnableSignal{&inverterEnable, 40, 1, true, 1, 0};
+    FS_CAN::CAN_SIGNAL speedModeEnableSignal{&speedModeEnable, 42, 1, true, 1, 0};
+    FS_CAN::CAN_SIGNAL torqueRequestSignal{&torqueRequest, 0, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL torqueLimitSignal{&torqueLimit, 48, 16, true, 0.1f, 0};
+    FS_CAN::CAN_MSG commandMessage{192,{&directionCommandSignal, &inverterDischargeSignal, &inverterEnableSignal, &speedModeEnableSignal, &torqueRequestSignal, &torqueLimitSignal}};
+
+    //fast info message
+    FS_CAN::CAN_SIGNAL DCBusVoltageSignal{&dcBusVoltage, 48, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL motorSpeedSignal{&motorSpeed, 32, 16, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL torqueCommandSignal{&commandedTorque, 0, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL torqueFeedbackSignal{&torqueFeedback, 16, 16, true, 0.1f, 0};
+    FS_CAN::CAN_MSG fastInfoMessage{176,{&DCBusVoltageSignal, &motorSpeedSignal, &torqueCommandSignal, &torqueFeedbackSignal}};
+
+    //inverter state info
+    
+    FS_CAN::CAN_SIGNAL enableStateSignal{&enableState, 48, 1, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL runModeSignal{&runMode, 32, 1, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL stateSignal{&inverterState, 16, 8, true, 1.0f, 0};
+    FS_CAN::CAN_MSG internalStatesMessage{170, {&enableStateSignal,&runModeSignal, &stateSignal}};
 
 public:
     /***public variables**/
 
     // Inverter Status Variables:
-    uint16_t commandedTorque;
-    uint16_t torqueFeedback;
-    uint16_t motorSpeed;
-    uint16_t dcBusVoltage;
+    float commandedTorque;
+    float torqueFeedback;
+    float motorSpeed;
+    float dcBusVoltage;
 
+    float enableState;
+    float runMode;
+    float inverterState;
     struct INVERTER_FAULTS
     {
         //@todo fill this in with all the fault states
     };
 
-    // public function declarations
-    Inverter(FS_CAN FS_CAN_handle);
+    enum INVERTER_STATE{
+        POWERUP0,
+        STOP1,
+        OPENLOOP2,
+        CLOSEDLOOP3,
+        INTERNALSTATE4,
+        INTERNALSTATE5,
+        INTERNALSTATE6,
+        INTERNALSTATE7,
+        IDLERUN8,
+        IDLESTOP9,
+        INTERNALSTATE10,
+        INTERNALSTATE11,
+        INTERNALSTATE12
+    };
 
-    void setTorqueRequest(uint16_t torque);
+    // public function declarations
+    Inverter();
+
+    void setTorqueRequest(float torque);
+    float getTorqueRequest();
+    void enableInverter();
+    void disableInverter();
+    INVERTER_STATE getInverterState();
 };
 #endif

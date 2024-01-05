@@ -39,9 +39,12 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
     CAN_message_t flex_msg; // message format for FlexCAN library
 
     flex_msg.id = msg->id;
+    debugf("transmitting message ID: %d \n", msg->id);
     for (const auto &signal : msg->signals)
     {
-        can_setSignal(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->little_endian);
+        debugf("signal: %f factor: %f, offset:%f \n", *signal->data ,signal->factor, signal->offset);
+        can_setSignal<int16_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
+    
     }
     can->write(flex_msg);
 }
@@ -56,7 +59,6 @@ void FS_CAN::txCallBack()
     {
         // transmit 1ms messages (i hope we don't need these)
         CAN_Tx(msg);
-        debugf("messages sent!\n");
     }
     // debugf("%dms\n",txCallBackCounter);
     if (txCallBackCounter % 10 == 0)
@@ -64,15 +66,13 @@ void FS_CAN::txCallBack()
         for (const auto &msg : CAN_TX_10ms)
         {
             CAN_Tx(msg);
-            debugf("messages sent!\n");
         }
     }
     if (txCallBackCounter % 100 == 0)
     {
         for (const auto &msg : CAN_TX_100ms)
         {
-            CAN_Tx(msg);
-            debugf("messages sent!\n");
+            CAN_Tx(msg);  
         }
     }
     if (txCallBackCounter % 1000 == 0)
@@ -80,7 +80,6 @@ void FS_CAN::txCallBack()
         for (const auto &msg : CAN_TX_1000ms)
         {
             CAN_Tx(msg);
-            debugf("messages sent!\n");
         }
     }
     txCallBackCounter++;
@@ -100,6 +99,7 @@ void FS_CAN::subscribe_to_message(CAN_MSG *msg)
 }
 void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
 {
+    debugf("message with ID %d published at address\n ", msg->id);
     if (frequency == THOUSAND_MS)
     {
         CAN_TX_1000ms.insert(CAN_TX_1000ms.end(), msg);
@@ -141,12 +141,12 @@ void FS_CAN::CAN_RX_ISR(const CAN_message_t &msg)
         debugf("message found\n");
         CAN_MSG *CAN_msg = CAN_msg_lookup[msg.id];
         int signalCount = 0;
-        for (auto &signal : CAN_msg->signals)
+        for (const auto &signal : CAN_msg->signals)
         {
             debugf("signal#%d\n", signalCount);
-            uint32_t data = 0;
-            data = can_getSignal<uint32_t>(msg.buf, signal->start_bit, signal->data_length, signal->little_endian);
-            debugf("data: %d\n", data);
+            float data = 0;
+            data = can_getSignal<int16_t>(msg.buf, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
+            debugf("data: %.2f\n",data);
             *signal->data = data;
             signalCount++;
         }

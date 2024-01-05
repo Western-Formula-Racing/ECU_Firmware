@@ -1,4 +1,6 @@
 #include "tasks.h"
+extern State state;
+extern std::array<state_function_t, 8> states;
 
 void setup_task(void *)
 {
@@ -11,34 +13,18 @@ void setup_task(void *)
         Serial.printf("my god this sh borked\n");
     }
     xTaskCreate(task1, "task1", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
-
+    xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     vTaskDelete(nullptr);
 }
 
 void task1(void *) // mostly just a task for testing 
 {
-    uint32_t testData = 0;
-    uint32_t testData2 = 0;
-    FS_CAN::CAN_MSG testMsg;
-    FS_CAN::CAN_MSG testMsgTx;
-    testMsg.id = 256;
-    testMsgTx.id = 200;
-    testMsg.signal_count = 1;
-    FS_CAN::CAN_SIGNAL testSignal{&testData, 0, 16, false};
-    FS_CAN::CAN_SIGNAL testSignal2{&testData2, 8, 8, false};
-    FS_CAN::CAN_SIGNAL testSignal3{&testData, 0, 16, false};
-    testMsg.signals.push_back(&testSignal);
-    testMsg.signals.push_back(&testSignal2);
-    testMsgTx.signals.push_back(&testSignal3);
-    FS_CAN0.publish_CAN_msg(&testMsgTx, FS_CAN::ONE_MS);
-    Serial.printf("didnt' crash yet\n");
-    FS_CAN0.subscribe_to_message(&testMsg);
-
     while (true)
     {
         digitalWriteFast(LED_BUILTIN, LOW);
         vTaskDelay(pdMS_TO_TICKS(500));
-        BlackBox::log(LOG_INFO, std::format("data1: {} data2: {}", testData, testData2).c_str());
+        BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}, requested torque: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque, inverter.getTorqueRequest()).c_str());
+        BlackBox::log(LOG_INFO, std::format("inverter state: {}, run mode {:.1f} enable state {:.1f}", static_cast<int> (inverter.getInverterState()), inverter.runMode, inverter.enableState).c_str());
         digitalWriteFast(LED_BUILTIN, HIGH);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
@@ -49,5 +35,11 @@ void DAQ_task(void *){
 
 
 void VCU_stateMachine(void *){
-    
+    state = START;
+    while(true){
+        state = states[state]();
+        BlackBox::log(LOG_INFO, std::format("currentState: {}",static_cast<int>(state)).c_str());
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+
 }
