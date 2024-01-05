@@ -2,7 +2,7 @@
 
 #pragma GCC optimize("O0")
 
-FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
+static FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
 FS_CAN FS_CAN0(&Can0);
 time_t getTeensy3Time();
 Inverter inverter;
@@ -33,7 +33,6 @@ void setup()
     Can0.enableMBInterrupt(FIFO);
     Can0.enableFIFOInterrupt();
     Can0.onReceive(can_sniff);
-
 
     Serial.println(PSTR("\r\nBooting FreeRTOS kernel " tskKERNEL_VERSION_NUMBER ". Built by gcc " __VERSION__ " (newlib " _NEWLIB_VERSION ") on " __DATE__ ". ***\r\n"));
 
