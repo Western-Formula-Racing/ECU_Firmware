@@ -6,7 +6,7 @@ static FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
 FS_CAN FS_CAN0(&Can0);
 time_t getTeensy3Time();
 Inverter inverter;
-
+BMS bms;
 
 void can_sniff(const CAN_message_t &msg)
 {
@@ -21,7 +21,8 @@ void setup()
 
     if (CrashReport)
     {
-        while(!Serial);
+        while (!Serial)
+            ;
         Serial.print(CrashReport);
         Serial.println();
         Serial.flush();
@@ -46,8 +47,7 @@ void setup()
 
 time_t getTeensy3Time()
 {
-  return Teensy3Clock.get()+ 3600*5;//shift time forward 5 hours and 1s because that's needed for some reason
+    return Teensy3Clock.get() + 3600 * 5; // shift time forward 5 hours and 1s because that's needed for some reason
 }
-
 
 void loop() {}
