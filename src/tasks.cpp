@@ -1,11 +1,10 @@
 #include "tasks.h"
+#include "sensors.h"
+
 extern State state;
 extern std::array<state_function_t, 8> states;
 
-ADC *adc = new ADC(); // adc object
-LowPass lp1(2,2,1e3,true);
-Sensor sens(adc,A0, 0, 1, 2, 2, 1e3, true);
-std::array<Sensor*, 1> sensors = {&sens};
+
 
 void setup_task(void *)
 {

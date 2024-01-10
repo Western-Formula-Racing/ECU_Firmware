@@ -4,8 +4,6 @@
 #include "required_includes.h"
 #include "state_machine.h"
 #include "interfaces/inverter.h"
-#include "sensor.h"
-#include "ADC.h"
 extern Inverter inverter;
 
 void setup_task(void *);
