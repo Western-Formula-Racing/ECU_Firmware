@@ -2,6 +2,11 @@
 extern State state;
 extern std::array<state_function_t, 8> states;
 
+ADC *adc = new ADC(); // adc object
+LowPass lp1(2,2,1e3,true);
+Sensor sens(adc,A0, 0, 1, 2, 2, 1e3, true);
+std::array<Sensor*, 1> sensors = {&sens};
+
 void setup_task(void *)
 {
     BlackBox::begin(100, tskIDLE_PRIORITY + 1);
@@ -19,14 +24,25 @@ void setup_task(void *)
 
 void task1(void *) // mostly just a task for testing 
 {
+
+
+
     while (true)
     {
         digitalWriteFast(LED_BUILTIN, LOW);
-        vTaskDelay(pdMS_TO_TICKS(500));
-        BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}, requested torque: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque, inverter.getTorqueRequest()).c_str());
-        BlackBox::log(LOG_INFO, std::format("inverter state: {}, run mode {:.1f} enable state {:.1f}", static_cast<int> (inverter.getInverterState()), inverter.runMode, inverter.enableState).c_str());
-        digitalWriteFast(LED_BUILTIN, HIGH);
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(50));
+        // BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}, requested torque: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque, inverter.getTorqueRequest()).c_str());
+        // BlackBox::log(LOG_INFO, std::format("inverter state: {}, run mode {:.1f} enable state {:.1f}", static_cast<int> (inverter.getInverterState()), inverter.runMode, inverter.enableState).c_str());
+        for (auto*sensor: sensors){
+            sensor->read();
+            Serial.print(sensor->rawValue);
+            Serial.print(" ");
+            Serial.print(sensor->value);
+            Serial.print(" ");
+            Serial.print(sensor->filteredValue);
+            Serial.println();
+        }
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
 void DAQ_task(void *){
@@ -38,7 +54,7 @@ void VCU_stateMachine(void *){
     state = START;
     while(true){
         state = states[state]();
-        BlackBox::log(LOG_INFO, std::format("currentState: {}",static_cast<int>(state)).c_str());
+        //BlackBox::log(LOG_INFO, std::format("currentState: {}",static_cast<int>(state)).c_str());
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 
