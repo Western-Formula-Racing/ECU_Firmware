@@ -1,5 +1,4 @@
 #include "tasks.h"
-#include "sensors.h"
 
 extern State state;
 extern std::array<state_function_t, 8> states;

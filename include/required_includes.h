@@ -4,3 +4,4 @@
 #include "arduino_freertos.h"
 #include "CAN/FS_CAN.h"
 #include "black_box.h"
+#include "config/config.h"
