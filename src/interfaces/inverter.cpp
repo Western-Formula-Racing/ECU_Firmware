@@ -3,12 +3,9 @@
 extern State state;
 Inverter::Inverter()
 {
-
-    Devices::Get().GetFS_Can0().publish_CAN_msg(&commandMessage, FS_CAN::TEN_MS);
-    Devices::Get().GetFS_Can0().subscribe_to_message(&fastInfoMessage);
-    Devices::Get().GetFS_Can0().subscribe_to_message(&internalStatesMessage);
-
-
+    Devices::GetFS_Can0().publish_CAN_msg(&commandMessage, FS_CAN::TEN_MS);
+    Devices::GetFS_Can0().subscribe_to_message(&fastInfoMessage);
+    Devices::GetFS_Can0().subscribe_to_message(&internalStatesMessage);
 }
 
 void Inverter::setTorqueRequest(float torque){

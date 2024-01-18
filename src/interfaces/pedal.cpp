@@ -5,5 +5,5 @@ Pedal::Pedal(Sensor *s1_p, Sensor *s2_p){
     Serial.println("sensor constructor called");
     sensor1 = s1_p;
     sensor2 = s2_p;
-    Devices::Get().GetFS_Can0().publish_CAN_msg(&pedalInfoMessage, FS_CAN::HUNDRED_MS);
+    Devices::GetFS_Can0().publish_CAN_msg(&pedalInfoMessage, FS_CAN::HUNDRED_MS);
 }

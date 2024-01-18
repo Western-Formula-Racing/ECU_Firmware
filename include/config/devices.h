@@ -1,5 +1,6 @@
 #pragma once
 #include <ADC.h>
+#include "CAN/FS_CAN.h"
 #include "sensor.h"
 #include "interfaces/pedal.h"
 #include "interfaces/bms.h"
@@ -11,18 +12,21 @@ class Devices
 public:
     static Devices& Get() // Edit this needs to be static, my bad
     {
-        Serial.println("get devices called");
-        static Devices d;
-        return d;
+        return *s_instance;
     }
+
+    static void Create(FS_CAN* canHandle);
+
+
 public:
-    FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16>& GetCan0()
+    //FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16>& GetCan0()
+    //{
+    //    return Can0;
+    //}
+
+    static FS_CAN& GetFS_Can0()
     {
-        return Can0;
-    }
-    FS_CAN& GetFS_Can0()
-    {
-        return FS_CAN0;
+        return *((FS_CAN *)(nullptr));
     }
 
     Inverter& GetInverter()
@@ -36,6 +40,7 @@ public:
     std::array <Sensor*, 2>& GetSensors(){
         return sensors;
     }
+
     Devices(const Devices&) = delete;
     Devices& operator=(const Devices&) = delete;
 
@@ -44,22 +49,23 @@ public:
 
 
 private:
-    FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
+    static Devices* s_instance;
 
-    FS_CAN FS_CAN0;
+    //FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
+    static FS_CAN* s_fs_can0;
     Inverter inverter;
     BMS bms;
     ADC adc;
     Sensor sense1;
     Sensor sense2;
     Pedal pedal;
-    std::array <Sensor*, 2>sensors = {&sense1, &sense2};
+    std::array <Sensor*, 2>sensors;
+
 private:
     Devices()
-        : Can0(), FS_CAN0(&Can0), inverter(), bms(), adc(), sense1(&adc, A0, 0, 1, 2, 2, 1e3, true),
-        sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), pedal(&sense1, &sense2)
+        : inverter(), bms(), adc(), sense1(&adc, A0, 0, 1, 2, 2, 1e3, true),
+        sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), pedal(&sense1, &sense2), sensors({&sense1, &sense2})
     {
-        Serial.println("help, i got past innit");
     }
-
 };
+

@@ -6,7 +6,7 @@ time_t getTeensy3Time();
 
 void can_sniff(const CAN_message_t &msg)
 {
-    Devices::Get().GetFS_Can0().CAN_RX_ISR(msg);
+    Devices::GetFS_Can0().CAN_RX_ISR(msg);
 }
 
 void setup()
@@ -26,7 +26,8 @@ void setup()
         Serial.flush();
     }
     Serial.println("bruh");
-    FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16>& Can0 = Devices::Get().GetCan0();
+    FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
+    FS_CAN FS_CAN0(&Can0);
 
     Can0.begin();
     Can0.setBaudRate(500000);
@@ -35,6 +36,8 @@ void setup()
     Can0.enableMBInterrupt(FIFO);
     Can0.enableFIFOInterrupt();
     Can0.onReceive(can_sniff);
+
+    Devices::Create(&FS_CAN0);
 
     Serial.println(PSTR("\r\nBooting FreeRTOS kernel " tskKERNEL_VERSION_NUMBER ". Built by gcc " __VERSION__ " (newlib " _NEWLIB_VERSION ") on " __DATE__ ". ***\r\n"));
 
