@@ -22,8 +22,9 @@ FS_CAN::FS_CAN(FlexCAN_T4_Base *canHandle)
     Serial.println("FS_CAN Constructor called");
     FS_CAN::can = canHandle;
     txCallBackCounter = 0;
-    TimerHandle_t txTimer = xTimerCreate("txTaskTimer", pdMS_TO_TICKS(1), pdTRUE, (void *)this, [](TimerHandle_t xTimer)
-                                         { static_cast<FS_CAN *>(pvTimerGetTimerID(xTimer))->txCallBack(); });
+    TimerHandle_t txTimer = xTimerCreate("txTaskTimer", pdMS_TO_TICKS(1), pdTRUE, (void *)this, [](TimerHandle_t xTimer) {\
+        static_cast<FS_CAN *>(pvTimerGetTimerID(xTimer))->txCallBack(); 
+    });
     if (txTimer == NULL)
     {
          Serial.println("failed to start CAN TxTimer\n");
@@ -52,6 +53,7 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
     can->write(flex_msg);
     debugln("message sent");
 }
+
 void FS_CAN::txCallBack()
 {
     Serial.println("txCallback");

@@ -49,9 +49,8 @@ public:
 
 
 private:
-    static Devices* s_instance;
-
     //FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
+    static Devices* s_instance;
     static FS_CAN* s_fs_can0;
     Inverter inverter;
     BMS bms;
