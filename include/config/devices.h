@@ -26,7 +26,7 @@ public:
 
     static FS_CAN& GetFS_Can0()
     {
-        return *((FS_CAN *)(nullptr));
+        return *s_fs_can0;
     }
 
     Inverter& GetInverter()
