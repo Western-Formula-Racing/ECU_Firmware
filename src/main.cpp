@@ -26,16 +26,17 @@ void setup()
         Serial.flush();
     }
     Serial.println("bruh");
-    FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
-    FS_CAN FS_CAN0(&Can0);
+    
+    auto* Can0 = new FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16>();
+    FS_CAN FS_CAN0(Can0);
 
-    Can0.begin();
-    Can0.setBaudRate(500000);
-    Can0.setMaxMB(64);
-    Can0.enableFIFO();
-    Can0.enableMBInterrupt(FIFO);
-    Can0.enableFIFOInterrupt();
-    Can0.onReceive(can_sniff);
+    Can0->begin();
+    Can0->setBaudRate(500000);
+    Can0->setMaxMB(64);
+    Can0->enableFIFO();
+    Can0->enableMBInterrupt(FIFO);
+    Can0->enableFIFOInterrupt();
+    Can0->onReceive(can_sniff);
 
     Devices::Create(&FS_CAN0);
 
