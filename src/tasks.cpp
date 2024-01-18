@@ -1,5 +1,5 @@
 #include "tasks.h"
-
+#include "config/devices.h"
 extern State state;
 extern std::array<state_function_t, 8> states;
 

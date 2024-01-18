@@ -18,7 +18,6 @@
 
 FS_CAN::FS_CAN(FlexCAN_T4_Base *canHandle)
 {
-    delay(1000);
     Serial.println("FS_CAN Constructor called");
     FS_CAN::can = canHandle;
     txCallBackCounter = 0;

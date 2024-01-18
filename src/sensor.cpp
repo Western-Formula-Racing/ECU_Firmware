@@ -2,6 +2,7 @@
 
 Sensor::Sensor(ADC *adc_handle, uint8_t pin, float offset, float scale, uint8_t filter_order, float f0, float fs, bool adaptive)
 {
+    Serial.println("sensor innited");
     adc = adc_handle;
     pin = pin;
     offset_ = offset;

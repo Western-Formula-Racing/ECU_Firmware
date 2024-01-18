@@ -1,12 +1,12 @@
 #include "interfaces/bms.h"
-
+#include "config/devices.h"
 extern State state;
 
 BMS::BMS()
 {
-    FS_CAN0.subscribe_to_message(&packStateMessage);
-    FS_CAN0.subscribe_to_message(&packFaultsMessage);
-    FS_CAN0.publish_CAN_msg(&VCUFaultMessage, FS_CAN::HUNDRED_MS);
+    Devices::Get().GetFS_Can0().subscribe_to_message(&packStateMessage);
+    Devices::Get().GetFS_Can0().subscribe_to_message(&packFaultsMessage);
+    Devices::Get().GetFS_Can0().publish_CAN_msg(&VCUFaultMessage, FS_CAN::HUNDRED_MS);
 }
 
 bool BMS::hasFault()

@@ -6,11 +6,13 @@ time_t getTeensy3Time();
 
 void can_sniff(const CAN_message_t &msg)
 {
-    FS_CAN0.CAN_RX_ISR(msg);
+    Devices::Get().GetFS_Can0().CAN_RX_ISR(msg);
 }
 
 void setup()
 {
+    while (!Serial);
+    
     setSyncProvider(getTeensy3Time);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
@@ -23,6 +25,7 @@ void setup()
         Serial.println();
         Serial.flush();
     }
+    Serial.println("bruh");
     FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16>& Can0 = Devices::Get().GetCan0();
 
     Can0.begin();

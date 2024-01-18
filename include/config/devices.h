@@ -11,6 +11,7 @@ class Devices
 public:
     static Devices& Get() // Edit this needs to be static, my bad
     {
+        Serial.println("get devices called");
         static Devices d;
         return d;
     }
@@ -48,16 +49,17 @@ private:
     FS_CAN FS_CAN0;
     Inverter inverter;
     BMS bms;
-    ADC *adc;
+    ADC adc;
     Sensor sense1;
     Sensor sense2;
     Pedal pedal;
     std::array <Sensor*, 2>sensors = {&sense1, &sense2};
 private:
     Devices()
-        : Can0(), FS_CAN0(&Can0), adc(), sense1(adc, A0, 0, 1, 2, 2, 1e3, true),
-        sense2(adc, A16, 0, 1, 2, 2, 1e3, true), pedal(&sense1, &sense2)
+        : Can0(), FS_CAN0(&Can0), inverter(), bms(), adc(), sense1(&adc, A0, 0, 1, 2, 2, 1e3, true),
+        sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), pedal(&sense1, &sense2)
     {
+        Serial.println("help, i got past innit");
     }
 
 };
