@@ -3,10 +3,13 @@
 #pragma GCC optimize("O0")
 
 time_t getTeensy3Time();
-
+// These guys ABSOLUTELY HAVE TO BE GLOBAL VARIABLES
+FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
+FS_CAN FS_CAN0(&Can0);
+// DO NOT TOUCH
 void can_sniff(const CAN_message_t &msg)
 {
-    Devices::GetFS_Can0().CAN_RX_ISR(msg);
+    FS_CAN0.CAN_RX_ISR(msg);
 }
 
 void setup()
@@ -27,8 +30,7 @@ void setup()
     }
     Serial.println("bruh");
     
-    FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
-    FS_CAN FS_CAN0(&Can0);
+
     
     Serial.println("can0 and FS_can created");
     Can0.begin();
@@ -39,7 +41,7 @@ void setup()
     Can0.enableFIFOInterrupt();
     Can0.onReceive(can_sniff);
 
-    Devices::Create(&FS_CAN0);
+
 
     Serial.println(PSTR("\r\nBooting FreeRTOS kernel " tskKERNEL_VERSION_NUMBER ". Built by gcc " __VERSION__ " (newlib " _NEWLIB_VERSION ") on " __DATE__ ". ***\r\n"));
 

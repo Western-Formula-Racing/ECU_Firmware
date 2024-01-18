@@ -1,12 +1,14 @@
 #include "interfaces/inverter.h"
 #include "config/devices.h"
 extern State state;
+extern FS_CAN FS_CAN0;
+
 Inverter::Inverter()
 {
     Serial.println("Inverter Constructor called");
-    Devices::GetFS_Can0().publish_CAN_msg(&commandMessage, FS_CAN::TEN_MS);
-    Devices::GetFS_Can0().subscribe_to_message(&fastInfoMessage);
-    Devices::GetFS_Can0().subscribe_to_message(&internalStatesMessage);
+    FS_CAN0.publish_CAN_msg(&commandMessage, FS_CAN::TEN_MS);
+    FS_CAN0.subscribe_to_message(&fastInfoMessage);
+    FS_CAN0.subscribe_to_message(&internalStatesMessage);
 }
 
 void Inverter::setTorqueRequest(float torque){

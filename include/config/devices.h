@@ -12,10 +12,10 @@ class Devices
 public:
     static Devices& Get() // Edit this needs to be static, my bad
     {
-        return *s_instance;
+        static Devices d;
+        return d;
     }
 
-    static void Create(FS_CAN* canHandle);
 
 
 public:
@@ -24,10 +24,7 @@ public:
     //    return Can0;
     //}
 
-    static FS_CAN& GetFS_Can0()
-    {
-        return *s_fs_can0;
-    }
+
 
     Inverter& GetInverter()
     {
@@ -51,7 +48,6 @@ public:
 private:
     //FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
     static Devices* s_instance;
-    static FS_CAN* s_fs_can0;
     Inverter inverter;
     BMS bms;
     ADC adc;
