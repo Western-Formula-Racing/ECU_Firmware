@@ -1,5 +1,5 @@
 #include "CAN/FS_CAN.h"
-#define SERIAL_PRINT 1
+#define SERIAL_PRINT 0
 #if SERIAL_PRINT == 1
 #define debug(x) \
     if (Serial)  \
@@ -18,8 +18,7 @@
 
 FS_CAN::FS_CAN(FlexCAN_T4_Base *canHandle)
 {
-    while (!Serial);
-    Serial.println("FS_CAN Constructor called");
+    debugln("FS_CAN Constructor called");
     FS_CAN::can = canHandle;
     txCallBackCounter = 0;
     TimerHandle_t txTimer = xTimerCreate("txTaskTimer", pdMS_TO_TICKS(1), pdTRUE, (void *)this, [](TimerHandle_t xTimer) {
@@ -27,13 +26,13 @@ FS_CAN::FS_CAN(FlexCAN_T4_Base *canHandle)
     });
     if (txTimer == NULL)
     {
-         Serial.println("failed to start CAN TxTimer\n");
+         debugln("failed to start CAN TxTimer\n");
     }
     else
     {
         if (xTimerStart(txTimer, 0) != pdPASS)
         {
-            Serial.println("failed to start CAN TxTimer\n");
+            debugln("failed to start CAN TxTimer\n");
         }
     }
 }
@@ -56,7 +55,6 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
 
 void FS_CAN::txCallBack()
 {
-    Serial.println("txCallback");
     // reset the counter
     if (txCallBackCounter >= 1000)
     {
@@ -70,30 +68,24 @@ void FS_CAN::txCallBack()
     // debugf("%dms\n",txCallBackCounter);
     if (txCallBackCounter % 10 == 0)
     {
-        debugln("sending the 10ms messages");
         for (const auto &msg : CAN_TX_10ms)
         {
             CAN_Tx(msg);
         }
-        debugln("done sending the 10ms messages");
     }
     if (txCallBackCounter % 100 == 0)
     {
-        debugln("sending the 100ms messages");
         for (const auto &msg : CAN_TX_100ms)
         {
             CAN_Tx(msg);  
         }
-        debugln("done sending 100ms messages");
     }
     if (txCallBackCounter % 1000 == 0)
     {
-        debugln("sending 1000ms messages");
         for (const auto &msg : CAN_TX_1000ms)
         {
             CAN_Tx(msg);
         }
-        debugln("done sending 1000ms messages");
     }
     txCallBackCounter++;
 }

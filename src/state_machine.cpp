@@ -16,7 +16,7 @@ std::array<state_function_t, 8> states = {
 
 State handle_start(){
     Devices::Get().GetInverter().setTorqueRequest(10.0f);
-    return START;
+    return DRIVE;
 }
 State handle_startup_delay(){
     return START;

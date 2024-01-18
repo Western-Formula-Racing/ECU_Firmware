@@ -52,7 +52,7 @@ void VCU_stateMachine(void *){
     state = START;
     while(true){
         state = states[state]();
-        //BlackBox::log(LOG_INFO, std::format("currentState: {}",static_cast<int>(state)).c_str());
+        BlackBox::log(LOG_INFO, std::format("currentState: {}",static_cast<int>(state)).c_str());
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 

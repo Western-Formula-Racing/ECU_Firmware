@@ -13,9 +13,7 @@ void can_sniff(const CAN_message_t &msg)
 }
 
 void setup()
-{
-    while (!Serial);
-    
+{  
     setSyncProvider(getTeensy3Time);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
