@@ -18,6 +18,8 @@
 
 FS_CAN::FS_CAN(FlexCAN_T4_Base *canHandle)
 {
+    delay(1000);
+    Serial.println("FS_CAN Constructor called");
     FS_CAN::can = canHandle;
     txCallBackCounter = 0;
     TimerHandle_t txTimer = xTimerCreate("txTaskTimer", pdMS_TO_TICKS(1), pdTRUE, (void *)this, [](TimerHandle_t xTimer)
@@ -102,19 +104,19 @@ void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
     debugf("message with ID %d published at address\n ", msg->id);
     if (frequency == THOUSAND_MS)
     {
-        CAN_TX_1000ms.insert(CAN_TX_1000ms.end(), msg);
+        CAN_TX_1000ms.push_back(msg);
     }
     else if (frequency == HUNDRED_MS)
     {
-        CAN_TX_100ms.insert(CAN_TX_100ms.end(), msg);
+        CAN_TX_100ms.push_back(msg);
     }
     else if (frequency == TEN_MS)
     {
-        CAN_TX_10ms.insert(CAN_TX_10ms.end(), msg);
+        CAN_TX_10ms.push_back(msg);
     }
     else if (frequency == ONE_MS)
     {
-        CAN_TX_1ms.insert(CAN_TX_1ms.end(), msg);
+        CAN_TX_1ms.push_back(msg);
     }
 }
 void FS_CAN::add_signal_to_message(CAN_MSG *msg, CAN_SIGNAL *signal)

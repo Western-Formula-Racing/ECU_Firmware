@@ -31,7 +31,7 @@ void task1(void *) // mostly just a task for testing
         vTaskDelay(pdMS_TO_TICKS(50));
         // BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}, requested torque: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque, inverter.getTorqueRequest()).c_str());
         // BlackBox::log(LOG_INFO, std::format("inverter state: {}, run mode {:.1f} enable state {:.1f}", static_cast<int> (inverter.getInverterState()), inverter.runMode, inverter.enableState).c_str());
-        for (auto*sensor: sensors){
+        for (auto*sensor: Devices::Get().GetSensors()){
             sensor->read();
             Serial.print(sensor->rawValue);
             Serial.print(" ");

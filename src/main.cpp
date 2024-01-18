@@ -1,12 +1,8 @@
 #include "main.h"
-
+#include "config/devices.h"
 #pragma GCC optimize("O0")
 
-static FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
-FS_CAN FS_CAN0(&Can0);
 time_t getTeensy3Time();
-Inverter inverter;
-BMS bms;
 
 void can_sniff(const CAN_message_t &msg)
 {
@@ -27,6 +23,8 @@ void setup()
         Serial.println();
         Serial.flush();
     }
+    FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16>& Can0 = Devices::Get().GetCan0();
+
     Can0.begin();
     Can0.setBaudRate(500000);
     Can0.setMaxMB(64);

@@ -16,13 +16,18 @@ class Pedal
         float sensor2MinVoltage;
         float sensor2MaxVoltage;
 
-        Sensor sensor1;
-        Sensor sensor2;
+        float sensor1Voltage;
+        float sensor2Voltage;
+        float sensorPlausability;
 
-        Sensor *sensor1_p = &sensor1; //pointers to the sensors for adding to the sensor list
-        Sensor *sensor2_p = &sensor2;
+        FS_CAN::CAN_SIGNAL sensorPlausabilitySignal{&sensorPlausability, 0,8, false, 1.0f,0};
+        FS_CAN::CAN_MSG pedalInfoMessage{400,{&sensorPlausabilitySignal}};
+
+        Sensor *sensor1;
+        Sensor *sensor2;
 
         float plausabilityFault; // float so we can Make it a CAN signal
         
         float getPedalPosition();
+        Pedal(Sensor *s1_p, Sensor *s2_p);
 };
