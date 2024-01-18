@@ -29,7 +29,8 @@ void setup()
     
     auto* Can0 = new FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16>();
     FS_CAN FS_CAN0(Can0);
-
+    
+    Serial.println("can0 and FS_can created");
     Can0->begin();
     Can0->setBaudRate(500000);
     Can0->setMaxMB(64);
@@ -48,6 +49,7 @@ void setup()
     Serial.flush();
 
     vTaskStartScheduler();
+    Serial.println("scheduler returned");
 }
 
 time_t getTeensy3Time()
