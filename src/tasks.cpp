@@ -27,11 +27,13 @@ void task1(void *) // mostly just a task for testing
 
     while (true)
     {
-        digitalWriteFast(LED_BUILTIN, LOW);
+        digitalWriteFast(LED_BUILTIN, HIGH);
         vTaskDelay(pdMS_TO_TICKS(50));
         // BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}, requested torque: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque, inverter.getTorqueRequest()).c_str());
         // BlackBox::log(LOG_INFO, std::format("inverter state: {}, run mode {:.1f} enable state {:.1f}", static_cast<int> (inverter.getInverterState()), inverter.runMode, inverter.enableState).c_str());
+        int i = 0;
         for (auto*sensor: Devices::Get().GetSensors()){
+            Serial.printf("sensor %d\n", i);
             sensor->read();
             Serial.print(sensor->rawValue);
             Serial.print(" ");
@@ -39,8 +41,13 @@ void task1(void *) // mostly just a task for testing
             Serial.print(" ");
             Serial.print(sensor->filteredValue);
             Serial.println();
+            i++;
         }
+        float pedalPos = Devices::Get().GetPedal().getPedalPosition();
+        Serial.printf("pedal postion: %d\n", pedalPos);
         vTaskDelay(pdMS_TO_TICKS(50));
+        digitalWriteFast(LED_BUILTIN, LOW);
+
     }
 }
 void DAQ_task(void *){

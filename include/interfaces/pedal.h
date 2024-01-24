@@ -11,13 +11,8 @@ class Pedal
         uint8_t pin1 = A0; //If this is wrong yell at faris
         uint8_t pin2 = A16;
 
-        float sensor1MinVoltage;
-        float sensor1MaxVoltage;
-        float sensor2MinVoltage;
-        float sensor2MaxVoltage;
-
-        float sensor1Voltage;
-        float sensor2Voltage;
+        float sensor1Position;
+        float sensor2Position;
         float sensorPlausability;
 
         FS_CAN::CAN_SIGNAL sensorPlausabilitySignal{&sensorPlausability, 0,8, false, 1.0f,0};

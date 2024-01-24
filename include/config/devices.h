@@ -34,6 +34,10 @@ public:
     BMS& GetBMS(){
         return bms;
     }
+
+    Pedal& GetPedal(){
+        return pedal;
+    }
     std::array <Sensor*, 2>& GetSensors(){
         return sensors;
     }
