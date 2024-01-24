@@ -8,4 +8,4 @@ extern const float APPS1_MIN_VOLTAGE;
 extern const float APPS1_MAX_VOLTAGE;
 extern const float APPS2_MIN_VOLTAGE;
 extern const float APPS2_MAX_VOLTAGE;
-
+extern const float APPS_PLAUSABILITY_THRESHOLD;

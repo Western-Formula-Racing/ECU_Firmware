@@ -23,8 +23,6 @@ void setup_task(void *)
 void task1(void *) // mostly just a task for testing 
 {
 
-
-
     while (true)
     {
         digitalWriteFast(LED_BUILTIN, HIGH);
@@ -44,7 +42,8 @@ void task1(void *) // mostly just a task for testing
             i++;
         }
         float pedalPos = Devices::Get().GetPedal().getPedalPosition();
-        Serial.printf("pedal postion: %d\n", pedalPos);
+        Serial.printf("pedal postion: %f\n", pedalPos);
+        Serial.printf("sensor1: %f sensor2: %f\n",Devices::Get().GetPedal().sensor1Position,Devices::Get().GetPedal().sensor2Position);
         vTaskDelay(pdMS_TO_TICKS(50));
         digitalWriteFast(LED_BUILTIN, LOW);
 

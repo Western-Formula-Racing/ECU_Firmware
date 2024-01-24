@@ -2,7 +2,7 @@
 
 Sensor::Sensor(ADC *adc_handle, uint8_t pin_, float offset, float scale, uint8_t filter_order, float f0, float fs, bool adaptive)
 {
-    Serial.printf("sensor %d innited\n",pin);
+    Serial.printf("sensor %d with address:%#010x innited\n",pin, (int)this);
     adc = adc_handle;
     pin = pin_;
     offset_ = offset;
