@@ -1,6 +1,5 @@
 #include "black_box.h"
 
-
 static QueueHandle_t queue = NULL;
 static File logFile = NULL;
 static void task(void *)

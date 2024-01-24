@@ -1,8 +1,6 @@
 #ifndef _LOGGING_
 #define _LOGGING_
 
-#pragma once
-
 enum LogLevel
 {
     LOG_INFO,

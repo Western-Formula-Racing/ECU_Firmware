@@ -11,27 +11,34 @@ Inverter::Inverter()
     FS_CAN0.subscribe_to_message(&internalStatesMessage);
 }
 
-void Inverter::setTorqueRequest(float torque){
-    if (state == DRIVE){
+void Inverter::setTorqueRequest(float torque)
+{
+    if (state == DRIVE)
+    {
         torqueRequest = torque;
     }
-    else{
+    else
+    {
         torqueRequest = 0;
     }
 }
 
-float Inverter::getTorqueRequest(){
+float Inverter::getTorqueRequest()
+{
     return torqueRequest;
 }
 
-void  Inverter::enableInverter(){
+void Inverter::enableInverter()
+{
     inverterEnable = 1.0f;
 }
 
-void Inverter::disableInverter(){
+void Inverter::disableInverter()
+{
     inverterEnable = 0.0f;
 }
 
-Inverter::INVERTER_STATE Inverter::getInverterState(){
+Inverter::INVERTER_STATE Inverter::getInverterState()
+{
     return static_cast<Inverter::INVERTER_STATE>(inverterState);
 }

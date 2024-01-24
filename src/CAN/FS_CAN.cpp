@@ -21,12 +21,11 @@ FS_CAN::FS_CAN(FlexCAN_T4_Base *canHandle)
     debugln("FS_CAN Constructor called");
     FS_CAN::can = canHandle;
     txCallBackCounter = 0;
-    TimerHandle_t txTimer = xTimerCreate("txTaskTimer", pdMS_TO_TICKS(1), pdTRUE, (void *)this, [](TimerHandle_t xTimer) {
-        static_cast<FS_CAN *>(pvTimerGetTimerID(xTimer))->txCallBack(); 
-    });
+    TimerHandle_t txTimer = xTimerCreate("txTaskTimer", pdMS_TO_TICKS(1), pdTRUE, (void *)this, [](TimerHandle_t xTimer)
+                                         { static_cast<FS_CAN *>(pvTimerGetTimerID(xTimer))->txCallBack(); });
     if (txTimer == NULL)
     {
-         debugln("failed to start CAN TxTimer\n");
+        debugln("failed to start CAN TxTimer\n");
     }
     else
     {
@@ -36,6 +35,7 @@ FS_CAN::FS_CAN(FlexCAN_T4_Base *canHandle)
         }
     }
 }
+
 void FS_CAN::CAN_Tx(CAN_MSG *msg)
 {
     CAN_message_t flex_msg; // message format for FlexCAN library
@@ -44,9 +44,8 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
     debugf("transmitting message ID: %d \n", msg->id);
     for (const auto &signal : msg->signals)
     {
-        debugf("signal: %f factor: %f, offset:%f \n", *signal->data ,signal->factor, signal->offset);
+        debugf("signal: %f factor: %f, offset:%f \n", *signal->data, signal->factor, signal->offset);
         can_setSignal<int16_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
-    
     }
     debugln("about to send message");
     can->write(flex_msg);
@@ -77,7 +76,7 @@ void FS_CAN::txCallBack()
     {
         for (const auto &msg : CAN_TX_100ms)
         {
-            CAN_Tx(msg);  
+            CAN_Tx(msg);
         }
     }
     if (txCallBackCounter % 1000 == 0)
@@ -89,6 +88,7 @@ void FS_CAN::txCallBack()
     }
     txCallBackCounter++;
 }
+
 uint8_t FS_CAN::reverseByte(uint8_t byte)
 {
     byte = (byte & 0xF0) >> 4 | (byte & 0x0F) << 4;
@@ -122,6 +122,7 @@ void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
         CAN_TX_1ms.push_back(msg);
     }
 }
+
 void FS_CAN::add_signal_to_message(CAN_MSG *msg, CAN_SIGNAL *signal)
 {
     //@todo probably wanna use this to check if a message is valid before adding it to message struct
@@ -151,7 +152,7 @@ void FS_CAN::CAN_RX_ISR(const CAN_message_t &msg)
             debugf("signal#%d\n", signalCount);
             float data = 0;
             data = can_getSignal<int16_t>(msg.buf, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
-            debugf("data: %.2f\n",data);
+            debugf("data: %.2f\n", data);
             *signal->data = data;
             signalCount++;
         }
