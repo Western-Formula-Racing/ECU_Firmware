@@ -1,20 +1,19 @@
 #include "main.h"
-
+#include "config/devices.h"
 #pragma GCC optimize("O0")
 
-static FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
-FS_CAN FS_CAN0(&Can0);
 time_t getTeensy3Time();
-Inverter inverter;
-BMS bms;
-
+// These guys ABSOLUTELY HAVE TO BE GLOBAL VARIABLES
+FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
+FS_CAN FS_CAN0(&Can0);
+// DO NOT TOUCH
 void can_sniff(const CAN_message_t &msg)
 {
     FS_CAN0.CAN_RX_ISR(msg);
 }
 
 void setup()
-{
+{  
     setSyncProvider(getTeensy3Time);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
@@ -27,6 +26,11 @@ void setup()
         Serial.println();
         Serial.flush();
     }
+    Serial.println("bruh");
+    
+
+    
+    Serial.println("can0 and FS_can created");
     Can0.begin();
     Can0.setBaudRate(500000);
     Can0.setMaxMB(64);
@@ -34,6 +38,8 @@ void setup()
     Can0.enableMBInterrupt(FIFO);
     Can0.enableFIFOInterrupt();
     Can0.onReceive(can_sniff);
+
+
 
     Serial.println(PSTR("\r\nBooting FreeRTOS kernel " tskKERNEL_VERSION_NUMBER ". Built by gcc " __VERSION__ " (newlib " _NEWLIB_VERSION ") on " __DATE__ ". ***\r\n"));
 
@@ -43,6 +49,7 @@ void setup()
     Serial.flush();
 
     vTaskStartScheduler();
+    Serial.println("scheduler returned");
 }
 
 time_t getTeensy3Time()

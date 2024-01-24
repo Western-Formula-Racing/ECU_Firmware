@@ -2,7 +2,6 @@
 #define _STATEMACHINE_
 
 #include <array>
-#include "interfaces/inverter.h"
 
 enum State { START, STARTUP_DELAY, PRECHARGE_ENABLE, DRIVE, PEDAL_IMPLAUSABILITY, PRECHARGE_ERROR, DEVICE_FAULT, LOW_SOC};
 typedef State (*state_function_t)(); // creating a type for state function pointers

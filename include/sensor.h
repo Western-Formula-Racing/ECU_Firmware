@@ -2,7 +2,7 @@
 #include "required_includes.h"
 #include <ADC.h>
 #include "lowPass.h"
-extern FS_CAN FS_CAN0;
+
 
 class Sensor
 {

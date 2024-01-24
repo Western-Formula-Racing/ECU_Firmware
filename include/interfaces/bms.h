@@ -6,7 +6,7 @@
 #include "required_includes.h"
 #include "state_machine.h"
 
-extern FS_CAN FS_CAN0;
+
 
 class BMS
 {
@@ -21,6 +21,9 @@ private:
     FS_CAN::CAN_SIGNAL packFlags2Signal{&packFaults2, 24, 16, false, 1.0f, 0};
     FS_CAN::CAN_MSG packFaultsMessage{1713, {&packFlags1Signal, &packFlags2Signal}};
 
+    FS_CAN::CAN_SIGNAL BMSFaultSignal{&BMSFault, 0,8, false, 1.0f,0};
+    FS_CAN::CAN_MSG VCUFaultMessage{500,{&BMSFaultSignal}};
+
 public:
     // BMS Status Variables:
     float packCurrent; // amps
@@ -30,6 +33,8 @@ public:
     // BMS Fault Variables:
     float packFaults1; // bitfield
     float packFaults2; // bitfield
+    
+    float BMSFault; 
 
     // public function declarations
     BMS();
