@@ -4,10 +4,4 @@
 #include "required_includes.h"
 #include "tasks.h"
 
-//objects and handles
-
-
-
-
-
 #endif

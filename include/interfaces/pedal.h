@@ -13,15 +13,15 @@ class Pedal
 
         float sensor1Position;
         float sensor2Position;
-        float sensorPlausability;
+        float sensorPlausibility;
 
-        FS_CAN::CAN_SIGNAL sensorPlausabilitySignal{&sensorPlausability, 0,8, false, 1.0f,0};
-        FS_CAN::CAN_MSG pedalInfoMessage{400,{&sensorPlausabilitySignal}};
+        FS_CAN::CAN_SIGNAL sensorPlausibilitySignal{&sensorPlausibility, 0,8, false, 1.0f,0};
+        FS_CAN::CAN_MSG pedalInfoMessage{400,{&sensorPlausibilitySignal}};
 
         Sensor *sensor1;
         Sensor *sensor2;
 
-        float plausabilityFault; // float so we can Make it a CAN signal
+        float plausibilityFault; // float so we can Make it a CAN signal
         
         float getPedalPosition();
         Pedal(Sensor *s1_p, Sensor *s2_p);

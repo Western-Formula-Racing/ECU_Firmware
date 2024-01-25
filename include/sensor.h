@@ -1,8 +1,9 @@
-#pragma once
-#include "required_includes.h"
-#include <ADC.h>
-#include "lowPass.h"
+#ifndef _SENSOR_
+#define _SENSOR_
 
+#include <ADC.h>
+#include "required_includes.h"
+#include "low_pass.h"
 
 class Sensor
 {
@@ -19,8 +20,9 @@ public:
     uint8_t pin;
     float value;
     int rawValue;
-    float filteredValue; 
+    float filteredValue;
 
     Sensor(ADC *adc_handle, uint8_t pin, float offset, float scale, uint8_t filter_order, float f0, float fs, bool adaptive);
     void read();
 };
+#endif

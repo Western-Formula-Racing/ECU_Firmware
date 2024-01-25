@@ -1,7 +1,9 @@
 #include "interfaces/bms.h"
 #include "config/devices.h"
+
 extern State state;
 extern FS_CAN FS_CAN0;
+
 BMS::BMS()
 {
     Serial.println("BMS constructor called");

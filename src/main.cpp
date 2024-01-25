@@ -13,7 +13,7 @@ void can_sniff(const CAN_message_t &msg)
 }
 
 void setup()
-{  
+{
     setSyncProvider(getTeensy3Time);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
@@ -27,9 +27,7 @@ void setup()
         Serial.flush();
     }
     Serial.println("bruh");
-    
 
-    
     Serial.println("can0 and FS_can created");
     Can0.begin();
     Can0.setBaudRate(500000);
@@ -38,8 +36,6 @@ void setup()
     Can0.enableMBInterrupt(FIFO);
     Can0.enableFIFOInterrupt();
     Can0.onReceive(can_sniff);
-
-
 
     Serial.println(PSTR("\r\nBooting FreeRTOS kernel " tskKERNEL_VERSION_NUMBER ". Built by gcc " __VERSION__ " (newlib " _NEWLIB_VERSION ") on " __DATE__ ". ***\r\n"));
 

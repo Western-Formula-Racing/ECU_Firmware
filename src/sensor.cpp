@@ -2,7 +2,7 @@
 
 Sensor::Sensor(ADC *adc_handle, uint8_t pin_, float offset, float scale, uint8_t filter_order, float f0, float fs, bool adaptive)
 {
-    Serial.printf("sensor %d with address:%#010x innited\n",pin, (int)this);
+    Serial.printf("sensor %d with address:%#010x initalized\n", pin, (int)this);
     adc = adc_handle;
     pin = pin_;
     offset_ = offset;
@@ -10,11 +10,10 @@ Sensor::Sensor(ADC *adc_handle, uint8_t pin_, float offset, float scale, uint8_t
     filter = LowPass{filter_order, f0, fs, adaptive};
 }
 
-
 void Sensor::read()
 {
     rawValue = adc->analogRead(pin);
-    float voltage = (rawValue / pow(2,ADC_RES)) * VREF;
+    float voltage = (rawValue / pow(2, ADC_RES)) * VREF;
     value = (voltage * scale_) + offset_;
     filteredValue = filter.filt(value);
 }
