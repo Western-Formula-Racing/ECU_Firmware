@@ -26,7 +26,8 @@ void task1(void *) // mostly just a task for testing
     while (true)
     {
         digitalWriteFast(LED_BUILTIN, HIGH);
-        vTaskDelay(pdMS_TO_TICKS(50));
+        PDM::setPin(HSDIN1, true);
+        vTaskDelay(pdMS_TO_TICKS(1000));
         // BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}, requested torque: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque, inverter.getTorqueRequest()).c_str());
         // BlackBox::log(LOG_INFO, std::format("inverter state: {}, run mode {:.1f} enable state {:.1f}", static_cast<int> (inverter.getInverterState()), inverter.runMode, inverter.enableState).c_str());
         int i = 0;
@@ -45,7 +46,8 @@ void task1(void *) // mostly just a task for testing
         float pedalPos = Devices::Get().GetPedal().getPedalPosition();
         Serial.printf("pedal postion: %f\n", pedalPos);
         Serial.printf("sensor1: %f sensor2: %f\n", Devices::Get().GetPedal().sensor1Position, Devices::Get().GetPedal().sensor2Position);
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        PDM::setPin(12, HIGH);
         digitalWriteFast(LED_BUILTIN, LOW);
     }
 }

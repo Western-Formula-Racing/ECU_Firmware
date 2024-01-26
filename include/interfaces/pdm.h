@@ -9,7 +9,7 @@ enum PDM_PINS
     HSDIN6 = 5,
     HSDIN5 = 7,
     HSDIN4 = 8,
-    HSDIN2 = 2,
+    HSDIN2 = 28,
     HSDIN7 = 4,
     HSDIN8 = 2,
     HSDIN1 = 32,
