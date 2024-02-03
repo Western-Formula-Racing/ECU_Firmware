@@ -6,6 +6,7 @@
 #include "interfaces/pedal.h"
 #include "interfaces/bms.h"
 #include "interfaces/inverter.h"
+#include "interfaces/pdm.h"
 
 class Devices
 {
@@ -31,6 +32,9 @@ public:
     {
         return pedal;
     }
+    PDM &GetPDM(){
+        return pdm;
+    }
     std::array<Sensor *, 2> &GetSensors()
     {
         return sensors;
@@ -50,6 +54,7 @@ private:
     Sensor sense1;
     Sensor sense2;
     Pedal pedal;
+    PDM pdm;
     std::array<Sensor *, 2> sensors;
 
 private:

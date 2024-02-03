@@ -44,12 +44,10 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
     debugf("transmitting message ID: %d \n", msg->id);
     for (const auto &signal : msg->signals)
     {
-        debugf("signal: %f factor: %f, offset:%f \n", *signal->data, signal->factor, signal->offset);
+        debugf("signal: %f, address:%#08x factor: %f, offset:%f \n", *signal->data, signal->data,signal->factor, signal->offset);
         can_setSignal<int16_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
     }
-    debugln("about to send message");
     can->write(flex_msg);
-    debugln("message sent");
 }
 
 void FS_CAN::txCallBack()

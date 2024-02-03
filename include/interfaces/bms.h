@@ -18,7 +18,7 @@ private:
     FS_CAN::CAN_MSG packFaultsMessage{1713, {&packFlags1Signal, &packFlags2Signal}};
 
     FS_CAN::CAN_SIGNAL BMSFaultSignal{&BMSFault, 0, 8, false, 1.0f, 0};
-    FS_CAN::CAN_MSG VCUFaultMessage{500, {&BMSFaultSignal}};
+    FS_CAN::CAN_MSG BMSFaultMessage{500, {&BMSFaultSignal}};
 
 public:
     // BMS Status Variables:
