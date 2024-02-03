@@ -54,13 +54,13 @@ private:
     Sensor sense1;
     Sensor sense2;
     Pedal pedal;
-    PDM pdm;
     std::array<Sensor *, 2> sensors;
-
+    PDM pdm;
 private:
     Devices()
         : inverter(), bms(), adc(), sense1(&adc, A0, 0, 1, 2, 2, 1e3, true),
-          sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), pedal(&sense1, &sense2), sensors({&sense1, &sense2})
+          sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), pedal(&sense1, &sense2), sensors({&sense1, &sense2}),
+          pdm()
     {
         Serial.println("Devices:Devices() constructor called");
     }

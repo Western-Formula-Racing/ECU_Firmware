@@ -1,6 +1,6 @@
 #include "interfaces/pdm.h"
 extern FS_CAN FS_CAN0;
-void PDM::begin()
+PDM::PDM()
 {
     pinMode(HSDIN6, OUTPUT);
     pinMode(HSDIN5, OUTPUT);
@@ -24,9 +24,9 @@ void PDM::begin()
     FS_CAN0.publish_CAN_msg(&pdmInfo, FS_CAN::THOUSAND_MS);
 }
 
-void PDM::setPin(PDM_PINS pin, bool state)
+void PDM::setPin(PDM_PINS pin, int state)
 {
-    pinState[hsdMap[pin]] = state;
-    //Serial.printf("pin %d state: %d\n", pin, state);
+    pinState[hsdMap[pin]] = static_cast<float>(state);
+    Serial.printf(">pin%d_state:%f\n", pin, pinState[hsdMap[pin]]);
     digitalWrite(pin, state);    
 }

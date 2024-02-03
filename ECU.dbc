@@ -223,13 +223,13 @@ BO_ 2000 VCU_PedalInfo: 8 VCU
  SG_ pedalPosition : 8|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2001 VCU_pdmInfo: 8 VCU
- SG_ HSD1State : 56|1@0+ (1,0) [0|1] "" Vector__XXX
- SG_ HSD2State : 57|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ HSD3State : 58|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ HSD4State : 59|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ HSD5State : 60|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ HSD6State : 61|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ HSD7State : 62|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ HSD1State : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD2State : 1|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ HSD3State : 2|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ HSD4State : 3|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ HSD5State : 4|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ HSD6State : 5|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ HSD7State : 6|1@1+ (1,0) [0|0] "" Vector__XXX
 
 
 CM_ SG_ 173 INV_Iq_Command "The commanded Q-axis current";
@@ -380,3 +380,9 @@ VAL_ 170 INV_Limit_Stall_Burst_Model 0 "Not Limiting" 1 "Limiting" ;
 VAL_ 170 INV_Burst_Model_Mode 0 "Stall" 1 "High Speed" ;
 VAL_ 2000 sensorPlausibility 0 "OK" 1 "Plausability Fault" ;
 VAL_ 2001 HSD1State 0 "OFF" 1 "ON" ;
+VAL_ 2001 HSD2State 0 "OFF" 1 "ON" ;
+VAL_ 2001 HSD3State 0 "OFF" 1 "ON" ;
+VAL_ 2001 HSD4State 0 "OFF" 1 "ON" ;
+VAL_ 2001 HSD5State 0 "OFF" 1 "ON" ;
+VAL_ 2001 HSD6State 0 "OFF" 1 "ON" ;
+VAL_ 2001 HSD7State 0 "OFF" 1 "ON" ;

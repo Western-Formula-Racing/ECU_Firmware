@@ -102,7 +102,7 @@ void FS_CAN::subscribe_to_message(CAN_MSG *msg)
 }
 void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
 {
-    debugf("message with ID %d published at address\n ", msg->id);
+    Serial.printf("message with ID %d published at address\n ", msg->id);
     if (frequency == THOUSAND_MS)
     {
         CAN_TX_1000ms.push_back(msg);
