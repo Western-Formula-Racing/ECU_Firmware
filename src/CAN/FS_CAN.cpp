@@ -44,12 +44,10 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
     debugf("transmitting message ID: %d \n", msg->id);
     for (const auto &signal : msg->signals)
     {
-        debugf("signal: %f factor: %f, offset:%f \n", *signal->data, signal->factor, signal->offset);
+        debugf("signal: %f, address:%#08x factor: %f, offset:%f \n", *signal->data, signal->data,signal->factor, signal->offset);
         can_setSignal<int16_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
     }
-    debugln("about to send message");
     can->write(flex_msg);
-    debugln("message sent");
 }
 
 void FS_CAN::txCallBack()
@@ -104,7 +102,7 @@ void FS_CAN::subscribe_to_message(CAN_MSG *msg)
 }
 void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
 {
-    debugf("message with ID %d published at address\n ", msg->id);
+    Serial.printf("message with ID %d published at address\n ", msg->id);
     if (frequency == THOUSAND_MS)
     {
         CAN_TX_1000ms.push_back(msg);

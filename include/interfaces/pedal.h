@@ -6,6 +6,17 @@ class Pedal
 {
     private:
         float pedalPostion;
+        FS_CAN::CAN_SIGNAL sensorPlausibilitySignal{&plausibilityFault, 0,1, true, 1.0f,0};
+        FS_CAN::CAN_SIGNAL sensor1PositionSignal{&sensor1Position, 24,8, true, 0.01f,0};
+        FS_CAN::CAN_SIGNAL sensor2PositionSignal{&sensor2Position, 16,8, true, 0.01f,0};
+        FS_CAN::CAN_SIGNAL pedalPositionSignal{&pedalPostion, 8,8, true, 0.01f,0};
+        FS_CAN::CAN_MSG pedalInfoMessage{2000,
+        {
+        &sensorPlausibilitySignal, 
+        &sensor1PositionSignal,
+        &sensor2PositionSignal,
+        &pedalPositionSignal
+        }};
 
     public:
         uint8_t pin1 = A0; //If this is wrong yell at faris
@@ -13,10 +24,8 @@ class Pedal
 
         float sensor1Position;
         float sensor2Position;
-        float sensorPlausibility;
 
-        FS_CAN::CAN_SIGNAL sensorPlausibilitySignal{&sensorPlausibility, 0,8, false, 1.0f,0};
-        FS_CAN::CAN_MSG pedalInfoMessage{400,{&sensorPlausibilitySignal}};
+        
 
         Sensor *sensor1;
         Sensor *sensor2;

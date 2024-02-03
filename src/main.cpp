@@ -1,7 +1,7 @@
 #include "main.h"
 #include "config/devices.h"
 #pragma GCC optimize("O0")
-
+#define debug 1
 time_t getTeensy3Time();
 // These guys ABSOLUTELY HAVE TO BE GLOBAL VARIABLES
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
@@ -14,6 +14,8 @@ void can_sniff(const CAN_message_t &msg)
 
 void setup()
 {
+    
+    
     setSyncProvider(getTeensy3Time);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
