@@ -21,17 +21,18 @@ class Pedal
     public:
         uint8_t pin1 = A0; //If this is wrong yell at faris
         uint8_t pin2 = A16;
-
+        uint8_t pin3 = A7;
         float sensor1Position;
         float sensor2Position;
-
+        float sensor3Position;
         
 
         Sensor *sensor1;
         Sensor *sensor2;
-
+        Sensor *sensor3;
         float plausibilityFault; // float so we can Make it a CAN signal
         
         float getPedalPosition();
-        Pedal(Sensor *s1_p, Sensor *s2_p);
+        float getFrontBreakPressure();
+        Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p);
 };

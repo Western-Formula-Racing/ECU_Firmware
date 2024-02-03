@@ -9,6 +9,7 @@ extern const float APPS1_MAX_VOLTAGE;
 extern const float APPS2_MIN_VOLTAGE;
 extern const float APPS2_MAX_VOLTAGE;
 extern const float APPS_PLAUSIBILITY_THRESHOLD;
+extern const float BRAKE_THRESHOLD;
 extern std::array<std::array<int,10>,10> torqueMap;
 
 #endif

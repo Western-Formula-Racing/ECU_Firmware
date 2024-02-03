@@ -3,11 +3,12 @@
 
 extern FS_CAN FS_CAN0;
 
-Pedal::Pedal(Sensor *s1_p, Sensor *s2_p)
+Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p)
 {
     Serial.println("pedal constructor called");
     sensor1 = s1_p;
     sensor2 = s2_p;
+    sensor3 = s3_p;
     FS_CAN0.publish_CAN_msg(&pedalInfoMessage, FS_CAN::TEN_MS);
 }
 
@@ -29,4 +30,8 @@ float Pedal::getPedalPosition()
     }
     pedalPostion = value;
     return value;
+}
+
+float Pedal::getFrontBreakPressure(){
+    return sensor3->filteredValue;
 }

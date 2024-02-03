@@ -36,7 +36,7 @@ public:
     PDM &GetPDM(){
         return pdm;
     }
-    std::array<Sensor *, 2> &GetSensors()
+    std::array<Sensor *, 3> &GetSensors()
     {
         return sensors;
     }
@@ -60,14 +60,15 @@ private:
     ADC adc;
     Sensor sense1;
     Sensor sense2;
+    Sensor sense3;
     DigitalSensor rtdButton;
     Pedal pedal;
-    std::array<Sensor *, 2> sensors;
+    std::array<Sensor *, 3> sensors;
     PDM pdm;
 private:
     Devices()
         : inverter(), bms(), adc(), sense1(&adc, A0, 0, 1, 2, 2, 1e3, true),
-          sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), rtdButton(&adc,36), pedal(&sense1, &sense2), sensors({&sense1, &sense2}),
+          sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), sense3(&adc, A7, 0, 1, 2, 2, 1e3, true),rtdButton(&adc,36), pedal(&sense1, &sense2, &sense3), sensors({&sense1, &sense2, &sense3}),
           pdm()
     {
         Serial.println("Devices:Devices() constructor called");
