@@ -10,3 +10,16 @@ const float APPS1_MAX_VOLTAGE = 5.05;
 const float APPS2_MIN_VOLTAGE = 5.05;
 const float APPS2_MAX_VOLTAGE = 0.01;
 const float APPS_PLAUSIBILITY_THRESHOLD = 0.1;
+std::array<std::array<int,10>,10> torqueMap{{
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+
+}};

@@ -26,7 +26,6 @@ void task1(void *) // mostly just a task for testing
     while (true)
     {
         digitalWriteFast(LED_BUILTIN, HIGH);
-        vTaskDelay(pdMS_TO_TICKS(100));
         // BlackBox::log(LOG_INFO, std::format("DCBus: {:.1f} TorqueCmd: {:.1f}, requested torque: {:.1f}", inverter.dcBusVoltage, inverter.commandedTorque, inverter.getTorqueRequest()).c_str());
         // BlackBox::log(LOG_INFO, std::format("inverter state: {}, run mode {:.1f} enable state {:.1f}", static_cast<int> (inverter.getInverterState()), inverter.runMode, inverter.enableState).c_str());
         int i = 0;
@@ -43,10 +42,13 @@ void task1(void *) // mostly just a task for testing
             // Serial.println();
             i++;
         }
+
+        Devices::Get().GetRTDButton().read();
         float pedalPos = Devices::Get().GetPedal().getPedalPosition();
         Serial.printf(">pedal_postion:%f\n", pedalPos);
         Serial.printf(">sensor1:%f\n>sensor2:%f\n", Devices::Get().GetPedal().sensor1Position, Devices::Get().GetPedal().sensor2Position);
-        vTaskDelay(pdMS_TO_TICKS(100));
+        Serial.printf(">RTDButton:%f\n", Devices::Get().GetRTDButton().filteredValue);
+        vTaskDelay(pdMS_TO_TICKS(10));
         Devices::Get().GetPDM().setPin(HSDIN1, HIGH);
         digitalWriteFast(LED_BUILTIN, LOW);
     }
@@ -61,7 +63,7 @@ void VCU_stateMachine(void *)
     while (true)
     {
         state = states[state]();
-        BlackBox::log(LOG_INFO, std::format("currentState: {}", static_cast<int>(state)).c_str());
+        //BlackBox::log(LOG_INFO, std::format("currentState: {}", static_cast<int>(state)).c_str());
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
