@@ -58,6 +58,7 @@ void task1(void *) // mostly just a task for testing
         rtdButton = static_cast<float>(Devices::Get().GetRTDButton().value);
         Serial.printf(">brake:%f\n", Devices::Get().GetPedal().getFrontBreakPressure());
         Serial.printf(">state:%d\n", static_cast<int>(state));
+        Serial.printf(">torqueRequest:%f\n", Devices::Get().GetInverter().getTorqueRequest());
         vTaskDelay(pdMS_TO_TICKS(10));
         Devices::Get().GetPDM().setPin(HSDIN1, HIGH);
         digitalWriteFast(LED_BUILTIN, LOW);
