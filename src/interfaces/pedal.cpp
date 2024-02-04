@@ -1,7 +1,7 @@
 #include "interfaces/pedal.h"
 #include "config/devices.h"
 
-extern FS_CAN FS_CAN0;
+extern FS_CAN dataCAN;
 
 Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p, Sensor *s4_p)
 {
@@ -10,7 +10,7 @@ Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p, Sensor *s4_p)
     sensor2 = s2_p;
     sensor3 = s3_p;
     sensor4 = s4_p;
-    FS_CAN0.publish_CAN_msg(&pedalInfoMessage, FS_CAN::TEN_MS);
+    dataCAN.publish_CAN_msg(&pedalInfoMessage, FS_CAN::TEN_MS);
 }
 
 float Pedal::getPedalPosition()

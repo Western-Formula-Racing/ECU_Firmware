@@ -1,5 +1,5 @@
 #include "CAN/FS_CAN.h"
-#define SERIAL_PRINT 0
+#define SERIAL_PRINT 1
 #if SERIAL_PRINT == 1
 #define debug(x) \
     if (Serial)  \

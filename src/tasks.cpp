@@ -4,7 +4,7 @@ extern State state;
 extern std::array<state_function_t, 8> states;
 float stateS;
 float rtdButton;
-extern FS_CAN FS_CAN0;
+extern FS_CAN dataCAN;
 FS_CAN::CAN_SIGNAL stateSignal{&stateS,8,8,true,1,0};
 FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton,0,1,true,1,0};
 FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal,&rtdButtonSignal}};
@@ -21,7 +21,7 @@ void setup_task(void *)
             ;
         Serial.printf("my god this sh borked\n");
     }
-    FS_CAN0.publish_CAN_msg(&VCU_StateInfo, FS_CAN::TEN_MS);
+    dataCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::TEN_MS);
     xTaskCreate(task1, "task1", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     vTaskDelete(nullptr);
