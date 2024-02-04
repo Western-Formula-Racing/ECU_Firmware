@@ -8,7 +8,6 @@ std::array<state_function_t, 8> states = {
     handle_startup_delay,
     handle_precharge_enable,
     handle_drive,
-    handle_pedal_implausibility,
     handle_precharge_error,
     handle_device_fault,
     handle_low_soc,
@@ -61,12 +60,10 @@ State handle_drive()
     Devices::Get().GetInverter().setTorqueRequest(Devices::Get().GetPedal().getPedalPosition() * 200);
     return DRIVE;
 }
-State handle_pedal_implausibility()
-{
-    return START;
-}
 State handle_precharge_error()
 {
+    BlackBox::log(LOG_ERROR, "precharge error");
+    vTaskDelay(pdMS_TO_TICKS(1000));
     return PRECHARGE_ERROR;
 }
 State handle_device_fault()

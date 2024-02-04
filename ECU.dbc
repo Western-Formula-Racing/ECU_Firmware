@@ -234,7 +234,7 @@ BO_ 2001 VCU_pdmInfo: 8 VCU
  SG_ HSD7State : 6|1@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2002 VCU_State_Info: 8 VCU
- SG_ State : 8|8@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ State : 8|8@1+ (1,0) [0|6] "" Vector__XXX
  SG_ RTD_Button : 0|1@1+ (1,0) [0|1] "" Vector__XXX
 
 
@@ -393,4 +393,4 @@ VAL_ 2001 HSD4State 0 "OFF" 1 "ON" ;
 VAL_ 2001 HSD5State 0 "OFF" 1 "ON" ;
 VAL_ 2001 HSD6State 0 "OFF" 1 "ON" ;
 VAL_ 2001 HSD7State 0 "OFF" 1 "ON" ;
-VAL_ 2002 State 0 "START" 1 "STARTUP_DELAY" 2 "PRECHARGE_ENABLE" 3 "DRIVE" 5 "PRECHARGE_ERROR" ;
+VAL_ 2002 State 0 "START" 1 "STARTUP_DELAY" 2 "PRECHARGE_ENABLE" 3 "DRIVE" 4 "PRECHARGE_ERROR" 5 "DEVICE FAULT" 6 "LOW_SOC" ;
