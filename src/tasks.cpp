@@ -55,6 +55,7 @@ void task1(void *) // mostly just a task for testing
         Serial.printf(">pedal_postion:%f\n", pedalPos);
         Serial.printf(">sensor1:%f\n>sensor2:%f\n", Devices::Get().GetPedal().appsSensor1Position, Devices::Get().GetPedal().appsSensor2Position);
         Serial.printf(">RTDButton:%f\n", Devices::Get().GetRTDButton().value);
+        rtdButton = static_cast<float>(Devices::Get().GetRTDButton().value);
         Serial.printf(">brake:%f\n", Devices::Get().GetPedal().getFrontBreakPressure());
         Serial.printf(">state:%d\n", static_cast<int>(state));
         vTaskDelay(pdMS_TO_TICKS(10));

@@ -218,11 +218,11 @@ BO_ 1714 MSGID_0X6B2: 4 BMS
 
 BO_ 2000 VCU_PedalInfo: 8 VCU
  SG_ sensorPlausibility : 0|1@1+ (1,0) [2|1] "" Vector__XXX
- SG_ sensor1Position : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ sensor2Position : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ pedalPosition : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ brakePressure1Signal : 32|8@1+ (0.01,0) [0|500] "" Vector__XXX
- SG_ brakePressure2Signal : 40|8@1+ (0.01,0) [0|500] "" Vector__XXX
+ SG_ sensor1Position : 16|8@1+ (1,0) [0|100] "" Vector__XXX
+ SG_ sensor2Position : 24|8@1+ (1,0) [0|100] "" Vector__XXX
+ SG_ pedalPosition : 8|8@1+ (1,0) [0|100] "" Vector__XXX
+ SG_ brakePressure1Signal : 32|16@1+ (0.01,0) [0|5] "" Vector__XXX
+ SG_ brakePressure2Signal : 48|16@1+ (0.01,0) [0|5] "" Vector__XXX
 
 BO_ 2001 VCU_pdmInfo: 8 VCU
  SG_ HSD1State : 0|1@1+ (1,0) [0|1] "" Vector__XXX
