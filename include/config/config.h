@@ -10,6 +10,9 @@ extern const float APPS2_MIN_VOLTAGE;
 extern const float APPS2_MAX_VOLTAGE;
 extern const float APPS_PLAUSIBILITY_THRESHOLD;
 extern const float BRAKE_THRESHOLD;
+extern const int RTD_TIMER;
+extern const int PRECHARGE_TIMEOUT;
+extern const int MIN_PRECHARGE_VOLTAGE;
 extern std::array<std::array<int,10>,10> torqueMap;
 
 #endif

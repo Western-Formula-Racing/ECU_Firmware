@@ -221,6 +221,8 @@ BO_ 2000 VCU_PedalInfo: 8 VCU
  SG_ sensor1Position : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sensor2Position : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ pedalPosition : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ brakePressure1Signal : 32|8@1+ (0.01,0) [0|500] "" Vector__XXX
+ SG_ brakePressure2Signal : 40|8@1+ (0.01,0) [0|500] "" Vector__XXX
 
 BO_ 2001 VCU_pdmInfo: 8 VCU
  SG_ HSD1State : 0|1@1+ (1,0) [0|1] "" Vector__XXX
@@ -230,6 +232,10 @@ BO_ 2001 VCU_pdmInfo: 8 VCU
  SG_ HSD5State : 4|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ HSD6State : 5|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ HSD7State : 6|1@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2002 VCU_State_Info: 8 VCU
+ SG_ State : 8|8@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ RTD_Button : 0|1@1+ (1,0) [0|1] "" Vector__XXX
 
 
 CM_ SG_ 173 INV_Iq_Command "The commanded Q-axis current";
@@ -349,6 +355,7 @@ CM_ BO_ 1713 "This ID Transmits at 104 ms.";
 CM_ BO_ 2000 "Contains Pedal Info";
 CM_ SG_ 2000 sensorPlausibility "";
 CM_ SG_ 2000 pedalPosition "";
+CM_ SG_ 2002 State "";
 BA_DEF_ BO_  "GenMsgCycleTime" INT 0 100000;
 BA_DEF_  "BusType" STRING ;
 BA_DEF_DEF_  "GenMsgCycleTime" 0;
@@ -386,3 +393,4 @@ VAL_ 2001 HSD4State 0 "OFF" 1 "ON" ;
 VAL_ 2001 HSD5State 0 "OFF" 1 "ON" ;
 VAL_ 2001 HSD6State 0 "OFF" 1 "ON" ;
 VAL_ 2001 HSD7State 0 "OFF" 1 "ON" ;
+VAL_ 2002 State 0 "START" 1 "STARTUP_DELAY" 2 "PRECHARGE_ENABLE" 3 "DRIVE" 5 "PRECHARGE_ERROR" ;

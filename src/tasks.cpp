@@ -2,6 +2,12 @@
 #include "config/devices.h"
 extern State state;
 extern std::array<state_function_t, 8> states;
+float stateS;
+float rtdButton;
+extern FS_CAN FS_CAN0;
+FS_CAN::CAN_SIGNAL stateSignal{&stateS,8,8,true,1,0};
+FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton,0,1,true,1,0};
+FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal,&rtdButtonSignal}};
 
 void setup_task(void *)
 {
@@ -15,6 +21,7 @@ void setup_task(void *)
             ;
         Serial.printf("my god this sh borked\n");
     }
+    FS_CAN0.publish_CAN_msg(&VCU_StateInfo, FS_CAN::TEN_MS);
     xTaskCreate(task1, "task1", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     vTaskDelete(nullptr);
@@ -31,7 +38,7 @@ void task1(void *) // mostly just a task for testing
         int i = 0;
         for (auto *sensor : Devices::Get().GetSensors())
         {
-            
+
             sensor->read();
             // Serial.printf("sensor %d\n", i);
             // Serial.print(sensor->rawValue);
@@ -46,9 +53,10 @@ void task1(void *) // mostly just a task for testing
         Devices::Get().GetRTDButton().read();
         float pedalPos = Devices::Get().GetPedal().getPedalPosition();
         Serial.printf(">pedal_postion:%f\n", pedalPos);
-        Serial.printf(">sensor1:%f\n>sensor2:%f\n", Devices::Get().GetPedal().sensor1Position, Devices::Get().GetPedal().sensor2Position);
-        Serial.printf(">RTDButton:%f\n", Devices::Get().GetRTDButton().filteredValue);
+        Serial.printf(">sensor1:%f\n>sensor2:%f\n", Devices::Get().GetPedal().appsSensor1Position, Devices::Get().GetPedal().appsSensor2Position);
+        Serial.printf(">RTDButton:%f\n", Devices::Get().GetRTDButton().value);
         Serial.printf(">brake:%f\n", Devices::Get().GetPedal().getFrontBreakPressure());
+        Serial.printf(">state:%d\n", static_cast<int>(state));
         vTaskDelay(pdMS_TO_TICKS(10));
         Devices::Get().GetPDM().setPin(HSDIN1, HIGH);
         digitalWriteFast(LED_BUILTIN, LOW);
@@ -62,9 +70,10 @@ void VCU_stateMachine(void *)
 {
     state = START;
     while (true)
-    {
+    {   
+        stateS = static_cast<float>(state);
         state = states[state]();
-        //BlackBox::log(LOG_INFO, std::format("currentState: {}", static_cast<int>(state)).c_str());
+        // BlackBox::log(LOG_INFO, std::format("currentState: {}", static_cast<int>(state)).c_str());
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }

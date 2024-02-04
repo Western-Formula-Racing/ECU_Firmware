@@ -61,6 +61,7 @@ private:
     Sensor sense1;
     Sensor sense2;
     Sensor sense3;
+    Sensor sense4;
     DigitalSensor rtdButton;
     Pedal pedal;
     std::array<Sensor *, 3> sensors;
@@ -68,7 +69,8 @@ private:
 private:
     Devices()
         : inverter(), bms(), adc(), sense1(&adc, A0, 0, 1, 2, 2, 1e3, true),
-          sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), sense3(&adc, A7, 0, 1, 2, 2, 1e3, true),rtdButton(&adc,36), pedal(&sense1, &sense2, &sense3), sensors({&sense1, &sense2, &sense3}),
+          sense2(&adc, A16, 0, 1, 2, 2, 1e3, true), sense3(&adc, A7, 0, 1, 2, 2, 1e3, true), sense4(&adc, A7, 0, 1, 2, 2, 1e3, true),
+          rtdButton(&adc,36), pedal(&sense1, &sense2, &sense3, &sense4), sensors({&sense1, &sense2, &sense3}),
           pdm()
     {
         Serial.println("Devices:Devices() constructor called");
