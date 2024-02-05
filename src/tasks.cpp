@@ -59,6 +59,8 @@ void task1(void *) // mostly just a task for testing
         Serial.printf(">brake:%f\n", Devices::Get().GetPedal().getFrontBreakPressure());
         Serial.printf(">state:%d\n", static_cast<int>(state));
         Serial.printf(">torqueRequest:%f\n", Devices::Get().GetInverter().getTorqueRequest());
+        Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
+        Serial.printf(">inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
         vTaskDelay(pdMS_TO_TICKS(10));
         Devices::Get().GetPDM().setPin(HSDIN1, HIGH);
         digitalWriteFast(LED_BUILTIN, LOW);
@@ -76,6 +78,6 @@ void VCU_stateMachine(void *)
         stateS = static_cast<float>(state);
         state = states[state]();
         // BlackBox::log(LOG_INFO, std::format("currentState: {}", static_cast<int>(state)).c_str());
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
