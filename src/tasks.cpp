@@ -61,7 +61,8 @@ void task1(void *) // mostly just a task for testing
         Serial.printf(">torqueRequest:%f\n", Devices::Get().GetInverter().getTorqueRequest());
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
         Serial.printf(">inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
-        vTaskDelay(pdMS_TO_TICKS(10));
+        Serial.printf(">precharge thresh:%f\n",Devices::Get().GetBMS().packVoltage*0.95);
+        vTaskDelay(pdMS_TO_TICKS(100));
         Devices::Get().GetPDM().setPin(HSDIN1, HIGH);
         digitalWriteFast(LED_BUILTIN, LOW);
     }

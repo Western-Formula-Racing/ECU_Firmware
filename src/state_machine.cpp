@@ -46,10 +46,10 @@ State handle_precharge_enable()
     State nextState = PRECHARGE_ERROR;
     //@todo turn on precharge-enable lol
     int currentTime = millis();
-    if (Devices::Get().GetInverter().dcBusVoltage < Devices::Get().GetBMS().packVoltage and (currentTime-startTime) < PRECHARGE_TIMEOUT){
+    if (Devices::Get().GetInverter().dcBusVoltage < Devices::Get().GetBMS().packVoltage*0.95 and (currentTime-startTime) < PRECHARGE_TIMEOUT){
         nextState = PRECHARGE_ENABLE;
     }
-    else if(Devices::Get().GetInverter().dcBusVoltage >= Devices::Get().GetBMS().packVoltage and (currentTime-startTime) < PRECHARGE_TIMEOUT){
+    else if(Devices::Get().GetInverter().dcBusVoltage >= (Devices::Get().GetBMS().packVoltage*0.95) and (currentTime-startTime) < PRECHARGE_TIMEOUT){
         nextState = DRIVE;
     }
     return nextState;
