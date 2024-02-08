@@ -127,10 +127,7 @@ void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
     }
 }
 
-void FS_CAN::add_signal_to_message(CAN_MSG *msg, CAN_SIGNAL *signal)
-{
-    //@todo probably wanna use this to check if a message is valid before adding it to message struct
-}
+
 
 void FS_CAN::CAN_RX_ISR(const CAN_message_t &msg)
 {
