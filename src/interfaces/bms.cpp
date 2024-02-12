@@ -2,14 +2,14 @@
 #include "config/devices.h"
 
 extern State state;
-extern FS_CAN FS_CAN0;
+extern FS_CAN dataCAN;
 
 BMS::BMS()
 {
     Serial.println("BMS constructor called");
-    FS_CAN0.subscribe_to_message(&packStateMessage);
-    FS_CAN0.subscribe_to_message(&packFaultsMessage);
-    FS_CAN0.publish_CAN_msg(&BMSFaultMessage, FS_CAN::THOUSAND_MS);
+    dataCAN.subscribe_to_message(&packStateMessage);
+    dataCAN.subscribe_to_message(&packFaultsMessage);
+    dataCAN.publish_CAN_msg(&BMSFaultMessage, FS_CAN::THOUSAND_MS);
 }
 
 bool BMS::hasFault()

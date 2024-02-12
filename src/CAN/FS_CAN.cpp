@@ -18,7 +18,10 @@
 
 FS_CAN::FS_CAN(FlexCAN_T4_Base *canHandle)
 {
-    debugln("FS_CAN Constructor called");
+    #if SERIAL_PRINT == 1
+    while(!Serial);
+    #endif
+    debugf("FS_CAN Constructor called, address:%#010x\n", this);
     FS_CAN::can = canHandle;
     txCallBackCounter = 0;
     TimerHandle_t txTimer = xTimerCreate("txTaskTimer", pdMS_TO_TICKS(1), pdTRUE, (void *)this, [](TimerHandle_t xTimer)
@@ -98,7 +101,10 @@ uint8_t FS_CAN::reverseByte(uint8_t byte)
 void FS_CAN::subscribe_to_message(CAN_MSG *msg)
 {
     CAN_msg_lookup[msg->id] = msg;
-    // debugf("Subcribed to ID: %d with a Signal from %d to %d \n", msg->id);
+    Serial.printf("Subcribed to ID: %d\n", msg->id);
+    for (auto& [key,value]: CAN_msg_lookup){
+        Serial.printf("message ID:%d in lookup: %d\n", key, value->id);
+    }
 }
 void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
 {
@@ -121,10 +127,7 @@ void FS_CAN::publish_CAN_msg(CAN_MSG *msg, CAN_TX_FREQUENCY frequency)
     }
 }
 
-void FS_CAN::add_signal_to_message(CAN_MSG *msg, CAN_SIGNAL *signal)
-{
-    //@todo probably wanna use this to check if a message is valid before adding it to message struct
-}
+
 
 void FS_CAN::CAN_RX_ISR(const CAN_message_t &msg)
 {

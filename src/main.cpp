@@ -4,18 +4,23 @@
 #define debug 1
 time_t getTeensy3Time();
 // These guys ABSOLUTELY HAVE TO BE GLOBAL VARIABLES
-FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can0;
-FS_CAN FS_CAN0(&Can0);
+FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> Can2;
+FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> Can1;
+FS_CAN dataCAN(&Can2);
+FS_CAN controlCAN(&Can1);
 // DO NOT TOUCH
-void can_sniff(const CAN_message_t &msg)
+void dataCan_sniff(const CAN_message_t &msg)
 {
-    FS_CAN0.CAN_RX_ISR(msg);
+    dataCAN.CAN_RX_ISR(msg);
+}
+void controlCan_sniff(const CAN_message_t &msg)
+{
+    controlCAN.CAN_RX_ISR(msg);
 }
 
 void setup()
 {
-    
-    
+
     setSyncProvider(getTeensy3Time);
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWriteFast(LED_BUILTIN, HIGH);
@@ -30,14 +35,23 @@ void setup()
     }
     Serial.println("bruh");
 
-    Serial.println("can0 and FS_can created");
-    Can0.begin();
-    Can0.setBaudRate(500000);
-    Can0.setMaxMB(64);
-    Can0.enableFIFO();
-    Can0.enableMBInterrupt(FIFO);
-    Can0.enableFIFOInterrupt();
-    Can0.onReceive(can_sniff);
+    Serial.println("can2 and dataCAN created");
+    Can2.begin();
+    Can2.setBaudRate(500000);
+    Can2.setMaxMB(64);
+    Can2.enableFIFO();
+    Can2.enableMBInterrupt(FIFO);
+    Can2.enableFIFOInterrupt();
+    Can2.onReceive(dataCan_sniff);
+
+    Serial.println("can1 and controlCAN created");
+    Can1.begin();
+    Can1.setBaudRate(500000);
+    Can1.setMaxMB(64);
+    Can1.enableFIFO();
+    Can1.enableMBInterrupt(FIFO);
+    Can1.enableFIFOInterrupt();
+    Can1.onReceive(controlCan_sniff);
 
     Serial.println(PSTR("\r\nBooting FreeRTOS kernel " tskKERNEL_VERSION_NUMBER ". Built by gcc " __VERSION__ " (newlib " _NEWLIB_VERSION ") on " __DATE__ ". ***\r\n"));
 

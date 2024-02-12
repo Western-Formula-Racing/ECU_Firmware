@@ -1,32 +1,39 @@
 #include "interfaces/pedal.h"
 #include "config/devices.h"
 
-extern FS_CAN FS_CAN0;
+extern FS_CAN dataCAN;
 
-Pedal::Pedal(Sensor *s1_p, Sensor *s2_p)
+Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p, Sensor *s4_p)
 {
     Serial.println("pedal constructor called");
     sensor1 = s1_p;
     sensor2 = s2_p;
-    FS_CAN0.publish_CAN_msg(&pedalInfoMessage, FS_CAN::TEN_MS);
+    sensor3 = s3_p;
+    sensor4 = s4_p;
+    dataCAN.publish_CAN_msg(&pedalInfoMessage, FS_CAN::TEN_MS);
 }
 
 float Pedal::getPedalPosition()
 {
     float value;
-    sensor1Position = min(1,max(0,(sensor1->filteredValue - APPS1_MIN_VOLTAGE) / (APPS1_MAX_VOLTAGE - APPS1_MIN_VOLTAGE)));
-    sensor2Position = min(1,max(0,(sensor2->filteredValue - APPS2_MIN_VOLTAGE) / (APPS2_MAX_VOLTAGE - APPS2_MIN_VOLTAGE)));
-
-    if (max(sensor1Position, sensor2Position) - min(sensor1Position, sensor2Position) > APPS_PLAUSIBILITY_THRESHOLD)
+    appsSensor1Position = min(1,max(0,(sensor1->filteredValue - APPS1_MIN_VOLTAGE) / (APPS1_MAX_VOLTAGE - APPS1_MIN_VOLTAGE)));
+    appsSensor2Position = min(1,max(0,(sensor2->filteredValue - APPS2_MIN_VOLTAGE) / (APPS2_MAX_VOLTAGE - APPS2_MIN_VOLTAGE)));
+    brakePressure1 = sensor3->filteredValue;
+    brakePressure2 = sensor4->filteredValue;
+    if (max(appsSensor1Position, appsSensor2Position) - min(appsSensor1Position, appsSensor2Position) > APPS_PLAUSIBILITY_THRESHOLD)
     {
         value = 0;
     plausibilityFault = true;
     }
     else
     {
-        value = (sensor1Position + sensor2Position) / 2;
+        value = (appsSensor1Position + appsSensor2Position) / 2;
         plausibilityFault = false;
     }
     pedalPostion = value;
     return value;
+}
+
+float Pedal::getFrontBreakPressure(){ 
+    return brakePressure1;
 }
