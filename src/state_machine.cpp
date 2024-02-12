@@ -64,7 +64,7 @@ State handle_precharge_error()
 {
     BlackBox::log(LOG_ERROR, "precharge error");
     vTaskDelay(pdMS_TO_TICKS(1000));
-    return PRECHARGE_ERROR;
+    return START;
 }
 State handle_device_fault()
 {
