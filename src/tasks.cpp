@@ -5,13 +5,14 @@ extern std::array<state_function_t, 8> states;
 float stateS;
 float rtdButton;
 extern FS_CAN dataCAN;
-FS_CAN::CAN_SIGNAL stateSignal{&stateS,8,8,true,1,0};
-FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton,0,1,true,1,0};
-FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal,&rtdButtonSignal}};
+FS_CAN::CAN_SIGNAL stateSignal{&stateS, 8, 8, true, 1, 0};
+FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
+FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
 
 void setup_task(void *)
 {
     BlackBox::begin(100, tskIDLE_PRIORITY + 1);
+    CLI_Tool::begin(tskIDLE_PRIORITY + 1);
 
     // Delay to allow the serial port to be opened and queue to be created (for some reason it needs this)
     vTaskDelay(pdMS_TO_TICKS(5000));
@@ -61,7 +62,7 @@ void task1(void *) // mostly just a task for testing
         Serial.printf(">torqueRequest:%f\n", Devices::Get().GetInverter().getTorqueRequest());
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
         Serial.printf(">inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
-        Serial.printf(">precharge thresh:%f\n",Devices::Get().GetBMS().packVoltage*0.95);
+        Serial.printf(">precharge thresh:%f\n", Devices::Get().GetBMS().packVoltage * 0.95);
         vTaskDelay(pdMS_TO_TICKS(100));
         Devices::Get().GetPDM().setPin(HSDIN1, HIGH);
         digitalWriteFast(LED_BUILTIN, LOW);
@@ -75,7 +76,7 @@ void VCU_stateMachine(void *)
 {
     state = START;
     while (true)
-    {   
+    {
         stateS = static_cast<float>(state);
         state = states[state]();
         // BlackBox::log(LOG_INFO, std::format("currentState: {}", static_cast<int>(state)).c_str());
