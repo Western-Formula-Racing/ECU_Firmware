@@ -12,10 +12,10 @@ FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
 void setup_task(void *)
 {
     BlackBox::begin(100, tskIDLE_PRIORITY + 1);
-    CLI_Tool::begin(tskIDLE_PRIORITY + 1);
 
     // Delay to allow the serial port to be opened and queue to be created (for some reason it needs this)
     vTaskDelay(pdMS_TO_TICKS(5000));
+
     if (timeStatus() != timeSet)
     {
         while (!Serial)
@@ -25,6 +25,8 @@ void setup_task(void *)
     dataCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::TEN_MS);
     xTaskCreate(task1, "task1", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
+    xTaskCreate(CLI_Tool::task, "CLI_Task", 4096, nullptr, tskIDLE_PRIORITY + 3, nullptr);
+
     vTaskDelete(nullptr);
 }
 

@@ -4,19 +4,22 @@
 #include <iostream>
 #include <arduino_freertos.h>
 
-typedef struct {
+typedef void (*CommandFunction)(int argc, char *argv[]);
+
+struct CLI_Command
+{
     const char *command;
-    void (*function)(int, char **);
-    const char *helpText;
-} CLI_Command;
+    CommandFunction function;
+    const char *description;
+};
+
+void testCommand(int argc, char *argv[]);
 
 namespace CLI_Tool
 {
     // Begin the CLI task
-    void begin(int taskPriority);
-
-    // Add a command to the CLI
-    void addCommand(CLI_Command command);
+    void task(void *);
+    void setup();
 }
 
 #endif
