@@ -78,6 +78,7 @@ void frontDAQ(void *)
 }
 void rearECU_task(void *)
 {
+    while (1){
     int i = 0;
     for (auto *sensor : Devices::Get().GetSensors())
     {
@@ -86,7 +87,7 @@ void rearECU_task(void *)
     }
     Devices::Get().GetPDM().setPin(HSDIN2,precharge_enable);
     Devices::Get().GetPDM().setPin(HSDIN3,precharge_ok);
-
+    }
 }
 
 void VCU_stateMachine(void *)
