@@ -35,8 +35,8 @@ void setup_task(void *)
     }
 
     #ifndef REAR
-    dataCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::TEN_MS);
-    controlCAN.publish_CAN_msg(&VCU_Precharge, FS_CAN::TEN_MS);
+    dataCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::HUNDRED_MS);
+    controlCAN.publish_CAN_msg(&VCU_Precharge, FS_CAN::HUNDRED_MS);
     xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     #endif
@@ -58,6 +58,9 @@ void frontDAQ(void *)
         for (auto *sensor : Devices::Get().GetSensors())
         {
             sensor->read();
+            Serial.printf(">sensor%draw:", i);
+            Serial.print(sensor->rawValue);
+            Serial.println();
             i++;
         }
         Devices::Get().GetRTDButton().read();

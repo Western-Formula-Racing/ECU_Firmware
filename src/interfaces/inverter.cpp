@@ -6,9 +6,12 @@ extern FS_CAN controlCAN;
 Inverter::Inverter()
 {
     Serial.println("Inverter Constructor called");
+    #ifndef REAR
     controlCAN.publish_CAN_msg(&commandMessage, FS_CAN::TEN_MS);
+    #endif
     dataCAN.subscribe_to_message(&fastInfoMessage);
     dataCAN.subscribe_to_message(&internalStatesMessage);
+    
 }
 
 void Inverter::setTorqueRequest(float torque)
