@@ -7,8 +7,8 @@
 #include "cli_tool.h"
 
 void setup_task(void *);
-void task1(void *);
+void frontDAQ(void *);
 void VCU_stateMachine(void *);
-void DAQ_task(void *);
+void rearECU_task(void *);
 
 #endif

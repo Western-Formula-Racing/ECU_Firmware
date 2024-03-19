@@ -9,7 +9,9 @@ BMS::BMS()
     Serial.println("BMS constructor called");
     dataCAN.subscribe_to_message(&packStateMessage);
     dataCAN.subscribe_to_message(&packFaultsMessage);
+    #ifndef REAR
     dataCAN.publish_CAN_msg(&BMSFaultMessage, FS_CAN::THOUSAND_MS);
+    #endif
 }
 
 bool BMS::hasFault()

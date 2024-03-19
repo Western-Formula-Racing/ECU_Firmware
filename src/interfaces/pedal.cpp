@@ -10,7 +10,9 @@ Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p, Sensor *s4_p)
     sensor2 = s2_p;
     sensor3 = s3_p;
     sensor4 = s4_p;
-    dataCAN.publish_CAN_msg(&pedalInfoMessage, FS_CAN::TEN_MS);
+    #ifndef REAR
+    dataCAN.publish_CAN_msg(&pedalInfoMessage, FS_CAN::HUNDRED_MS);
+    #endif
 }
 
 float Pedal::getPedalPosition()
