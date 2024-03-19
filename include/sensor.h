@@ -12,6 +12,7 @@ private:
     float scale_;
     uint8_t order;
     ADC *adc;
+    
 
 public:
     uint8_t pin;
@@ -19,7 +20,11 @@ public:
     int rawValue;
     float filteredValue;
     LowPass filter;
+    bool overridden; 
+    float override_value;
     Sensor(ADC *adc_handle, uint8_t pin, float offset, float scale, uint8_t filter_order, float f0, float fs, bool adaptive);
     void read();
+    void override(float value);
+    void disable_override();
 };
 #endif

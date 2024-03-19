@@ -9,17 +9,15 @@ extern FS_CAN controlCAN;
 
 float precharge_enable = 0;
 float precharge_ok = 0;
-FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable,0,1,true,1,0};
-FS_CAN::CAN_SIGNAL precharge_ok_signal{&precharge_ok,1,1,true,1,0};
+FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable, 0, 1, true, 1, 0};
+FS_CAN::CAN_SIGNAL precharge_ok_signal{&precharge_ok, 1, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_Precharge{2003, {&precharge_enable_signal, &precharge_ok_signal}};
 
-
 #ifndef REAR
-FS_CAN::CAN_SIGNAL stateSignal{&stateS,8,8,true,1,0};
-FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton,0,1,true,1,0};
-FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal,&rtdButtonSignal}};
+FS_CAN::CAN_SIGNAL stateSignal{&stateS, 8, 8, true, 1, 0};
+FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
+FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
 #endif
-
 
 void setup_task(void *)
 {
@@ -27,6 +25,7 @@ void setup_task(void *)
 
     // Delay to allow the serial port to be opened and queue to be created (for some reason it needs this)
     vTaskDelay(pdMS_TO_TICKS(5000));
+
     if (timeStatus() != timeSet)
     {
         while (!Serial)
@@ -34,20 +33,22 @@ void setup_task(void *)
         Serial.printf("my god this sh borked\n");
     }
 
-    #ifndef REAR
+    xTaskCreate(CLI_Tool::task, "CLI_Task", 2048, nullptr, tskIDLE_PRIORITY + 1, nullptr);
+
+#ifndef REAR
     dataCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::HUNDRED_MS);
     controlCAN.publish_CAN_msg(&VCU_Precharge, FS_CAN::HUNDRED_MS);
     xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
-    #endif
-    #ifdef REAR
+#endif
+#ifdef REAR
     controlCAN.subscribe_to_message(&VCU_Precharge);
     xTaskCreate(rearECU_task, "rearECU_task", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
-    #endif
+#endif
     vTaskDelete(nullptr);
 }
 
-void frontDAQ(void *) 
+void frontDAQ(void *)
 {
     while (true)
     {
@@ -74,22 +75,24 @@ void frontDAQ(void *)
         Serial.printf(">torqueRequest:%f\n", Devices::Get().GetInverter().getTorqueRequest());
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
         Serial.printf(">inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
-        Serial.printf(">precharge thresh:%f\n",Devices::Get().GetBMS().packVoltage*0.95);
+        Serial.printf(">precharge thresh:%f\n", Devices::Get().GetBMS().packVoltage * 0.95);
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
     }
 }
 void rearECU_task(void *)
 {
-    while (1){
-    int i = 0;
-    for (auto *sensor : Devices::Get().GetSensors())
+    while (1)
     {
-        sensor->read();
-        i++;
-    }
-    Devices::Get().GetPDM().setPin(HSDIN2,precharge_enable);
-    Devices::Get().GetPDM().setPin(HSDIN3,precharge_ok);
+        int i = 0;
+        for (auto *sensor : Devices::Get().GetSensors())
+        {
+            sensor->read();
+            i++;
+        }
+        Devices::Get().GetPDM().setPin(HSDIN2, precharge_enable);
+        Devices::Get().GetPDM().setPin(HSDIN3, precharge_ok);
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
@@ -97,7 +100,7 @@ void VCU_stateMachine(void *)
 {
     state = START;
     while (true)
-    {   
+    {
         stateS = static_cast<float>(state);
         state = states[state]();
         // BlackBox::log(LOG_INFO, std::format("currentState: {}", static_cast<int>(state)).c_str());

@@ -12,8 +12,22 @@ Sensor::Sensor(ADC *adc_handle, uint8_t pin_, float offset, float scale, uint8_t
 
 void Sensor::read()
 {
-    rawValue = adc->analogRead(pin);
-    float voltage = (rawValue / pow(2, ADC_RES)) * VREF;
-    value = (voltage * scale_) + offset_;
-    filteredValue = filter.filt(value);
+    if(overridden == false){
+        rawValue = adc->analogRead(pin);
+        float voltage = (rawValue / pow(2, ADC_RES)) * VREF;
+        value = (voltage * scale_) + offset_;
+        filteredValue = filter.filt(value);
+    }
+    else{
+        value = override_value;
+        filteredValue = filter.filt(value);
+    }
+}
+
+void Sensor:: override(float value){
+    overridden = true;
+    override_value = value;
+}
+void Sensor:: disable_override(){
+    overridden = false;
 }
