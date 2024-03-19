@@ -42,7 +42,6 @@ State handle_startup_delay()
     else{
         nextState = START;
     }
-    Serial.println("In dealay");
     return nextState;
 }
 State handle_precharge_enable()
@@ -60,12 +59,9 @@ State handle_precharge_enable()
         nextState = DRIVE;
     }
     return nextState;
-    Serial.println("In enable");
-
 }
 State handle_drive()
 {
-    Serial.println("In Drive");
     State nextState = START;
     precharge_enable = 1;
     precharge_ok = 1;
