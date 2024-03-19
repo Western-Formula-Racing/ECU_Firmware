@@ -5,9 +5,21 @@ extern std::array<state_function_t, 8> states;
 float stateS;
 float rtdButton;
 extern FS_CAN dataCAN;
+extern FS_CAN controlCAN;
+
+float precharge_enable = 0;
+float precharge_ok = 0;
+FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable,0,1,true,1,0};
+FS_CAN::CAN_SIGNAL precharge_ok_signal{&precharge_ok,1,1,true,1,0};
+FS_CAN::CAN_MSG VCU_Precharge{2003, {&precharge_enable_signal, &precharge_ok_signal}};
+
+
+#ifndef REAR
 FS_CAN::CAN_SIGNAL stateSignal{&stateS,8,8,true,1,0};
 FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton,0,1,true,1,0};
 FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal,&rtdButtonSignal}};
+#endif
+
 
 void setup_task(void *)
 {
@@ -21,15 +33,22 @@ void setup_task(void *)
             ;
         Serial.printf("my god this sh borked\n");
     }
-    dataCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::TEN_MS);
-    xTaskCreate(task1, "task1", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
+
+    #ifndef REAR
+    dataCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::HUNDRED_MS);
+    controlCAN.publish_CAN_msg(&VCU_Precharge, FS_CAN::HUNDRED_MS);
+    xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
+    #endif
+    #ifdef REAR
+    controlCAN.subscribe_to_message(&VCU_Precharge);
+    xTaskCreate(rearECU_task, "rearECU_task", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
+    #endif
     vTaskDelete(nullptr);
 }
 
-void task1(void *) // mostly just a task for testing
+void frontDAQ(void *) 
 {
-
     while (true)
     {
         digitalWriteFast(LED_BUILTIN, HIGH);
@@ -38,18 +57,12 @@ void task1(void *) // mostly just a task for testing
         int i = 0;
         for (auto *sensor : Devices::Get().GetSensors())
         {
-
             sensor->read();
-            // Serial.printf("sensor %d\n", i);
-            // Serial.print(sensor->rawValue);
-            // Serial.print(" ");
-            // Serial.print(sensor->value);
-            // Serial.print(" ");
-            // Serial.print(sensor->filteredValue);
-            // Serial.println();
+            Serial.printf(">sensor%draw:", i);
+            Serial.print(sensor->rawValue);
+            Serial.println();
             i++;
         }
-
         Devices::Get().GetRTDButton().read();
         float pedalPos = Devices::Get().GetPedal().getPedalPosition();
         Serial.printf(">pedal_postion:%f\n", pedalPos);
@@ -63,12 +76,21 @@ void task1(void *) // mostly just a task for testing
         Serial.printf(">inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
         Serial.printf(">precharge thresh:%f\n",Devices::Get().GetBMS().packVoltage*0.95);
         vTaskDelay(pdMS_TO_TICKS(100));
-        Devices::Get().GetPDM().setPin(HSDIN1, HIGH);
         digitalWriteFast(LED_BUILTIN, LOW);
     }
 }
-void DAQ_task(void *)
+void rearECU_task(void *)
 {
+    while (1){
+    int i = 0;
+    for (auto *sensor : Devices::Get().GetSensors())
+    {
+        sensor->read();
+        i++;
+    }
+    Devices::Get().GetPDM().setPin(HSDIN2,precharge_enable);
+    Devices::Get().GetPDM().setPin(HSDIN3,precharge_ok);
+    }
 }
 
 void VCU_stateMachine(void *)

@@ -42,7 +42,12 @@ std::unordered_map<int,int>  hsdMap{
         {&pinState[6], 6, 1, true, 1.0f, 0}
     }};
     
+    #ifndef REAR
     FS_CAN::CAN_MSG pdmInfo{2001, {&pinStateSignals[0],&pinStateSignals[1],&pinStateSignals[2],&pinStateSignals[3],&pinStateSignals[4],&pinStateSignals[5],&pinStateSignals[6]}};
+    #endif
+    #ifdef REAR
+    FS_CAN::CAN_MSG pdmInfo{2004, {&pinStateSignals[0],&pinStateSignals[1],&pinStateSignals[2],&pinStateSignals[3],&pinStateSignals[4],&pinStateSignals[5],&pinStateSignals[6]}};
+    #endif
     // Setup the pins on the Teensy for the correct mode
     PDM();
     // Set the state of a pin

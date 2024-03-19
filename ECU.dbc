@@ -1,4 +1,4 @@
-VERSION "HIPBNYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY/4/%%%/4/'%**4YYY///"
+VERSION ""
 
 
 NS_ : 
@@ -22,11 +22,22 @@ NS_ :
 	SIG_GROUP_
 	SIG_VALTYPE_
 	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
 
 BS_:
 
 BU_: INV BMS VCU BMS Third_Party_Device BMS Third_Party_Device
 
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ NewSignal_0017 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 173 M173_Modulation_And_Flux_Info: 8 INV
  SG_ INV_Iq_Command : 48|16@1- (0.1,0) [-3276.8|3276.7] "current:A" Vector__XXX
@@ -224,7 +235,7 @@ BO_ 2000 VCU_PedalInfo: 8 VCU
  SG_ brakePressure1Signal : 32|16@1+ (0.01,0) [0|5] "" Vector__XXX
  SG_ brakePressure2Signal : 48|16@1+ (0.01,0) [0|5] "" Vector__XXX
 
-BO_ 2001 VCU_pdmInfo: 8 VCU
+BO_ 2001 VCU_PDMFront: 8 VCU
  SG_ HSD1State : 0|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ HSD2State : 1|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ HSD3State : 2|1@1+ (1,0) [0|0] "" Vector__XXX
@@ -237,8 +248,88 @@ BO_ 2002 VCU_State_Info: 8 VCU
  SG_ State : 8|8@1+ (1,0) [0|6] "" Vector__XXX
  SG_ RTD_Button : 0|1@1+ (1,0) [0|1] "" Vector__XXX
 
-BO_ 2005 testBMS: 8 Vector__XXX
- SG_ Boltage : 55|16@0+ (0.1,0) [0|0] "" Vector__XXX
+BO_ 2003 VCU_Precharge: 8 VCU
+ SG_ Precharge_Enable : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Precharge_OK : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 2004 VCU_PDMRear: 8 VCU
+ SG_ HSD1 : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD2 : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD3 : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD4 : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD5 : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD6 : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD7 : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ 
+ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+
+ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+
+ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+
+ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+
+ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 
 
 CM_ SG_ 173 INV_Iq_Command "The commanded Q-axis current";
@@ -359,6 +450,7 @@ CM_ BO_ 2000 "Contains Pedal Info";
 CM_ SG_ 2000 sensorPlausibility "";
 CM_ SG_ 2000 pedalPosition "";
 CM_ SG_ 2002 State "";
+CM_ BO_ 2003 "Precharge command from front ECU to rear";
 BA_DEF_ BO_  "GenMsgCycleTime" INT 0 100000;
 BA_DEF_  "BusType" STRING ;
 BA_DEF_DEF_  "GenMsgCycleTime" 0;
@@ -380,6 +472,7 @@ BA_ "GenMsgCycleTime" BO_ 162 100;
 BA_ "GenMsgCycleTime" BO_ 161 100;
 BA_ "GenMsgCycleTime" BO_ 160 100;
 BA_ "GenMsgCycleTime" BO_ 176 3;
+BA_ "GenMsgCycleTime" BO_ 2003 100;
 VAL_ 192 VCU_INV_Inverter_Enable 0 "Turn the inverter OFF" 1 "Turn the Inverter ON" ;
 VAL_ 192 VCU_INV_Direction_Command 0 "CW" 1 "CCW" ;
 VAL_ 192 VCU_INV_Inverter_Discharge 0 "Discharge Disable" 1 "Discharge Enable (if EEPROM parameter is set)" ;
@@ -397,3 +490,13 @@ VAL_ 2001 HSD5State 0 "OFF" 1 "ON" ;
 VAL_ 2001 HSD6State 0 "OFF" 1 "ON" ;
 VAL_ 2001 HSD7State 0 "OFF" 1 "ON" ;
 VAL_ 2002 State 0 "START" 1 "STARTUP_DELAY" 2 "PRECHARGE_ENABLE" 3 "DRIVE" 4 "PRECHARGE_ERROR" 5 "DEVICE FAULT" 6 "LOW_SOC" ;
+VAL_ 2003 Precharge_Enable 1 "ON" 0 "OFF" ;
+VAL_ 2003 Precharge_OK 0 "OFF" 1 "ON" ;
+VAL_ 2004 HSD1 0 "OFF" 1 "ON" ;
+VAL_ 2004 HSD2 0 "OFF" 1 "ON" ;
+VAL_ 2004 HSD3 0 "OFF" 1 "ON" ;
+VAL_ 2004 HSD4 0 "OFF" 1 "ON" ;
+VAL_ 2004 HSD5 0 "OFF" 1 "ON" ;
+VAL_ 2004 HSD6 0 "OFF" 1 "ON" ;
+VAL_ 2004 HSD7 0 "OFF" 1 "ON" ;
+
