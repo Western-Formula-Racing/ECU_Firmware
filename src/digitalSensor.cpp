@@ -5,7 +5,10 @@ DigitalSensor::DigitalSensor(ADC *adc_handle, uint8_t pin) : Sensor{adc_handle, 
 }
 
 void DigitalSensor::read(){
-    value = static_cast<float>(!digitalRead(pin));
-    //button doesn't really seem to need filtering/debouncing
-    //filteredValue = filter.filt(value);
+    if (overridden == false){
+        value = static_cast<float>(!digitalRead(pin));
+    }
+    else{
+        value = override_value;
+    }
 }

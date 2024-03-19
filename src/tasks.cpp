@@ -92,6 +92,7 @@ void rearECU_task(void *)
         }
         Devices::Get().GetPDM().setPin(HSDIN2, precharge_enable);
         Devices::Get().GetPDM().setPin(HSDIN3, precharge_ok);
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 

@@ -1,10 +1,33 @@
 #include "cli_tool.h"
 #include "black_box.h"
 #include <format>
-
+#include "config/devices.h"
+extern State state;
 const int MAX_BUFFER_SIZE = 100;
 const CLI_Command cli_commands[]{
-    {"test", testCommand, "Test command"}};
+    {"test", testCommand, "Test command"},
+    {"fake_precharge", fake_precharge, "Command to fake brake and RTD"},
+    {"reset_state", reset_state, "Command to restart state-machine"}
+    };
+
+
+void fake_precharge(int argc, char *argv[])
+{
+    BlackBox::log(LOG_INFO, "faking precharge");
+    Devices::Get().GetRTDButton().override(1);
+    Devices::Get().GetSensors()[2]->override(3.0);
+    Devices::Get().GetSensors()[3]->override(3.0);
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    Devices::Get().GetRTDButton().disable_override();
+    Devices::Get().GetSensors()[2]->disable_override();
+    Devices::Get().GetSensors()[3]->disable_override();
+}
+
+void reset_state(int argc, char *argv[])
+{
+    BlackBox::log(LOG_INFO, "state machine reset");
+    state = START;
+}
 
 void testCommand(int argc, char *argv[])
 {
