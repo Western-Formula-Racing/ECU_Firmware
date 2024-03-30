@@ -6,14 +6,16 @@
 
 class Inverter
 {
+public:
+    float inverterEnable ;
+    float torqueLimit ;
+
 private:
     // Command variables
     float directionCommand;
     float inverterDischarge = 0; // we don't use the discharge
-    float inverterEnable;
     float speedModeEnable = 0; // look at page 32 of the CAN documentation
     float torqueRequest;
-    float torqueLimit;
 
     // Command messages
 

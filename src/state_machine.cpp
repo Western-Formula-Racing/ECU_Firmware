@@ -18,6 +18,8 @@ int startTime;
 
 State handle_start()
 {
+    Devices::Get().GetInverter().inverterEnable = 0;
+    Devices::Get().GetInverter().torqueLimit = 0;
     State nextState = START; 
     precharge_enable = 0;
     precharge_ok = 0;
@@ -69,6 +71,8 @@ State handle_precharge_enable()
 }
 State handle_drive()
 {
+    Devices::Get().GetInverter().inverterEnable = 1;
+    Devices::Get().GetInverter().torqueLimit = 200;
     State nextState = START;
     precharge_enable = 1;
     precharge_ok = 1;
@@ -76,7 +80,7 @@ State handle_drive()
     if (Devices::Get().GetPedal().getPedalPosition()  > APPS_DEADZONE){
         throttle = Devices::Get().GetPedal().getPedalPosition();
     }
-    if(Devices::Get().GetInverter().dcBusVoltage >= 200.0){ //CHANGE BEFORE HV
+    if(Devices::Get().GetInverter().dcBusVoltage >= 200.0){ 
         Devices::Get().GetInverter().setTorqueRequest(throttle*200);
         nextState = DRIVE;
     }

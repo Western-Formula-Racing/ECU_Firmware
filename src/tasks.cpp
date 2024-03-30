@@ -74,7 +74,8 @@ void frontDAQ(void *)
         Serial.printf(">state:%d\n", static_cast<int>(state));
         Serial.printf(">torqueRequest:%f\n", Devices::Get().GetInverter().getTorqueRequest());
         Serial.printf(">MotorSpeed:%f\n", Devices::Get().GetInverter().motorSpeed);
-        Serial.printf(">InvRunState:%f\n", Devices::Get().GetInverter().runMode);
+        Serial.printf(">InvEnable:%f\n", Devices::Get().GetInverter().inverterEnable);
+        Serial.printf(">TorqueLimit:%f\n", Devices::Get().GetInverter().torqueLimit);
         Serial.printf(">InvState:%f\n", Devices::Get().GetInverter().enableState);
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
         Serial.printf(">inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
