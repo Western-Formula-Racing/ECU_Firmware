@@ -73,9 +73,12 @@ void frontDAQ(void *)
         Serial.printf(">brake:%f\n", Devices::Get().GetPedal().getFrontBreakPressure());
         Serial.printf(">state:%d\n", static_cast<int>(state));
         Serial.printf(">torqueRequest:%f\n", Devices::Get().GetInverter().getTorqueRequest());
+        Serial.printf(">MotorSpeed:%f\n", Devices::Get().GetInverter().motorSpeed);
+        Serial.printf(">InvRunState:%f\n", Devices::Get().GetInverter().runMode);
+        Serial.printf(">InvState:%f\n", Devices::Get().GetInverter().enableState);
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
         Serial.printf(">inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
-        Serial.printf(">precharge thresh:%f\n", Devices::Get().GetBMS().packVoltage * 0.95);
+        Serial.printf(">precharge thresh:%f\n", Devices::Get().GetBMS().packVoltage * 0.90);
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
     }

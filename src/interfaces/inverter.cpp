@@ -9,8 +9,8 @@ Inverter::Inverter()
     #ifndef REAR
     controlCAN.publish_CAN_msg(&commandMessage, FS_CAN::TEN_MS);
     #endif
-    dataCAN.subscribe_to_message(&fastInfoMessage);
-    dataCAN.subscribe_to_message(&internalStatesMessage);
+    controlCAN.subscribe_to_message(&fastInfoMessage);
+    controlCAN.subscribe_to_message(&internalStatesMessage);
     
 }
 

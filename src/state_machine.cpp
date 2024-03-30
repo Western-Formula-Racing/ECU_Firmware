@@ -20,6 +20,7 @@ State handle_start()
     State nextState = START; 
     precharge_enable = 0;
     precharge_ok = 0;
+    Devices::Get().GetInverter().setTorqueRequest(0);
     if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_THRESHOLD){
         nextState = STARTUP_DELAY;
         startTime = millis();
@@ -31,6 +32,7 @@ State handle_startup_delay()
     State nextState = STARTUP_DELAY;
     precharge_enable = 0;
     precharge_ok = 0;
+    Devices::Get().GetInverter().setTorqueRequest(0);
     int currentTime = millis();
     if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_THRESHOLD and (currentTime-startTime) < RTD_TIMER ){
         nextState = STARTUP_DELAY;
@@ -49,15 +51,19 @@ State handle_precharge_enable()
     State nextState = PRECHARGE_ERROR;
     precharge_enable = 1;
     precharge_ok = 0;
+    Devices::Get().GetInverter().setTorqueRequest(0);
     int currentTime = millis();
-    if (Devices::Get().GetInverter().dcBusVoltage < Devices::Get().GetBMS().packVoltage*0.0 and (currentTime-startTime) < PRECHARGE_TIMEOUT){ //CHANGE BACK BEFORE HV
-        Serial.println("waiting for inverter voltage");
-        nextState = PRECHARGE_ENABLE;
-    }
-    else if(Devices::Get().GetInverter().dcBusVoltage >= (Devices::Get().GetBMS().packVoltage*0.0) and (currentTime-startTime) < PRECHARGE_TIMEOUT){
+    if(Devices::Get().GetInverter().dcBusVoltage >= (Devices::Get().GetBMS().packVoltage*0.90) and (currentTime-startTime) < PRECHARGE_TIMEOUT){
         Serial.println("inverter voltage met");
         nextState = DRIVE;
     }
+    else if (Devices::Get().GetInverter().dcBusVoltage < Devices::Get().GetBMS().packVoltage and (currentTime-startTime) < PRECHARGE_TIMEOUT){ 
+        Serial.println("waiting for inverter voltage");
+        Serial.printf("inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
+
+        
+        nextState = PRECHARGE_ENABLE;
+    } 
     return nextState;
 }
 State handle_drive()
@@ -65,7 +71,7 @@ State handle_drive()
     State nextState = START;
     precharge_enable = 1;
     precharge_ok = 1;
-    if(Devices::Get().GetInverter().dcBusVoltage >= 200.0*0){ //CHANGE BEFORE HV
+    if(Devices::Get().GetInverter().dcBusVoltage >= 200.0){ //CHANGE BEFORE HV
         Devices::Get().GetInverter().setTorqueRequest(Devices::Get().GetPedal().getPedalPosition() * 200);
         nextState = DRIVE;
     }
@@ -75,6 +81,7 @@ State handle_precharge_error()
 {
     precharge_enable = 0;
     precharge_ok = 0;
+    Devices::Get().GetInverter().setTorqueRequest(0);
     BlackBox::log(LOG_ERROR, "precharge error");
     vTaskDelay(pdMS_TO_TICKS(1000));
     return START;
@@ -84,10 +91,12 @@ State handle_device_fault()
     precharge_enable = 0;
     precharge_ok = 0;
     return DEVICE_FAULT;
+    Devices::Get().GetInverter().setTorqueRequest(0);
 }
 State handle_low_soc()
 {
     precharge_enable = 0;
     precharge_ok = 0;
+    Devices::Get().GetInverter().setTorqueRequest(0);
     return START;
 }
