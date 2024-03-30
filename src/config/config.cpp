@@ -10,10 +10,11 @@ const float APPS1_MAX_VOLTAGE = 5.05;
 const float APPS2_MIN_VOLTAGE = 5.05;
 const float APPS2_MAX_VOLTAGE = 0.01;
 const float APPS_PLAUSIBILITY_THRESHOLD = 0.10;
+const float APPS_DEADZONE = 0.05;
 const float BRAKE_THRESHOLD = 2;
 const int RTD_TIMER = 1000;
 const int PRECHARGE_TIMEOUT = 7000;
-const int MIN_PRECHARGE_VOLTAGE  = 300;
+const float PREHCHARGE_THRESHOLD = 0.9;
 std::array<std::array<int,10>,10> torqueMap{{
     {},
     {},

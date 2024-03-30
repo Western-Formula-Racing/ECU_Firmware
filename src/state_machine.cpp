@@ -1,5 +1,6 @@
 #include "state_machine.h"
 #include "config/devices.h"
+#include "config/config.h"
 State state = START;
 extern float precharge_enable;
 extern float precharge_ok;
@@ -53,7 +54,7 @@ State handle_precharge_enable()
     precharge_ok = 0;
     Devices::Get().GetInverter().setTorqueRequest(0);
     int currentTime = millis();
-    if(Devices::Get().GetInverter().dcBusVoltage >= (Devices::Get().GetBMS().packVoltage*0.90) and (currentTime-startTime) < PRECHARGE_TIMEOUT){
+    if(Devices::Get().GetInverter().dcBusVoltage >= (Devices::Get().GetBMS().packVoltage*PREHCHARGE_THRESHOLD) and (currentTime-startTime) < PRECHARGE_TIMEOUT){
         Serial.println("inverter voltage met");
         nextState = DRIVE;
     }
@@ -71,8 +72,12 @@ State handle_drive()
     State nextState = START;
     precharge_enable = 1;
     precharge_ok = 1;
+    float throttle = 0;
+    if (Devices::Get().GetPedal().getPedalPosition()  > APPS_DEADZONE){
+        throttle = Devices::Get().GetPedal().getPedalPosition();
+    }
     if(Devices::Get().GetInverter().dcBusVoltage >= 200.0){ //CHANGE BEFORE HV
-        Devices::Get().GetInverter().setTorqueRequest(Devices::Get().GetPedal().getPedalPosition() * 200);
+        Devices::Get().GetInverter().setTorqueRequest(throttle*200);
         nextState = DRIVE;
     }
     return nextState;
