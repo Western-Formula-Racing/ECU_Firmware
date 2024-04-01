@@ -17,7 +17,7 @@ Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p, Sensor *s4_p)
 
 float Pedal::getPedalPosition()
 {
-    float value;
+    float value=0;
     appsSensor1Position = min(1, max(0, (sensor1->filteredValue - APPS1_MIN_VOLTAGE) / (APPS1_MAX_VOLTAGE - APPS1_MIN_VOLTAGE)));
     appsSensor2Position = min(1, max(0, (sensor2->filteredValue - APPS2_MIN_VOLTAGE) / (APPS2_MAX_VOLTAGE - APPS2_MIN_VOLTAGE)));
     brakePressure1 = sensor3->filteredValue;
@@ -37,6 +37,7 @@ float Pedal::getPedalPosition()
     }
     else if (((appsSensor1Position + appsSensor2Position) / 2) <= 0.05)
     { // only clear plausability faults if throttle is bellow 5%
+        value = 0;
         plausibilityFault = false;
     }
 
