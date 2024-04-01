@@ -25,7 +25,10 @@ float Pedal::getPedalPosition()
     if (max(appsSensor1Position, appsSensor2Position) - min(appsSensor1Position, appsSensor2Position) > APPS_PLAUSIBILITY_THRESHOLD)
     {
         value = 0;
-    plausibilityFault = true;
+        plausibilityFault = true;
+    }
+    else if(brakePressure1 > BRAKE_THRESHOLD){
+        value = 0;
     }
     else
     {
