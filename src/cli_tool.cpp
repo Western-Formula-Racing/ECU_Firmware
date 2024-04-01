@@ -6,14 +6,14 @@ extern State state;
 const int MAX_BUFFER_SIZE = 100;
 const CLI_Command cli_commands[]{
     {"test", testCommand, "Test command"},
-    {"fake_precharge", fake_precharge, "Command to fake brake and RTD"},
+    {"fake_rtd", fake_rtd, "Command to fake brake and RTD"},
     {"reset_state", reset_state, "Command to restart state-machine"}
     };
 
 
-void fake_precharge(int argc, char *argv[])
+void fake_rtd(int argc, char *argv[])
 {
-    BlackBox::log(LOG_INFO, "faking precharge");
+    BlackBox::log(LOG_INFO, "faking rtd sequence");
     Devices::Get().GetRTDButton().override(1);
     Devices::Get().GetSensors()[2]->override(3.0);
     Devices::Get().GetSensors()[3]->override(3.0);

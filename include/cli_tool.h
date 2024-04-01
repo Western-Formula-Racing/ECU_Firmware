@@ -5,7 +5,7 @@
 #include <arduino_freertos.h>
 
 void testCommand(int argc, char *argv[]);
-void fake_precharge(int argc, char *argv[]);
+void fake_rtd(int argc, char *argv[]);
 void reset_state(int argc, char *argv[]);
 
 typedef void (*CommandFunction)(int argc, char *argv[]);
