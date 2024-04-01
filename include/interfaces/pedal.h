@@ -29,7 +29,7 @@ public:
     float appsSensor2Position;
     float brakePressure1;
     float brakePressure2;
-
+    float avgbrakePressure;
     Sensor *sensor1;
     Sensor *sensor2;
     Sensor *sensor3;

@@ -13,18 +13,7 @@ const float APPS_PLAUSIBILITY_THRESHOLD = 0.10;
 const float APPS_DEADZONE = 0.05;
 const float BRAKE_THRESHOLD = 2;
 const int RTD_TIMER = 1000;
-const int PRECHARGE_TIMEOUT = 7000;
-const float PREHCHARGE_THRESHOLD = 0.9;
-std::array<std::array<int,10>,10> torqueMap{{
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-
-}};
+const int PRECHARGE_TIMEOUT = 30000;
+const float PRECHARGE_THRESHOLD = 0.9;
+const float TORQUE_LIMIT = 200.0;
+const float INVERTER_CUTOFF_VOLTAGE = 200.0;

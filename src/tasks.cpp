@@ -78,7 +78,7 @@ void frontDAQ(void *)
         Serial.printf(">TorqueLimit:%f\n", Devices::Get().GetInverter().torqueLimit);
         Serial.printf(">InvState:%f\n", Devices::Get().GetInverter().enableState);
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
-        Serial.printf(">inverter Voltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
+        Serial.printf(">inverterVoltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
         Serial.printf(">precharge thresh:%f\n", Devices::Get().GetBMS().packVoltage * 0.90);
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);

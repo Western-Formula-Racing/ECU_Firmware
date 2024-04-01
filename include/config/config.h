@@ -13,7 +13,8 @@ extern const float APPS_DEADZONE;
 extern const float BRAKE_THRESHOLD;
 extern const int RTD_TIMER;
 extern const int PRECHARGE_TIMEOUT;
-extern const float PREHCHARGE_THRESHOLD;
-extern std::array<std::array<int,10>,10> torqueMap;
+extern const float PRECHARGE_THRESHOLD;
+extern const float TORQUE_LIMIT;
+extern const float INVERTER_CUTOFF_VOLTAGE;
 
 #endif
