@@ -39,12 +39,12 @@ State handle_precharge_enable()
     precharge_ok = 0;
     Devices::Get().GetInverter().setTorqueRequest(0);
     int currentTime = millis();
-    if (Devices::Get().GetInverter().dcBusVoltage >= (Devices::Get().GetBMS().packVoltage * PRECHARGE_THRESHOLD) and (currentTime - startTime) < PRECHARGE_TIMEOUT)
+    if (Devices::Get().GetInverter().dcBusVoltage >= (Devices::Get().GetBMS().packVoltage * PRECHARGE_THRESHOLD) )
     {
         Serial.println("inverter voltage met");
         nextState = PRECHARGE_OK;
     }
-    else if (Devices::Get().GetInverter().dcBusVoltage < (Devices::Get().GetBMS().packVoltage * PRECHARGE_THRESHOLD) and (currentTime - startTime) < PRECHARGE_TIMEOUT)
+    else if (Devices::Get().GetInverter().dcBusVoltage < (Devices::Get().GetBMS().packVoltage * PRECHARGE_THRESHOLD))
     {
         Serial.println("waiting for inverter voltage");
         nextState = PRECHARGE_ENABLE;
@@ -59,6 +59,7 @@ State handle_precharge_enable()
 
 State handle_precharge_ok()
 {
+    Serial.println("precharge OK!");
     State nextState = PRECHARGE_OK;
     precharge_enable = 1;
     precharge_ok = 1;
@@ -67,6 +68,7 @@ State handle_precharge_ok()
         nextState = STARTUP_DELAY;
         startTime = millis();
     }
+    return nextState;
 }
 
 State handle_startup_delay()
