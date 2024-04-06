@@ -6,7 +6,8 @@ float stateS;
 float rtdButton;
 extern FS_CAN dataCAN;
 extern FS_CAN controlCAN;
-
+float amsOK = 0;
+float imdOK = 0;
 float precharge_enable = 0;
 float precharge_ok = 0;
 FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable, 0, 1, true, 1, 0};
@@ -17,6 +18,10 @@ FS_CAN::CAN_MSG VCU_Precharge{2003, {&precharge_enable_signal, &precharge_ok_sig
 FS_CAN::CAN_SIGNAL stateSignal{&stateS, 8, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
+
+FS_CAN::CAN_SIGNAL amsOKSignal{&amsOK, 40, 8, true, 1, 0};
+FS_CAN::CAN_SIGNAL imdOKSignal{&imdOK, 48, 1, true, 1, 0};
+FS_CAN::CAN_MSG AccMB_Info{2002, {&stateSignal, &rtdButtonSignal}};
 #endif
 
 void setup_task(void *)
@@ -38,6 +43,7 @@ void setup_task(void *)
 #ifndef REAR
     controlCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::HUNDRED_MS);
     controlCAN.publish_CAN_msg(&VCU_Precharge, FS_CAN::HUNDRED_MS);
+    controlCAN.subscribe_to_message(&AccMB_Info);
     xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 #endif
@@ -107,7 +113,8 @@ void VCU_stateMachine(void *)
     {
         stateS = static_cast<float>(state);
         state = states[state]();
-        // BlackBox::log(LOG_INFO, std::format("currentState: {}", static_cast<int>(state)).c_str());
+        Devices::Get().GetPDM().setPin(HSDIN7, !amsOK);
+        Devices::Get().GetPDM().setPin(HSDIN8, !imdOK);
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

@@ -18,7 +18,7 @@ int startTime;
 State handle_start()
 {
     State nextState = START;
-
+    Serial.println("Startup!");
     precharge_enable = 0;
     precharge_ok = 0;
     // inverter command message must be all zeros at least once to "enable" the inverter
@@ -82,6 +82,7 @@ State handle_startup_delay()
     Devices::Get().GetInverter().setTorqueRequest(0);
 
     int currentTime = millis();
+    Devices::Get().GetPDM().setPin(HSDIN4,1);
     if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_THRESHOLD and (currentTime - startTime) < RTD_TIMER)
     {
         nextState = STARTUP_DELAY;
@@ -102,6 +103,7 @@ State handle_drive()
 {
     Devices::Get().GetInverter().inverterEnable = 1;
     Devices::Get().GetInverter().torqueLimit = TORQUE_LIMIT;
+    Devices::Get().GetPDM().setPin(HSDIN4,0);
     State nextState = START;
 
     float throttle = 0;
