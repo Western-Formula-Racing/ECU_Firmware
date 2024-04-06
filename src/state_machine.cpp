@@ -68,6 +68,11 @@ State handle_precharge_ok()
         nextState = STARTUP_DELAY;
         startTime = millis();
     }
+    if (Devices::Get().GetInverter().dcBusVoltage < (Devices::Get().GetBMS().packVoltage * PRECHARGE_THRESHOLD))
+    {
+        Serial.println("inverter voltage lost unexpectedly");
+        nextState = PRECHARGE_ERROR;
+    }
     return nextState;
 }
 

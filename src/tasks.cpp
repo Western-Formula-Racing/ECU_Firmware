@@ -36,7 +36,7 @@ void setup_task(void *)
     xTaskCreate(CLI_Tool::task, "CLI_Task", 2048, nullptr, tskIDLE_PRIORITY + 1, nullptr);
 
 #ifndef REAR
-    dataCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::HUNDRED_MS);
+    controlCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::HUNDRED_MS);
     controlCAN.publish_CAN_msg(&VCU_Precharge, FS_CAN::HUNDRED_MS);
     xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
