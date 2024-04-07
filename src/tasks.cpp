@@ -65,9 +65,9 @@ void frontDAQ(void *)
         for (auto *sensor : Devices::Get().GetSensors())
         {
             sensor->read();
-            // Serial.printf(">sensor%draw:", i);
-            // Serial.print(sensor->rawValue);
-            // Serial.println();
+            Serial.printf(">sensor%draw:", i);
+            Serial.print(sensor->rawValue);
+            Serial.println();
             i++;
         }
         Devices::Get().GetRTDButton().read();
