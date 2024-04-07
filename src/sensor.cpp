@@ -14,7 +14,7 @@ void Sensor::read()
 {
     if(overridden == false){
         rawValue = adc->analogRead(pin);
-        float voltage = (rawValue / pow(2, ADC_RES)) * VREF;
+        voltage = (rawValue / pow(2, ADC_RES)) * VREF;
         value = (voltage * scale_) + offset_;
         filteredValue = filter.filt(value);
     }

@@ -18,6 +18,7 @@ public:
     uint8_t pin;
     float value;
     int rawValue;
+    float voltage;
     float filteredValue;
     LowPass filter;
     bool overridden; 

@@ -66,7 +66,7 @@ void frontDAQ(void *)
         {
             sensor->read();
             Serial.printf(">sensor%draw:", i);
-            Serial.print(sensor->rawValue);
+            Serial.print(sensor->voltage);
             Serial.println();
             i++;
         }
