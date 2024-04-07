@@ -12,7 +12,7 @@ public:
 
 private:
     // Command variables
-    float directionCommand;
+    float directionCommand=1;
     float inverterDischarge = 0; // we don't use the discharge
     float speedModeEnable = 0; // look at page 32 of the CAN documentation
     float torqueRequest;
