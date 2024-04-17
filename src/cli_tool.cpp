@@ -7,7 +7,8 @@ const int MAX_BUFFER_SIZE = 100;
 const CLI_Command cli_commands[]{
     {"test", testCommand, "Test command"},
     {"fake_rtd", fake_rtd, "Command to fake brake and RTD"},
-    {"reset_state", reset_state, "Command to restart state-machine"}
+    {"reset_state", reset_state, "Command to restart state-machine"},
+    {"set_hsd", set_hsd, "Command to set HSD"},
     };
 
 
@@ -28,6 +29,19 @@ void reset_state(int argc, char *argv[])
     BlackBox::log(LOG_INFO, "state machine reset");
     state = START;
 }
+
+void set_hsd(int argc, char *argv[]){
+    std::vector<PDM_PINS> hsdMap ({HSDIN1,HSDIN2,HSDIN3,HSDIN4,HSDIN5,HSDIN6,HSDIN7});
+    Serial.printf("argc:%d 0:%d 1:%d\n", argc, atoi(argv[1]), atoi(argv[2]));
+    if(argc == 3 and atoi(argv[1]) <= 7 and atoi(argv[1]) >= 0){
+        Devices::Get().GetPDM().setPin(hsdMap[atoi(argv[1])], atoi(argv[2]));
+    }
+    else{
+        Serial.println("wrong arguments mf");
+    }
+
+}
+
 
 void testCommand(int argc, char *argv[])
 {

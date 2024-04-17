@@ -20,8 +20,8 @@ FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
 
 FS_CAN::CAN_SIGNAL amsOKSignal{&amsOK, 40, 8, true, 1, 0};
-FS_CAN::CAN_SIGNAL imdOKSignal{&imdOK, 48, 1, true, 1, 0};
-FS_CAN::CAN_MSG AccMB_Info{2002, {&stateSignal, &rtdButtonSignal}};
+FS_CAN::CAN_SIGNAL imdOKSignal{&imdOK, 48, 8, true, 1, 0};
+FS_CAN::CAN_MSG AccMB_Info{2010, {&amsOKSignal, &imdOKSignal}};
 #endif
 
 void setup_task(void *)
@@ -113,8 +113,9 @@ void VCU_stateMachine(void *)
     {
         stateS = static_cast<float>(state);
         state = states[state]();
-        Devices::Get().GetPDM().setPin(HSDIN7, !amsOK);
-        Devices::Get().GetPDM().setPin(HSDIN8, !imdOK);
+        Devices::Get().GetPDM().setPin(HSDIN7, !amsOK); // first light 
+        Devices::Get().GetPDM().setPin(HSDIN5, !imdOK); // second light
+        Serial.printf(">amsOK:%.0f\n>imdOK:%.0f\n", amsOK, imdOK);
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

@@ -1,5 +1,7 @@
 #include "interfaces/pdm.h"
 extern FS_CAN dataCAN;
+extern FS_CAN controlCAN;
+
 PDM::PDM()
 {
     pinMode(HSDIN6, OUTPUT);
@@ -21,7 +23,7 @@ PDM::PDM()
     for(auto pin : pinState){
         pin = 0;
     }
-    dataCAN.publish_CAN_msg(&pdmInfo, FS_CAN::THOUSAND_MS);
+    controlCAN.publish_CAN_msg(&pdmInfo, FS_CAN::THOUSAND_MS);
 }
 
 void PDM::setPin(PDM_PINS pin, int state)

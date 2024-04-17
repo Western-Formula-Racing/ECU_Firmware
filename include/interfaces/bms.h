@@ -7,10 +7,9 @@
 class BMS
 {
 private:
-    // PREFACE: The BMS uses Motorola byte ordering, which is big endian. This is the opposite of what the inverter uses.
-    FS_CAN::CAN_SIGNAL packCurrentSignal{&packCurrent, 0, 8, false, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL packCurrentSignal{&packCurrent, 0, 8, true, 1.0f, 0};
     FS_CAN::CAN_SIGNAL packInstantaneousVoltageSignal{&packVoltage, 8, 16, true, 0.1f, 0};
-    FS_CAN::CAN_SIGNAL packSOCSignal{&packSOC, 24, 8, false, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL packSOCSignal{&packSOC, 24, 8, true, 1.0f, 0};
     FS_CAN::CAN_MSG packStateMessage{1712, {&packCurrentSignal, &packInstantaneousVoltageSignal, &packSOCSignal}};
 
     FS_CAN::CAN_SIGNAL packFlags1Signal{&packFaults1, 8, 16, false, 1.0f, 0};

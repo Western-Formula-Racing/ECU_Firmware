@@ -3,10 +3,13 @@
 
 #include <iostream>
 #include <arduino_freertos.h>
+#include "interfaces/pdm.h"
+
 
 void testCommand(int argc, char *argv[]);
 void fake_rtd(int argc, char *argv[]);
 void reset_state(int argc, char *argv[]);
+void set_hsd(int argc, char *argv[]);
 
 typedef void (*CommandFunction)(int argc, char *argv[]);
 

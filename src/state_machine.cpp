@@ -124,7 +124,6 @@ State handle_precharge_error()
     precharge_enable = 0;
     precharge_ok = 0;
     Devices::Get().GetInverter().setTorqueRequest(0);
-    BlackBox::log(LOG_ERROR, "precharge error");
     vTaskDelay(pdMS_TO_TICKS(1000));
     return PRECHARGE_ERROR;
 }
