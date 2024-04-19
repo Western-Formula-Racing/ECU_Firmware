@@ -1,5 +1,5 @@
 #include "CAN/FS_CAN.h"
-#define SERIAL_PRINT 1
+#define SERIAL_PRINT 0//if you turn this on the program won't work unless the serial monitor is open 
 #if SERIAL_PRINT == 1
 #define debug(x) \
     if (Serial)  \

@@ -20,7 +20,8 @@ private:
                                       &brakePressure1Signal,
                                       &brakePressure2Signal,
                                       }};
-
+    FS_CAN::CAN_SIGNAL brakeLightSignal{&brakeLight, 0, 1, true, 1.0f, 0};
+    FS_CAN::CAN_MSG brakeLightMsg{2011,{&brakeLightSignal}};
 public:
     uint8_t pin1 = A0; // If this is wrong yell at faris
     uint8_t pin2 = A16;
@@ -30,6 +31,7 @@ public:
     float brakePressure1;
     float brakePressure2;
     float avgbrakePressure;
+    float brakeLight;
     Sensor *sensor1;
     Sensor *sensor2;
     Sensor *sensor3;

@@ -115,7 +115,6 @@ void VCU_stateMachine(void *)
         state = states[state]();
         Devices::Get().GetPDM().setPin(HSDIN7, !amsOK); // first light 
         Devices::Get().GetPDM().setPin(HSDIN5, !imdOK); // second light
-        Serial.printf(">amsOK:%.0f\n>imdOK:%.0f\n", amsOK, imdOK);
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

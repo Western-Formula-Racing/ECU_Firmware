@@ -2,6 +2,7 @@
 #include "config/devices.h"
 
 extern FS_CAN dataCAN;
+extern FS_CAN controlCAN;
 
 Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p, Sensor *s4_p)
 {
@@ -11,7 +12,9 @@ Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p, Sensor *s4_p)
     sensor3 = s3_p;
     sensor4 = s4_p;
 #ifndef REAR
-    dataCAN.publish_CAN_msg(&pedalInfoMessage, FS_CAN::HUNDRED_MS);
+    controlCAN.publish_CAN_msg(&pedalInfoMessage, FS_CAN::HUNDRED_MS);
+    controlCAN.publish_CAN_msg(&brakeLightMsg, FS_CAN::HUNDRED_MS);
+
 #endif
 }
 
@@ -23,6 +26,12 @@ float Pedal::getPedalPosition()
     brakePressure1 = sensor3->filteredValue;
     brakePressure2 = sensor4->filteredValue;
     avgbrakePressure = (brakePressure1 + brakePressure2) / 2;
+    if (avgbrakePressure >= BRAKE_THRESHOLD){
+        brakeLight = 1;
+    }
+    else{
+        brakeLight = 0;
+    }
 
     if (max(appsSensor1Position, appsSensor2Position) - min(appsSensor1Position, appsSensor2Position) > APPS_PLAUSIBILITY_THRESHOLD)
     {
@@ -30,7 +39,7 @@ float Pedal::getPedalPosition()
         plausibilityFault = true;
     }
 
-    else if (avgbrakePressure > BRAKE_THRESHOLD)
+    else if (avgbrakePressure > BRAKE_THRESHOLD && ((appsSensor1Position + appsSensor2Position) / 2)>0.1)
     {
         value = 0;
         plausibilityFault = true;
