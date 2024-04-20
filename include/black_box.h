@@ -17,6 +17,21 @@ namespace BlackBox
 
     // Log a message to the black box
     void log(LogLevel level, const char *message);
+
+    // Log a sensor message to the black box
+    void log(SensorMessage_t msg);
+
+    // Log a float sensor message to the black box
+    void logSensor(const char *signalName, float value);
+
+    // Log a int sensor message to the black box
+    void logSensor(const char *signalName, int value);
+
+    // Log a boolean sensor message to the black box
+    void logSensor(const char *signalName, bool value);
+
+    // Clear power cycle counter
+    void clearPowerCycleCounter();
 }
 
 #endif
