@@ -13,7 +13,7 @@ BMS::BMS()
     controlCAN.subscribe_to_message(&packStateMessage);
     controlCAN.subscribe_to_message(&packFaultsMessage);
     #ifndef REAR
-    controlCAN.publish_CAN_msg(&BMSFaultMessage, FS_CAN::THOUSAND_MS);
+    controlCAN.subscribe_to_message(&BMSFaultMessage);
     #endif
 }
 
