@@ -36,13 +36,13 @@ float Pedal::getPedalPosition()
     if (max(appsSensor1Position, appsSensor2Position) - min(appsSensor1Position, appsSensor2Position) > APPS_PLAUSIBILITY_THRESHOLD)
     {
         value = 0;
-        plausibilityFault = true;
+        //plausibilityFault = true;
     }
 
     else if (avgbrakePressure > BRAKE_THRESHOLD && ((appsSensor1Position + appsSensor2Position) / 2)>0.1)
     {
         value = 0;
-        plausibilityFault = true;
+        //plausibilityFault = true;
     }
     else if (((appsSensor1Position + appsSensor2Position) / 2) <= 0.05)
     { // only clear plausability faults if throttle is bellow 5%
