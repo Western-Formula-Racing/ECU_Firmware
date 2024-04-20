@@ -10,6 +10,7 @@ const CLI_Command cli_commands[]{
     {"reset_state", reset_state, "Command to restart state-machine"},
     {"set_hsd", set_hsd, "Command to set HSD"},
     {"set_rear_hsd", set_hsd, "Command to set rearECU HSD"},
+    {"clear_eeprom", clear_eeprom, "Command to clear EEPROM"}
     };
 
 
@@ -46,6 +47,11 @@ void set_rear_hsd(int argc, char *argv[]){
     if(argc == 3 and atoi(argv[1]) <= 7 and atoi(argv[1]) >= 0){
         Devices::Get().GetRearECU().setHSD(atoi(argv[1]), atoi(argv[2]));
     }
+}
+void clear_eeprom(int argc, char *argv[])
+{
+    BlackBox::log(LOG_INFO, "Clearing EEPROM");
+    BlackBox::clearPowerCycleCounter();
 }
 
 

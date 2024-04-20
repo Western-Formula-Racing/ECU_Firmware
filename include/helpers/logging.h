@@ -17,4 +17,14 @@ typedef struct
     // Fixed length of 256 characters
     char message[256];
 } LogMessage_t;
+
+typedef struct
+{
+    // Fixed length of 256 characters
+    char sensorName[256];
+    // The current time
+    time_t time;
+    // Fixed length of 256 characters
+    char sensorValue[256];
+} SensorMessage_t;
 #endif

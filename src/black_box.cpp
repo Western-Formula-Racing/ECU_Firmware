@@ -1,15 +1,20 @@
 #include "black_box.h"
 
-static QueueHandle_t queue = NULL;
+#include <EEPROM.h>
+
+static QueueHandle_t logQueue = NULL;
+static QueueHandle_t sensorQueue = NULL;
 static File logFile = NULL;
+static File sensorFile = NULL;
+
 static void task(void *)
 {
     while (true)
     {
-        if (queue != NULL)
+        if (logQueue != NULL)
         {
             LogMessage_t msg;
-            while (xQueueReceive(queue, &msg, 0) == pdTRUE)
+            while (xQueueReceive(logQueue, &msg, 0) == pdTRUE)
             {
                 Serial.print(msg.time);
                 Serial.print(" - ");
@@ -58,14 +63,33 @@ static void task(void *)
                 }
             }
         }
+        if (sensorQueue != NULL)
+        {
+            SensorMessage_t msg;
+            while (xQueueReceive(sensorQueue, &msg, 0) == pdTRUE)
+            {
+                if (sensorFile)
+                {
+                    sensorFile.print(msg.sensorName);
+                    sensorFile.print(",");
+                    sensorFile.print(msg.time);
+                    sensorFile.print(",");
+                    sensorFile.println(msg.sensorValue);
+                    sensorFile.flush();
+                }
+            }
+        }
         vTaskDelay(pdMS_TO_TICKS(1'000));
     }
 }
 
 void BlackBox::begin(int queueSize, int taskPriority)
 {
-    // Create the queue
-    queue = xQueueCreate(queueSize, sizeof(LogMessage_t));
+    // Create the logQueue
+    logQueue = xQueueCreate(queueSize, sizeof(LogMessage_t));
+
+    // Create the sensorQueue
+    sensorQueue = xQueueCreate(queueSize, sizeof(SensorMessage_t));
 
     // Setup SD card
     if (!SD.begin(BUILTIN_SDCARD))
@@ -73,16 +97,55 @@ void BlackBox::begin(int queueSize, int taskPriority)
         Serial.println("setup(): failed to initialize SD card");
     }
 
-    logFile = SD.open("log.txt", FILE_WRITE);
+    unsigned int powerCycleCount = 0;
 
-    if (!logFile)
+    // Use the EEPROM to store the power cycle count
+    if (EEPROM.read(0) != 0)
     {
-        Serial.println("setup(): failed to open log file");
+        // Count 4 bytes and store the power cycle count
+        powerCycleCount = EEPROM.read(1) << 24 | EEPROM.read(2) << 16 | EEPROM.read(3) << 8 | EEPROM.read(4);
+    }
+
+    // Increment the power cycle count
+    powerCycleCount++;
+
+    // Store the power cycle count
+    EEPROM.write(0, 1);
+    EEPROM.write(1, (powerCycleCount >> 24) & 0xFF);
+    EEPROM.write(2, (powerCycleCount >> 16) & 0xFF);
+    EEPROM.write(3, (powerCycleCount >> 8) & 0xFF);
+    EEPROM.write(4, powerCycleCount & 0xFF);
+
+    // Log file at log_{powerCycleCount}.txt
+    char logFileName[32];
+    sprintf(logFileName, "/log_%u.txt", powerCycleCount);
+
+    logFile = SD.open(logFileName, FILE_WRITE);
+
+    // Sensor file at sensors_{powerCycleCount}.csv
+    char sensorFileName[32];
+    sprintf(sensorFileName, "/sensors_%u.csv", powerCycleCount);
+
+    sensorFile = SD.open(sensorFileName, FILE_WRITE);
+
+    if (sensorFile)
+    {
+        sensorFile.println("signal_name,time_stamp,value");
+        sensorFile.flush();
     }
     else
     {
+        Serial.println("setup(): failed to open sensor file");
+    }
+
+    if (logFile)
+    {
         logFile.println("BlackBox initialized!");
         logFile.flush();
+    }
+    else
+    {
+        Serial.println("setup(): failed to open log file");
     }
 
     // Create the task
@@ -91,18 +154,18 @@ void BlackBox::begin(int queueSize, int taskPriority)
 
 void BlackBox::log(LogMessage_t msg)
 {
-    if (queue != NULL)
+    if (logQueue != NULL)
     {
-        if (xQueueSendToBack(queue, &msg, 0) != pdTRUE)
+        if (xQueueSendToBack(logQueue, &msg, 0) != pdTRUE)
         {
-            Serial.println("BlackBox.log(): failed to send message to queue");
+            Serial.println("BlackBox.log(): failed to send message to logQueue");
         }
     }
 }
 
 void BlackBox::log(LogLevel level, const char *message)
 {
-    if (queue != NULL)
+    if (logQueue != NULL)
     {
         LogMessage_t msg;
 
@@ -118,4 +181,89 @@ void BlackBox::log(LogLevel level, const char *message)
 
         BlackBox::log(msg);
     }
+}
+
+void BlackBox::log(SensorMessage_t msg)
+{
+    if (sensorQueue != NULL)
+    {
+        if (xQueueSendToBack(sensorQueue, &msg, 0) != pdTRUE)
+        {
+            Serial.println("BlackBox.log(): failed to send message to sensorQueue");
+        }
+    }
+}
+
+void BlackBox::logSensor(const char *signalName, float value)
+{
+    if (sensorQueue != NULL)
+    {
+        SensorMessage_t msg;
+
+        msg.time = now();
+        strncpy(msg.sensorName, signalName, 32);
+
+        const int len = snprintf(nullptr, 0, "%f", value);
+        snprintf(msg.sensorValue, len + 1, "%f", value);
+
+        // Ensure the message is null terminated
+        if (sizeof(msg.sensorName) > 0)
+        {
+            msg.sensorName[sizeof(msg.sensorName) - 1] = 0;
+        }
+
+        BlackBox::log(msg);
+    }
+}
+
+void BlackBox::logSensor(const char *signalName, int value)
+{
+    if (sensorQueue != NULL)
+    {
+        SensorMessage_t msg;
+
+        msg.time = now();
+        strncpy(msg.sensorName, signalName, 32);
+
+        const int len = snprintf(nullptr, 0, "%d", value);
+        snprintf(msg.sensorValue, len + 1, "%d", value);
+
+        // Ensure the message is null terminated
+        if (sizeof(msg.sensorName) > 0)
+        {
+            msg.sensorName[sizeof(msg.sensorName) - 1] = 0;
+        }
+
+        BlackBox::log(msg);
+    }
+}
+
+void BlackBox::logSensor(const char *signalName, bool value)
+{
+    if (sensorQueue != NULL)
+    {
+        SensorMessage_t msg;
+
+        msg.time = now();
+        strncpy(msg.sensorName, signalName, 32);
+
+        snprintf(msg.sensorValue, 6, "%s", value ? "true" : "false");
+
+        // Ensure the message is null terminated
+        if (sizeof(msg.sensorName) > 0)
+        {
+            msg.sensorName[sizeof(msg.sensorName) - 1] = 0;
+        }
+
+        BlackBox::log(msg);
+    }
+}
+
+void BlackBox::clearPowerCycleCounter()
+{
+    EEPROM.write(0, 0);
+    EEPROM.write(1, 0);
+    EEPROM.write(2, 0);
+    EEPROM.write(3, 0);
+    EEPROM.write(4, 0);
 }

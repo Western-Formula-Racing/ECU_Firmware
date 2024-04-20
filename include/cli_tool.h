@@ -11,6 +11,7 @@ void fake_rtd(int argc, char *argv[]);
 void reset_state(int argc, char *argv[]);
 void set_hsd(int argc, char *argv[]);
 void set_rear_hsd(int argc, char *argv[]);
+void clear_eeprom(int argc, char *argv[]);
 typedef void (*CommandFunction)(int argc, char *argv[]);
 
 struct CLI_Command
