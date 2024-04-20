@@ -13,7 +13,7 @@ float precharge_ok = 0;
 FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable, 0, 1, true, 1, 0};
 FS_CAN::CAN_SIGNAL precharge_ok_signal{&precharge_ok, 1, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_Precharge{2003, {&precharge_enable_signal, &precharge_ok_signal}};
-
+ 
 #ifndef REAR
 FS_CAN::CAN_SIGNAL stateSignal{&stateS, 8, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
@@ -22,6 +22,29 @@ FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
 FS_CAN::CAN_SIGNAL amsOKSignal{&amsOK, 40, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL imdOKSignal{&imdOK, 48, 8, true, 1, 0};
 FS_CAN::CAN_MSG AccMB_Info{2010, {&amsOKSignal, &imdOKSignal}};
+#endif
+
+#ifdef REAR
+    float HSDEnable[8];
+    FS_CAN::CAN_SIGNAL HSD1_Enable_Signal{&HSDEnable[0], 0, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL HSD2_Enable_Signal{&HSDEnable[1], 8, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL HSD3_Enable_Signal{&HSDEnable[2], 16, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL HSD4_Enable_Signal{&HSDEnable[3], 24, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL HSD5_Enable_Signal{&HSDEnable[4], 32, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL HSD6_Enable_Signal{&HSDEnable[5], 40, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL HSD7_Enable_Signal{&HSDEnable[6], 48, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL HSD8_Enable_Signal{&HSDEnable[7], 56, 8, true, 1.0f, 0};
+    FS_CAN::CAN_MSG VCU_rearECU_command{2012, 
+    {
+    &HSD1_Enable_Signal,
+    &HSD2_Enable_Signal,
+    &HSD3_Enable_Signal,
+    &HSD4_Enable_Signal,
+    &HSD5_Enable_Signal,
+    &HSD6_Enable_Signal,
+    &HSD7_Enable_Signal,
+    &HSD8_Enable_Signal,
+    }};
 #endif
 
 void setup_task(void *)
@@ -49,6 +72,7 @@ void setup_task(void *)
 #endif
 #ifdef REAR
     controlCAN.subscribe_to_message(&VCU_Precharge);
+    controlCAN.subscribe_to_message(&VCU_rearECU_command);
     xTaskCreate(rearECU_task, "rearECU_task", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 #endif
     vTaskDelete(nullptr);
@@ -90,6 +114,7 @@ void frontDAQ(void *)
         digitalWriteFast(LED_BUILTIN, LOW);
     }
 }
+#ifdef REAR
 void rearECU_task(void *)
 {
     while (1)
@@ -102,10 +127,16 @@ void rearECU_task(void *)
         }
         Devices::Get().GetPDM().setPin(HSDIN2, precharge_enable);
         Devices::Get().GetPDM().setPin(HSDIN3, precharge_ok);
+        Devices::Get().GetPDM().setPin(HSDIN1, HSDEnable[0]);
+        Devices::Get().GetPDM().setPin(HSDIN4, HSDEnable[3]);
+        Devices::Get().GetPDM().setPin(HSDIN5, HSDEnable[4]);
+        Devices::Get().GetPDM().setPin(HSDIN6, HSDEnable[5]);
+        Devices::Get().GetPDM().setPin(HSDIN7, HSDEnable[6]);
+        Devices::Get().GetPDM().setPin(HSDIN8, HSDEnable[7]);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
-
+#endif
 void VCU_stateMachine(void *)
 {
     state = START;

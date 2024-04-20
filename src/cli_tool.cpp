@@ -9,6 +9,7 @@ const CLI_Command cli_commands[]{
     {"fake_rtd", fake_rtd, "Command to fake brake and RTD"},
     {"reset_state", reset_state, "Command to restart state-machine"},
     {"set_hsd", set_hsd, "Command to set HSD"},
+    {"set_rear_hsd", set_hsd, "Command to set rearECU HSD"},
     };
 
 
@@ -40,6 +41,11 @@ void set_hsd(int argc, char *argv[]){
         Serial.println("wrong arguments mf");
     }
 
+}
+void set_rear_hsd(int argc, char *argv[]){
+    if(argc == 3 and atoi(argv[1]) <= 7 and atoi(argv[1]) >= 0){
+        Devices::Get().GetRearECU().setHSD(atoi(argv[1]), atoi(argv[2]));
+    }
 }
 
 

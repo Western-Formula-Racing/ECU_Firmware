@@ -8,6 +8,7 @@
 #include "interfaces/inverter.h"
 #include "interfaces/pdm.h"
 #include "digitalSensor.h"
+#include "interfaces/rearECU.h"
 
 class Devices
 {
@@ -45,6 +46,10 @@ public:
     {
         return rtdButton;
     }
+    rearECU &GetRearECU()
+    {
+        return rearEcu;
+    }
     
     
     Devices(const Devices &) = delete;
@@ -66,6 +71,7 @@ private:
     Pedal pedal;
     std::array<Sensor *, 4> sensors;
     PDM pdm;
+    rearECU rearEcu;
 private:
     Devices()
         : inverter(), bms(), adc(), 
@@ -74,7 +80,7 @@ private:
         sense3(&adc, A7, 0, 1, 2, 2, 1e3, true), 
         sense4(&adc, A10, 0, 1, 2, 2, 1e3, true),
         rtdButton(&adc,36), pedal(&sense1, &sense2, &sense3, &sense4), sensors({&sense1, &sense2, &sense3, &sense4}),
-        pdm()
+        pdm(), rearEcu()
     {
         Serial.println("Devices:Devices() constructor called");
     }

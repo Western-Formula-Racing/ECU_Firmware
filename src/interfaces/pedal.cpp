@@ -27,10 +27,10 @@ float Pedal::getPedalPosition()
     brakePressure2 = sensor4->filteredValue;
     avgbrakePressure = (brakePressure1 + brakePressure2) / 2;
     if (avgbrakePressure >= BRAKE_THRESHOLD){
-        brakeLight = 1;
+        Devices::Get().GetRearECU().setHSD(0,1);// break light
     }
     else{
-        brakeLight = 0;
+        Devices::Get().GetRearECU().setHSD(0,0);
     }
 
     if (max(appsSensor1Position, appsSensor2Position) - min(appsSensor1Position, appsSensor2Position) > APPS_PLAUSIBILITY_THRESHOLD)

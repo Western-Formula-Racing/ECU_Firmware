@@ -29,24 +29,26 @@ std::unordered_map<int,int>  hsdMap{
     {HSDIN5,4},
     {HSDIN6,5},
     {HSDIN7,6},
+    {HSDIN8,7},
 };
 
-    std::array<float,7> pinState;
-    std::array<FS_CAN::CAN_SIGNAL,7> pinStateSignals{{
+    std::array<float,8> pinState;
+    std::array<FS_CAN::CAN_SIGNAL,8> pinStateSignals{{
         {&pinState[0], 0, 1, true, 1.0f, 0},
         {&pinState[1], 1, 1, true, 1.0f, 0},
         {&pinState[2], 2, 1, true, 1.0f, 0},
         {&pinState[3], 3, 1, true, 1.0f, 0},
         {&pinState[4], 4, 1, true, 1.0f, 0},
         {&pinState[5], 5, 1, true, 1.0f, 0},
-        {&pinState[6], 6, 1, true, 1.0f, 0}
+        {&pinState[6], 6, 1, true, 1.0f, 0},
+        {&pinState[7], 7, 1, true, 1.0f, 0}
     }};
     
     #ifndef REAR
-    FS_CAN::CAN_MSG pdmInfo{2001, {&pinStateSignals[0],&pinStateSignals[1],&pinStateSignals[2],&pinStateSignals[3],&pinStateSignals[4],&pinStateSignals[5],&pinStateSignals[6]}};
+    FS_CAN::CAN_MSG pdmInfo{2001, {&pinStateSignals[0],&pinStateSignals[1],&pinStateSignals[2],&pinStateSignals[3],&pinStateSignals[4],&pinStateSignals[5],&pinStateSignals[6],&pinStateSignals[7]}};
     #endif
     #ifdef REAR
-    FS_CAN::CAN_MSG pdmInfo{2004, {&pinStateSignals[0],&pinStateSignals[1],&pinStateSignals[2],&pinStateSignals[3],&pinStateSignals[4],&pinStateSignals[5],&pinStateSignals[6]}};
+    FS_CAN::CAN_MSG pdmInfo{2004, {&pinStateSignals[0],&pinStateSignals[1],&pinStateSignals[2],&pinStateSignals[3],&pinStateSignals[4],&pinStateSignals[5],&pinStateSignals[6],&pinStateSignals[7]}};
     #endif
     // Setup the pins on the Teensy for the correct mode
     PDM();

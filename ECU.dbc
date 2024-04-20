@@ -28,8 +28,15 @@ BS_:
 BU_: INV BMS VCU BMS Third_Party_Device BMS Third_Party_Device
 
 
-BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
- SG_ NewSignal_0017 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+BO_ 2012 VCU_rearPDM_Command: 8 VCU
+ SG_ HSD1 : 0|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD2 : 8|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD3 : 16|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD4 : 24|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD5 : 32|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD6 : 40|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD7 : 48|8@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD8 : 56|8@1+ (1,0) [0|1] "" Vector__XXX
 
 BO_ 173 M173_Modulation_And_Flux_Info: 8 INV
  SG_ INV_Iq_Command : 48|16@1- (0.1,0) [-3276.8|3276.7] "current:A" Vector__XXX
@@ -252,6 +259,7 @@ BO_ 2004 VCU_PDMRear: 8 VCU
  SG_ HSD5 : 4|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ HSD6 : 5|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ HSD7 : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ HSD8 : 7|1@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
  SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX

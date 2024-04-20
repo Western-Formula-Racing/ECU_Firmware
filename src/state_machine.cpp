@@ -59,7 +59,6 @@ State handle_precharge_enable()
 
 State handle_precharge_ok()
 {
-    Serial.println("precharge OK!");
     State nextState = PRECHARGE_OK;
     precharge_enable = 1;
     precharge_ok = 1;
