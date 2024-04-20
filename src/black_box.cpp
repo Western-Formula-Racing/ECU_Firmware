@@ -102,8 +102,7 @@ void BlackBox::begin(int queueSize, int taskPriority)
     // Use the EEPROM to store the power cycle count
     if (EEPROM.read(0) != 0)
     {
-        // Count 4 bytes and store the power cycle count
-        powerCycleCount = EEPROM.read(1) << 24 | EEPROM.read(2) << 16 | EEPROM.read(3) << 8 | EEPROM.read(4);
+        EEPROM.get(1, powerCycleCount);
     }
 
     // Increment the power cycle count
@@ -111,10 +110,7 @@ void BlackBox::begin(int queueSize, int taskPriority)
 
     // Store the power cycle count
     EEPROM.write(0, 1);
-    EEPROM.write(1, (powerCycleCount >> 24) & 0xFF);
-    EEPROM.write(2, (powerCycleCount >> 16) & 0xFF);
-    EEPROM.write(3, (powerCycleCount >> 8) & 0xFF);
-    EEPROM.write(4, powerCycleCount & 0xFF);
+    EEPROM.put(1, powerCycleCount);
 
     // Log file at log_{powerCycleCount}.txt
     char logFileName[32];
@@ -170,7 +166,7 @@ void BlackBox::log(LogLevel level, const char *message)
         LogMessage_t msg;
 
         msg.level = level;
-        msg.time = now();
+        msg.time = millis();
         strncpy(msg.message, message, 256);
 
         // Ensure the message is null terminated
@@ -200,7 +196,7 @@ void BlackBox::logSensor(const char *signalName, float value)
     {
         SensorMessage_t msg;
 
-        msg.time = now();
+        msg.time = millis();
         strncpy(msg.sensorName, signalName, 32);
 
         const int len = snprintf(nullptr, 0, "%f", value);
@@ -222,7 +218,7 @@ void BlackBox::logSensor(const char *signalName, int value)
     {
         SensorMessage_t msg;
 
-        msg.time = now();
+        msg.time = millis();
         strncpy(msg.sensorName, signalName, 32);
 
         const int len = snprintf(nullptr, 0, "%d", value);
@@ -244,7 +240,7 @@ void BlackBox::logSensor(const char *signalName, bool value)
     {
         SensorMessage_t msg;
 
-        msg.time = now();
+        msg.time = millis();
         strncpy(msg.sensorName, signalName, 32);
 
         snprintf(msg.sensorValue, 6, "%s", value ? "true" : "false");
