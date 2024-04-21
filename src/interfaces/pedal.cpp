@@ -11,6 +11,30 @@ Pedal::Pedal(Sensor *s1_p, Sensor *s2_p, Sensor *s3_p, Sensor *s4_p)
     sensor2 = s2_p;
     sensor3 = s3_p;
     sensor4 = s4_p;
+    float apps1_min;
+    float apps1_max;
+    float apps2_min;
+    float apps2_max;
+    EEPROM.get(0x8, apps1_min);
+    EEPROM.get(0x8 + sizeof(float), apps1_max);
+    EEPROM.get(0x8 + (2*0x8+sizeof(float)), apps2_min);
+    EEPROM.get(0x8 + (3*0x8+sizeof(float)), apps2_max);
+
+    if(apps1_min<5.0 and apps1_min>0.0 and apps1_max<5.0 and apps1_max >0.0 and
+        apps2_min<5.0 and apps2_min>0.0 and apps2_max<5.0 and apps2_max >0.0 ){
+            APPS1_MIN_VOLTAGE = apps1_min;
+            APPS1_MAX_VOLTAGE = apps1_max;
+            APPS2_MIN_VOLTAGE = apps2_min;
+            APPS2_MAX_VOLTAGE = apps2_max;
+            Serial.println("pedal values loaded");  
+
+        }
+    Serial.printf(">APPS1_MAX:%.2f\n", APPS1_MAX_VOLTAGE);
+    Serial.printf(">APPS2_MAX:%.2f\n", APPS2_MAX_VOLTAGE);
+    Serial.printf(">APPS1_MIN:%.2f\n", APPS1_MIN_VOLTAGE);
+    Serial.printf(">APPS2_MIN:%.2f\n", APPS2_MIN_VOLTAGE);
+
+
 #ifndef REAR
     controlCAN.publish_CAN_msg(&pedalInfoMessage, FS_CAN::HUNDRED_MS);
     controlCAN.publish_CAN_msg(&brakeLightMsg, FS_CAN::HUNDRED_MS);
@@ -26,33 +50,31 @@ float Pedal::getPedalPosition()
     brakePressure1 = sensor3->filteredValue;
     brakePressure2 = sensor4->filteredValue;
     avgbrakePressure = (brakePressure1 + brakePressure2) / 2;
+    float pedalDisagreement = max(appsSensor1Position, appsSensor2Position) - min(appsSensor1Position, appsSensor2Position);
+    float pedalAvg = ((appsSensor1Position + appsSensor2Position) / 2);
     if (avgbrakePressure >= BRAKE_THRESHOLD){
         Devices::Get().GetRearECU().setHSD(0,1);// break light
+        brakeLatch = true;
     }
     else{
         Devices::Get().GetRearECU().setHSD(0,0);
     }
 
-    if (max(appsSensor1Position, appsSensor2Position) - min(appsSensor1Position, appsSensor2Position) > APPS_PLAUSIBILITY_THRESHOLD)
+    if (pedalDisagreement > APPS_PLAUSIBILITY_THRESHOLD)
     {
         value = 0;
-        //plausibilityFault = true;
+        plausibilityFault = true;
     }
 
-    else if (avgbrakePressure > BRAKE_THRESHOLD && ((appsSensor1Position + appsSensor2Position) / 2)>0.1)
-    {
-        value = 0;
-        //plausibilityFault = true;
-    }
-    else if (((appsSensor1Position + appsSensor2Position) / 2) <= 0.05)
+    if (pedalAvg <= 0.05)
     { // only clear plausability faults if throttle is bellow 5%
-        value = 0;
         plausibilityFault = false;
+        brakeLatch = false;
     }
 
-    else if (plausibilityFault == false)
+    if (plausibilityFault == false and brakeLatch == false)
     {
-        value = (appsSensor1Position + appsSensor2Position) / 2;
+        value = pedalAvg;
         plausibilityFault = false;
     }
 

@@ -10,7 +10,9 @@ const CLI_Command cli_commands[]{
     {"reset_state", reset_state, "Command to restart state-machine"},
     {"set_hsd", set_hsd, "Command to set HSD"},
     {"set_rear_hsd", set_hsd, "Command to set rearECU HSD"},
-    {"clear_eeprom", clear_eeprom, "Command to clear EEPROM"}
+    {"clear_eeprom", clear_eeprom, "Command to clear EEPROM"},
+    {"set_apps_max", set_apps_max, "Command to clear calibrate pedals"},
+    {"set_apps_min", set_apps_min, "Command to clear calibrate pedals"},
     };
 
 
@@ -54,6 +56,22 @@ void clear_eeprom(int argc, char *argv[])
     BlackBox::clearPowerCycleCounter();
 }
 
+void set_apps_max(int argc, char *argv[]){
+    APPS1_MAX_VOLTAGE = Devices::Get().GetPedal().sensor1->filteredValue;
+    APPS2_MAX_VOLTAGE = Devices::Get().GetPedal().sensor2->filteredValue;
+    EEPROM.put(0x8 + sizeof(float), APPS1_MAX_VOLTAGE);
+    EEPROM.put(0x8 + (3*0x8+sizeof(float)), APPS2_MAX_VOLTAGE);
+    Serial.printf(">APPS1_MAX:%.2f\n", APPS1_MAX_VOLTAGE);
+    Serial.printf(">APPS2_MAX:%.2f\n", APPS2_MAX_VOLTAGE);
+}
+void set_apps_min(int argc, char *argv[]){
+    APPS1_MIN_VOLTAGE = Devices::Get().GetPedal().sensor1->filteredValue;
+    APPS2_MIN_VOLTAGE = Devices::Get().GetPedal().sensor2->filteredValue;
+    EEPROM.put(0x8, APPS1_MIN_VOLTAGE);
+    EEPROM.put(0x8 + (2*0x8+sizeof(float)), APPS2_MIN_VOLTAGE);
+    Serial.printf(">APPS1_MIN:%.2f\n", APPS1_MIN_VOLTAGE);
+    Serial.printf(">APPS2_MIN:%.2f\n", APPS2_MIN_VOLTAGE);
+}
 
 void testCommand(int argc, char *argv[])
 {
