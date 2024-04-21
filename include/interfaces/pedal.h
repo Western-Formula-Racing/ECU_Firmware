@@ -1,6 +1,7 @@
 #pragma once
 #include "required_includes.h"
 #include "sensor.h"
+#include <EEPROM.h>
 
 class Pedal
 {
@@ -32,6 +33,7 @@ public:
     float brakePressure2;
     float avgbrakePressure;
     float brakeLight;
+    bool brakeLatch = false;
     Sensor *sensor1;
     Sensor *sensor2;
     Sensor *sensor3;

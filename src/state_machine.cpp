@@ -46,7 +46,7 @@ State handle_precharge_enable()
     }
     else if (Devices::Get().GetInverter().dcBusVoltage < max( (Devices::Get().GetBMS().packVoltage * PRECHARGE_THRESHOLD),INVERTER_CUTOFF_VOLTAGE))
     {
-        Serial.println("waiting for inverter voltage");
+        //Serial.println("waiting for inverter voltage");
         nextState = PRECHARGE_ENABLE;
     }
     else
