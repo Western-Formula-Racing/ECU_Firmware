@@ -62,7 +62,8 @@ State handle_precharge_ok()
     State nextState = PRECHARGE_OK;
     precharge_enable = 1;
     precharge_ok = 1;
-    if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_THRESHOLD)
+    Devices::Get().GetPDM().setPin(HSDIN4,0);
+    if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_RTD_THRESHOLD)
     {
         nextState = STARTUP_DELAY;
         startTime = millis();
@@ -82,11 +83,11 @@ State handle_startup_delay()
 
     int currentTime = millis();
     Devices::Get().GetPDM().setPin(HSDIN4,1);
-    if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_THRESHOLD and (currentTime - startTime) < RTD_TIMER)
+    if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_RTD_THRESHOLD and (currentTime - startTime) < RTD_TIMER)
     {
         nextState = STARTUP_DELAY;
     }
-    else if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_THRESHOLD and (currentTime - startTime) >= RTD_TIMER)
+    else if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_RTD_THRESHOLD and (currentTime - startTime) >= RTD_TIMER)
     {
         nextState = DRIVE;
         startTime = millis();

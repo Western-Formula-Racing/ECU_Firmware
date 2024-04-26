@@ -13,15 +13,14 @@ float precharge_ok = 0;
 FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable, 0, 1, true, 1, 0};
 FS_CAN::CAN_SIGNAL precharge_ok_signal{&precharge_ok, 1, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_Precharge{2003, {&precharge_enable_signal, &precharge_ok_signal}};
+FS_CAN::CAN_SIGNAL amsOKSignal{&amsOK, 40, 8, true, 1, 0};
+FS_CAN::CAN_SIGNAL imdOKSignal{&imdOK, 48, 8, true, 1, 0};
+FS_CAN::CAN_MSG AccMB_Info{2010, {&amsOKSignal, &imdOKSignal}};
  
 #ifndef REAR
 FS_CAN::CAN_SIGNAL stateSignal{&stateS, 8, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
-
-FS_CAN::CAN_SIGNAL amsOKSignal{&amsOK, 40, 8, true, 1, 0};
-FS_CAN::CAN_SIGNAL imdOKSignal{&imdOK, 48, 8, true, 1, 0};
-FS_CAN::CAN_MSG AccMB_Info{2010, {&amsOKSignal, &imdOKSignal}};
 #endif
 
 #ifdef REAR
@@ -73,6 +72,7 @@ void setup_task(void *)
 #ifdef REAR
     controlCAN.subscribe_to_message(&VCU_Precharge);
     controlCAN.subscribe_to_message(&VCU_rearECU_command);
+    controlCAN.publish_CAN_msg(&AccMB_Info, FS_CAN::HUNDRED_MS);
     xTaskCreate(rearECU_task, "rearECU_task", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 #endif
     vTaskDelete(nullptr);
@@ -133,6 +133,8 @@ void rearECU_task(void *)
         Devices::Get().GetPDM().setPin(HSDIN6, HSDEnable[5]);
         Devices::Get().GetPDM().setPin(HSDIN7, HSDEnable[6]);
         Devices::Get().GetPDM().setPin(HSDIN8, HSDEnable[7]);
+        imdOK = digitalRead(A2);
+        amsOK = digitalRead(A8);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
@@ -146,6 +148,20 @@ void VCU_stateMachine(void *)
         state = states[state]();
         Devices::Get().GetPDM().setPin(HSDIN7, !amsOK); // first light 
         Devices::Get().GetPDM().setPin(HSDIN5, !imdOK); // second light
+        if (state == DRIVE){
+            Devices::Get().GetPDM().setPin(HSDIN6, 1); // RTD light 
+        }
+        else{
+            Devices::Get().GetPDM().setPin(HSDIN6, 0);
+        }
+         if (Devices::Get().GetInverter().dcBusVoltage >= 60){
+            Devices::Get().GetPDM().setPin(HSDIN8, 1); // HVP light 
+        }
+        else{
+            Devices::Get().GetPDM().setPin(HSDIN8, 0);
+        }
+
+
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

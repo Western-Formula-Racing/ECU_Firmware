@@ -52,12 +52,14 @@ float Pedal::getPedalPosition()
     avgbrakePressure = (brakePressure1 + brakePressure2) / 2;
     float pedalDisagreement = max(appsSensor1Position, appsSensor2Position) - min(appsSensor1Position, appsSensor2Position);
     float pedalAvg = ((appsSensor1Position + appsSensor2Position) / 2);
-    if (avgbrakePressure >= BRAKE_THRESHOLD){
+    if (avgbrakePressure >= BRAKE_LIGHT_THRESHOLD){
         Devices::Get().GetRearECU().setHSD(0,1);// break light
-        brakeLatch = true;
     }
     else{
         Devices::Get().GetRearECU().setHSD(0,0);
+    }
+    if (avgbrakePressure >= BRAKE_PLAUSABILITY_THRESHOLD){
+        brakeLatch = true;
     }
 
     if (pedalDisagreement > APPS_PLAUSIBILITY_THRESHOLD)
