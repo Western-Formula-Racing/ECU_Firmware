@@ -126,10 +126,10 @@ void rearECU_task(void *)
             i++;
         }
         Devices::Get().GetPDM().setPin(HSDIN2, precharge_enable);
-        Devices::Get().GetPDM().setPin(HSDIN3, precharge_ok);
+        Devices::Get().GetPDM().setPin(HSDIN5, precharge_ok);
         Devices::Get().GetPDM().setPin(HSDIN1, HSDEnable[0]);
         Devices::Get().GetPDM().setPin(HSDIN4, HSDEnable[3]);
-        Devices::Get().GetPDM().setPin(HSDIN5, HSDEnable[4]);
+        Devices::Get().GetPDM().setPin(HSDIN3, HSDEnable[4]);
         Devices::Get().GetPDM().setPin(HSDIN6, HSDEnable[5]);
         Devices::Get().GetPDM().setPin(HSDIN7, HSDEnable[6]);
         Devices::Get().GetPDM().setPin(HSDIN8, HSDEnable[7]);
