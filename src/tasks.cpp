@@ -110,6 +110,18 @@ void frontDAQ(void *)
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
         Serial.printf(">inverterVoltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
         Serial.printf(">precharge thresh:%f\n", Devices::Get().GetBMS().packVoltage * 0.90);
+        Serial.printf(">inv_torque_feedback:%f\n", Devices::Get().GetInverter().torqueFeedback);
+        
+        BlackBox::logSensor("state",static_cast<int>(state));
+        BlackBox::logSensor("inv_torque feedback", Devices::Get().GetInverter().torqueFeedback);
+        BlackBox::logSensor("pedal_position",pedalPos);
+        BlackBox::logSensor("apps1",Devices::Get().GetPedal().appsSensor1Position);
+        BlackBox::logSensor("apps2",Devices::Get().GetPedal().appsSensor2Position);
+        BlackBox::logSensor("brake_avg", Devices::Get().GetPedal().avgbrakePressure);
+        BlackBox::logSensor("torqueRequest",Devices::Get().GetInverter().getTorqueRequest());
+        BlackBox::logSensor("packVoltage", Devices::Get().GetBMS().packVoltage);   
+        
+        
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
     }
