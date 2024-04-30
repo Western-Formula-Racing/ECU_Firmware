@@ -8,7 +8,7 @@ class Inverter
 {
 public:
     float inverterEnable ;
-    float torqueLimit ;
+    float torqueLimit = TORQUE_LIMIT;
 
 private:
     // Command variables
