@@ -114,7 +114,7 @@ State handle_drive()
 
     if (Devices::Get().GetInverter().dcBusVoltage >= INVERTER_CUTOFF_VOLTAGE)
     {
-        Devices::Get().GetInverter().setTorqueRequest(throttle * 200);
+        Devices::Get().GetInverter().setTorqueRequest(throttle * TORQUE_LIMIT);
         nextState = DRIVE;
     }
     return nextState;
