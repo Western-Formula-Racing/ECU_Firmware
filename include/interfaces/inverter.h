@@ -40,6 +40,27 @@ private:
     FS_CAN::CAN_SIGNAL stateSignal{&inverterState, 16, 8, true, 1.0f, 0};
     FS_CAN::CAN_MSG internalStatesMessage{170, {&enableStateSignal, &runModeSignal, &stateSignal}};
 
+    //M168_Flux_ID_IQ_Info
+    FS_CAN::CAN_SIGNAL iqSignal{&iq, 48, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL idSignal{&id, 32, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL vq_ff_Signal{&vq_ff, 16, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL vd_ff_Signal{&vd_ff, 0, 16, true, 0.1f, 0};
+    FS_CAN::CAN_MSG M168_Flux_ID_IQ_Info{168, {&iqSignal, &idSignal, &vq_ff_Signal, &vd_ff_Signal}};
+
+    //M166_Current_Info
+    FS_CAN::CAN_SIGNAL INV_DC_Bus_Current_Signal{&INV_DC_Bus_Current, 48, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL INV_Phase_C_Current_Signal{&INV_Phase_C_Current, 32, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL INV_Phase_B_Current_Signal{&INV_Phase_B_Current, 16, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL INV_Phase_A_Current_Signal{&INV_Phase_A_Current, 0, 16, true, 0.1f, 0};
+    FS_CAN::CAN_MSG M166_Current_Info{166, {&INV_DC_Bus_Current_Signal, &INV_Phase_C_Current_Signal, &INV_Phase_B_Current_Signal, &INV_Phase_A_Current_Signal}};
+
+    //M162_Temperature_Set_3
+    FS_CAN::CAN_SIGNAL INV_Torque_Shudder_Signal{&INV_Torque_Shudder, 48, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL INV_Motor_Temp_Signal{&INV_Motor_Temp, 32, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL INV_Hot_Spot_Temp_Signal{&INV_Hot_Spot_Temp, 16, 16, true, 0.1f, 0};
+    FS_CAN::CAN_SIGNAL INV_Coolant_Temp_Signal{&INV_Coolant_Temp, 0, 16, true, 0.1f, 0};
+    FS_CAN::CAN_MSG M162_Temperature_Set_3{162, {&INV_DC_Bus_Current_Signal, &INV_Phase_C_Current_Signal, &INV_Phase_B_Current_Signal, &INV_Phase_A_Current_Signal}};
+
 public:
     // Inverter Status Variables:
     float commandedTorque;
@@ -50,6 +71,25 @@ public:
     float enableState;
     float runMode;
     float inverterState;
+
+    //M168_Flux_ID_IQ_Info
+    float iq;
+    float id;
+    float vq_ff;
+    float vd_ff;
+
+    //M166_Current_Info
+    float INV_DC_Bus_Current;
+    float INV_Phase_C_Current;
+    float INV_Phase_B_Current;
+    float INV_Phase_A_Current;
+
+    //M162_Temperature_Set_3
+    float INV_Torque_Shudder;
+    float INV_Motor_Temp;
+    float INV_Hot_Spot_Temp;
+    float INV_Coolant_Temp;
+ 
     
     struct INVERTER_FAULTS
     {

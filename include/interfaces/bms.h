@@ -7,7 +7,7 @@
 class BMS
 {
 private:
-    FS_CAN::CAN_SIGNAL packCurrentSignal{&packCurrent, 0, 8, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL packCurrentSignal{&packCurrent, 0, 8, true, 0.1f, 0};
     FS_CAN::CAN_SIGNAL packInstantaneousVoltageSignal{&packVoltage, 8, 16, true, 0.1f, 0};
     FS_CAN::CAN_SIGNAL packSOCSignal{&packSOC, 24, 8, true, 1.0f, 0};
     FS_CAN::CAN_MSG packStateMessage{1712, {&packCurrentSignal, &packInstantaneousVoltageSignal, &packSOCSignal}};
@@ -19,6 +19,10 @@ private:
     FS_CAN::CAN_SIGNAL BMSFaultSignal{&BMSFault, 0, 8, false, 1.0f, 0};
     FS_CAN::CAN_MSG BMSFaultMessage{500, {&BMSFaultSignal}};
 
+    FS_CAN::CAN_SIGNAL lowTemp1_Signal{&lowTemp1, 8, 8, false, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL highTemp1_Signal{&highTemp1, 16, 8, false, 1.0f, 0};
+    FS_CAN::CAN_MSG ThermistorModule1_msg{0x1839F380, {&lowTemp1_Signal, &highTemp1_Signal}};
+
 public:
     // BMS Status Variables:
     float packCurrent; // amps
@@ -29,6 +33,11 @@ public:
     float packFaults1; // bitfield
     float packFaults2; // bitfield
 
+    //BMS Temps
+
+
+    float lowTemp1;
+    float highTemp1;
     float BMSFault;
 
     BMS();

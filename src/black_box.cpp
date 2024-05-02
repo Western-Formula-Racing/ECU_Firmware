@@ -79,7 +79,7 @@ static void task(void *)
                 }
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(1'000));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 

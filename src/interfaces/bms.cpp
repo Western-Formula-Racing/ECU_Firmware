@@ -13,7 +13,8 @@ BMS::BMS()
     controlCAN.subscribe_to_message(&packStateMessage);
     controlCAN.subscribe_to_message(&packFaultsMessage);
     #ifndef REAR
-    controlCAN.subscribe_to_message(&BMSFaultMessage);
+    controlCAN.subscribe_to_message(&ThermistorModule1_msg);
+
     #endif
 }
 

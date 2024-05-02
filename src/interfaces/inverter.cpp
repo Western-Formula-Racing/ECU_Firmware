@@ -11,7 +11,10 @@ Inverter::Inverter()
     #endif
     controlCAN.subscribe_to_message(&fastInfoMessage);
     controlCAN.subscribe_to_message(&internalStatesMessage);
-    
+    controlCAN.subscribe_to_message(&M168_Flux_ID_IQ_Info);
+    controlCAN.subscribe_to_message(&M166_Current_Info);
+    controlCAN.subscribe_to_message(&M162_Temperature_Set_3);
+
 }
 
 void Inverter::setTorqueRequest(float torque)

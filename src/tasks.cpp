@@ -106,21 +106,45 @@ void frontDAQ(void *)
         Serial.printf(">MotorSpeed:%f\n", Devices::Get().GetInverter().motorSpeed);
         Serial.printf(">InvEnable:%f\n", Devices::Get().GetInverter().inverterEnable);
         Serial.printf(">TorqueLimit:%f\n", Devices::Get().GetInverter().torqueLimit);
-        Serial.printf(">InvState:%f\n", Devices::Get().GetInverter().enableState);
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
         Serial.printf(">inverterVoltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
         Serial.printf(">precharge thresh:%f\n", Devices::Get().GetBMS().packVoltage * 0.90);
         Serial.printf(">inv_torque_feedback:%f\n", Devices::Get().GetInverter().torqueFeedback);
+        Serial.printf(">inv_commandedTorque:%f\n", Devices::Get().GetInverter().commandedTorque);
+        Serial.printf(">iq:%f\n", Devices::Get().GetInverter().iq);
+        Serial.printf(">INV_DC_Bus_Current:%f\n", Devices::Get().GetInverter().INV_DC_Bus_Current);
+        Serial.printf(">INV_Coolant_Temp:%f\n", Devices::Get().GetInverter().INV_Coolant_Temp);
         
+
+
         BlackBox::logSensor("state",static_cast<int>(state));
+        BlackBox::logSensor("torqueRequest",Devices::Get().GetInverter().getTorqueRequest());
+        BlackBox::logSensor("inv_torque_request", Devices::Get().GetInverter().commandedTorque);
         BlackBox::logSensor("inv_torque feedback", Devices::Get().GetInverter().torqueFeedback);
         BlackBox::logSensor("pedal_position",pedalPos);
         BlackBox::logSensor("apps1",Devices::Get().GetPedal().appsSensor1Position);
         BlackBox::logSensor("apps2",Devices::Get().GetPedal().appsSensor2Position);
         BlackBox::logSensor("brake_avg", Devices::Get().GetPedal().avgbrakePressure);
-        BlackBox::logSensor("torqueRequest",Devices::Get().GetInverter().getTorqueRequest());
         BlackBox::logSensor("packVoltage", Devices::Get().GetBMS().packVoltage);   
-        
+        BlackBox::logSensor("iq", Devices::Get().GetInverter().iq);
+        BlackBox::logSensor("id", Devices::Get().GetInverter().id);
+        BlackBox::logSensor("vq_ff", Devices::Get().GetInverter().vq_ff);
+        BlackBox::logSensor("vd_ff", Devices::Get().GetInverter().vd_ff);
+        BlackBox::logSensor("INV_DC_Bus_Current", Devices::Get().GetInverter().INV_DC_Bus_Current);
+        BlackBox::logSensor("INV_Phase_A_Current", Devices::Get().GetInverter().INV_Phase_A_Current);
+        BlackBox::logSensor("INV_Phase_B_Current", Devices::Get().GetInverter().INV_Phase_B_Current);
+        BlackBox::logSensor("INV_Phase_C_Current", Devices::Get().GetInverter().INV_Phase_C_Current);
+        BlackBox::logSensor("INV_Torque_Shudder", Devices::Get().GetInverter().INV_Torque_Shudder);
+        BlackBox::logSensor("INV_Motor_Temp", Devices::Get().GetInverter().INV_Motor_Temp);
+        BlackBox::logSensor("INV_Hot_Spot_Temp", Devices::Get().GetInverter().INV_Hot_Spot_Temp);
+        BlackBox::logSensor("INV_Coolant_Temp", Devices::Get().GetInverter().INV_Coolant_Temp);
+        BlackBox::logSensor("ThermModule1_lowTemp", Devices::Get().GetBMS().lowTemp1);
+        BlackBox::logSensor("ThermModule1_highTemp", Devices::Get().GetBMS().highTemp1);
+        BlackBox::logSensor("motorSpeed", Devices::Get().GetInverter().motorSpeed);
+
+
+
+
         
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
