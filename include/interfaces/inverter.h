@@ -61,6 +61,11 @@ private:
     FS_CAN::CAN_SIGNAL INV_Coolant_Temp_Signal{&INV_Coolant_Temp, 0, 16, true, 0.1f, 0};
     FS_CAN::CAN_MSG M162_Temperature_Set_3{162, {&INV_Coolant_Temp_Signal, &INV_Hot_Spot_Temp_Signal, &INV_Motor_Temp_Signal, &INV_Torque_Shudder_Signal}};
 
+    //M169_Internal_Voltages
+    FS_CAN::CAN_SIGNAL INV_ref_voltage_signal{&INV_glv_voltage, 48, 16, true, 0.01f, 0};
+    FS_CAN::CAN_MSG M169_Internal_Voltages{169, {&INV_ref_voltage_signal}};
+
+
 public:
     // Inverter Status Variables:
     float commandedTorque;
@@ -89,6 +94,9 @@ public:
     float INV_Motor_Temp;
     float INV_Hot_Spot_Temp;
     float INV_Coolant_Temp;
+
+    //M169_Internal_Voltages
+    float INV_glv_voltage;
  
     
     struct INVERTER_FAULTS

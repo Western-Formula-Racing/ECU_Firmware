@@ -18,5 +18,6 @@ extern const int PRECHARGE_TIMEOUT;
 extern const float PRECHARGE_THRESHOLD;
 extern const float TORQUE_LIMIT;
 extern const float INVERTER_CUTOFF_VOLTAGE;
+extern const float GLV_CUTOFF_VOLTAGE;
 
 #endif

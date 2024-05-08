@@ -48,7 +48,7 @@ FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
 
 void setup_task(void *)
 {
-    BlackBox::begin(100, tskIDLE_PRIORITY + 1);
+    BlackBox::begin(300, tskIDLE_PRIORITY + 1);
 
     // Delay to allow the serial port to be opened and queue to be created (for some reason it needs this)
     vTaskDelay(pdMS_TO_TICKS(5000));
@@ -66,7 +66,7 @@ void setup_task(void *)
     controlCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::HUNDRED_MS);
     controlCAN.publish_CAN_msg(&VCU_Precharge, FS_CAN::HUNDRED_MS);
     controlCAN.subscribe_to_message(&AccMB_Info);
-    xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
+    xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 1, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 #endif
 #ifdef REAR
@@ -114,6 +114,7 @@ void frontDAQ(void *)
         Serial.printf(">iq:%f\n", Devices::Get().GetInverter().iq);
         Serial.printf(">INV_DC_Bus_Current:%f\n", Devices::Get().GetInverter().INV_DC_Bus_Current);
         Serial.printf(">INV_Coolant_Temp:%f\n", Devices::Get().GetInverter().INV_Coolant_Temp);
+        Serial.printf(">INV_glv_voltage:%f\n", Devices::Get().GetInverter().INV_glv_voltage);
         
 
 
@@ -141,7 +142,7 @@ void frontDAQ(void *)
         BlackBox::logSensor("ThermModule1_lowTemp", Devices::Get().GetBMS().lowTemp1);
         BlackBox::logSensor("ThermModule1_highTemp", Devices::Get().GetBMS().highTemp1);
         BlackBox::logSensor("motorSpeed", Devices::Get().GetInverter().motorSpeed);
-
+        BlackBox::logSensor("INV_glv_voltage",  Devices::Get().GetInverter().INV_glv_voltage);
 
 
 

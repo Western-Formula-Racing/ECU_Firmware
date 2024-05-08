@@ -14,6 +14,7 @@ Inverter::Inverter()
     controlCAN.subscribe_to_message(&M168_Flux_ID_IQ_Info);
     controlCAN.subscribe_to_message(&M166_Current_Info);
     controlCAN.subscribe_to_message(&M162_Temperature_Set_3);
+    controlCAN.subscribe_to_message(&M169_Internal_Voltages);
 
 }
 

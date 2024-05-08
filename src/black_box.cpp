@@ -79,7 +79,7 @@ static void task(void *)
                 }
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(100));
+        // vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
@@ -145,7 +145,7 @@ void BlackBox::begin(int queueSize, int taskPriority)
     }
 
     // Create the task
-    xTaskCreate(task, "BlackBox", 1024, nullptr, taskPriority, nullptr);
+    xTaskCreate(task, "BlackBox", 5024, nullptr, taskPriority, nullptr);
 }
 
 void BlackBox::log(LogMessage_t msg)
