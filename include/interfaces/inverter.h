@@ -59,7 +59,7 @@ private:
     FS_CAN::CAN_SIGNAL INV_Motor_Temp_Signal{&INV_Motor_Temp, 32, 16, true, 0.1f, 0};
     FS_CAN::CAN_SIGNAL INV_Hot_Spot_Temp_Signal{&INV_Hot_Spot_Temp, 16, 16, true, 0.1f, 0};
     FS_CAN::CAN_SIGNAL INV_Coolant_Temp_Signal{&INV_Coolant_Temp, 0, 16, true, 0.1f, 0};
-    FS_CAN::CAN_MSG M162_Temperature_Set_3{162, {&INV_DC_Bus_Current_Signal, &INV_Phase_C_Current_Signal, &INV_Phase_B_Current_Signal, &INV_Phase_A_Current_Signal}};
+    FS_CAN::CAN_MSG M162_Temperature_Set_3{162, {&INV_Coolant_Temp_Signal, &INV_Hot_Spot_Temp_Signal, &INV_Motor_Temp_Signal, &INV_Torque_Shudder_Signal}};
 
 public:
     // Inverter Status Variables:

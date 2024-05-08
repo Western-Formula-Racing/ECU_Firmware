@@ -1,4 +1,4 @@
-VERSION "HIPBNYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY/4/%%%/4/'%**4YYY///"
+VERSION ""
 
 
 NS_ : 
@@ -22,11 +22,37 @@ NS_ :
 	SIG_GROUP_
 	SIG_VALTYPE_
 	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
 
 BS_:
 
 BU_: INV BMS VCU BMS Third_Party_Device BMS Third_Party_Device
 
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
+ SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2012 VCU_rearPDM_Command: 8 VCU
  SG_ HSD1 : 0|8@1+ (1,0) [0|1] "" Vector__XXX
@@ -207,20 +233,20 @@ BO_ 176 M176_Fast_Info: 8 INV
  SG_ INV_Fast_DC_Bus_Voltage : 48|16@1- (0.1,0) [-3276.8|3276.7] "voltage:V" Vector__XXX
 
 BO_ 1712 MSGID_0X6B0: 8 BMS
- SG_ Pack_Current : 7|16@0+ (0.1,0) [0|0] "Amps"  Third_Party_Device
- SG_ Pack_Inst_Voltage : 23|16@0+ (0.1,0) [0|0] "Volts"  Third_Party_Device
- SG_ Pack_SOC : 39|8@0+ (0.5,0) [0|0] "Percent"  Third_Party_Device
- SG_ Relay_State : 47|16@0+ (1,0) [0|0] ""  Third_Party_Device
- SG_ CRC_Checksum : 63|8@0+ (1,1720) [0|0] ""  Third_Party_Device
+ SG_ Pack_Current : 0|16@1+ (0.1,0) [0|0] "Amps"  Third_Party_Device
+ SG_ Pack_Inst_Voltage : 8|16@1+ (0.1,0) [0|0] "Volts"  Third_Party_Device
+ SG_ Pack_SOC : 24|8@1+ (0.5,0) [0|0] "Percent"  Third_Party_Device
+ SG_ Relay_State : 32|16@1+ (1,0) [0|0] ""  Third_Party_Device
+ SG_ CRC_Checksum : 48|8@1+ (1,1720) [0|0] ""  Third_Party_Device
 
 BO_ 1713 MSGID_0X6B1: 8 BMS
- SG_ Pack_DCL : 7|16@0+ (1,0) [0|0] "Amps"  Third_Party_Device
- SG_ Pack_CCL : 23|8@0+ (1,0) [0|0] "Amps"  Third_Party_Device
- SG_ Blank : 31|8@0+ (1,0) [0|0] ""  Third_Party_Device
- SG_ High_Temperature : 39|8@0+ (1,0) [0|0] "Celsius"  Third_Party_Device
- SG_ Low_Temperature : 47|8@0+ (1,0) [0|0] "Celsius"  Third_Party_Device
- SG_ Blank : 55|8@0+ (1,0) [0|0] ""  Third_Party_Device
- SG_ CRC_Checksum : 63|8@0+ (1,1721) [0|0] ""  Third_Party_Device
+ SG_ Pack_DCL : 0|16@1+ (1,0) [0|0] "Amps"  Third_Party_Device
+ SG_ Pack_CCL : 16|8@1+ (1,0) [0|0] "Amps"  Third_Party_Device
+ SG_ Blank : 24|8@1+ (1,0) [0|0] ""  Third_Party_Device
+ SG_ High_Temperature : 32|8@1+ (1,0) [0|0] "Celsius"  Third_Party_Device
+ SG_ Low_Temperature : 40|8@1+ (1,0) [0|0] "Celsius"  Third_Party_Device
+ SG_ Blank : 48|8@1+ (1,0) [0|0] ""  Third_Party_Device
+ SG_ CRC_Checksum : 56|8@1+ (1,1721) [0|0] ""  Third_Party_Device
 
 BO_ 1714 MSGID_0X6B2: 4 BMS
  SG_ DTC_Flags_1 : 7|16@0+ (1,0) [0|0] ""  Third_Party_Device
@@ -261,7 +287,7 @@ BO_ 2004 VCU_PDMRear: 8 VCU
  SG_ HSD7 : 6|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ HSD8 : 7|1@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+BO_ 2553934720 BMS_Thermistor_Module_1: 8 BMS
  SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
  SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
@@ -271,7 +297,7 @@ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
  SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+BO_ 2553934721 BMS_Thermistor_Module_2: 8 BMS
  SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
  SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
@@ -281,7 +307,7 @@ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
  SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+BO_ 2553934722 BMS_Thermistor_Module_3: 8 BMS
  SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
  SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
@@ -291,7 +317,7 @@ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
  SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+BO_ 2553934723 BMS_Thermistor_Module_4: 8 BMS
  SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
  SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
@@ -301,27 +327,7 @@ BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
  SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
- SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
- SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
- SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
- SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
- SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
- SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
- SG_ Average_Thermistor_Value : 24|8@1- (1,0) [0|0] "c" Vector__XXX
- SG_ Number_Thermistors_Enabled : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Highest_Thermistor_ID : 40|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Lowest_Thermistor_ID : 48|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ Checksum : 56|8@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2553934720 BMS_Thermistor_Module_0: 8 BMS
+BO_ 2553934724 BMS_Thermistor_Module_5: 8 BMS
  SG_ Thermistor_Module_Number : 0|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Lowest_Thermistor_Value : 8|8@1- (1,0) [0|0] "c" Vector__XXX
  SG_ Highest_Thermistor_Value : 16|8@1- (1,0) [0|0] "c" Vector__XXX
@@ -342,6 +348,7 @@ BO_ 2010 ACCMB_Status: 8 BMS
 
 BO_ 2011 VCU_BrakeLight: 1 VCU
  SG_ BrakeLightSignal : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
 
 
 CM_ SG_ 173 INV_Iq_Command "The commanded Q-axis current";
@@ -512,3 +519,4 @@ VAL_ 2004 HSD4 0 "OFF" 1 "ON" ;
 VAL_ 2004 HSD5 0 "OFF" 1 "ON" ;
 VAL_ 2004 HSD6 0 "OFF" 1 "ON" ;
 VAL_ 2004 HSD7 0 "OFF" 1 "ON" ;
+
