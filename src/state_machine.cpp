@@ -28,10 +28,6 @@ State handle_start()
 
     //@todo add a device check once CAN timeouts are introduced
     nextState = PRECHARGE_ENABLE;
-    // if(Devices::Get().GetInverter().INV_glv_voltage <= GLV_CUTOFF_VOLTAGE){
-    //     BlackBox::log(LOG_ERROR, "GLV Voltage too low, undervoltage lockout");
-    //     nextState = DEVICE_FAULT;
-    // }
     startTime = millis();
     return nextState;
 }
@@ -58,10 +54,6 @@ State handle_precharge_enable()
         Serial.println("Precharge Timed out! Please Power Cycle");
         nextState = PRECHARGE_ERROR;
     }
-    // if(Devices::Get().GetInverter().INV_glv_voltage <= GLV_CUTOFF_VOLTAGE){
-    //     BlackBox::log(LOG_ERROR, std::format("GLV voltage lockout, glv battery voltage too low\n").c_str());
-    //     nextState = DEVICE_FAULT;
-    // }
     return nextState;
 }
 
