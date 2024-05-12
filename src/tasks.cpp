@@ -170,8 +170,8 @@ void rearECU_task(void *)
         Devices::Get().GetPDM().setPin(HSDIN6, HSDEnable[5]);
         Devices::Get().GetPDM().setPin(HSDIN7, HSDEnable[6]);
         Devices::Get().GetPDM().setPin(HSDIN8, HSDEnable[7]);
-        imdOK = digitalRead(A2);
-        amsOK = digitalRead(A8);
+        imdOK = digitalRead(A0);
+        amsOK = digitalRead(A4);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
