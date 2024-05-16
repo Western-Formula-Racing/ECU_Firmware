@@ -61,6 +61,7 @@ void setup_task(void *)
             ;
         Serial.printf("my god this sh borked\n");
     }
+    SPI.begin();
     if(!imu.begin()){
         Serial.printf("imu failed to innit");
     }
@@ -139,7 +140,6 @@ void frontDAQ(void *)
         BlackBox::logSensor("iq", Devices::Get().GetInverter().iq);
         BlackBox::logSensor("id", Devices::Get().GetInverter().id);
         BlackBox::logSensor("INV_DC_Bus_Current", Devices::Get().GetInverter().INV_DC_Bus_Current);
-        BlackBox::logSensor("INV_Motor_Temp", Devices::Get().GetInverter().INV_Motor_Temp);
         BlackBox::logSensor("INV_Coolant_Temp", Devices::Get().GetInverter().INV_Coolant_Temp);
         BlackBox::logSensor("ThermModule1_lowTemp", Devices::Get().GetBMS().lowTemp1);
         BlackBox::logSensor("ThermModule1_highTemp", Devices::Get().GetBMS().highTemp1);
@@ -149,6 +149,12 @@ void frontDAQ(void *)
         BlackBox::logSensor("INV_BMS_Torque_Limiting",  Devices::Get().GetInverter().INV_BMS_Torque_Limiting);
         BlackBox::logSensor("INV_Limit_Max_Speed",  Devices::Get().GetInverter().INV_Limit_Max_Speed);
         BlackBox::logSensor("INV_Limit_Coolant_Derating",  Devices::Get().GetInverter().INV_Limit_Coolant_Derating);
+        BlackBox::logSensor("accelX", imu.getAccelX());
+        BlackBox::logSensor("accelY", imu.getAccelY());
+        BlackBox::logSensor("accelZ", imu.getAccelZ());
+        BlackBox::logSensor("gyroX", imu.getGyroX());
+        BlackBox::logSensor("gyroY", imu.getGyroY());
+        BlackBox::logSensor("gyroZ", imu.getGyroZ());
         
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
