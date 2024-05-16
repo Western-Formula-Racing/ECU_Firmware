@@ -1,5 +1,6 @@
 #include "tasks.h"
 #include "config/devices.h"
+#include "mpu6x00.h"
 extern State state;
 extern std::array<state_function_t, 8> states;
 float stateS;
@@ -10,6 +11,7 @@ float amsOK = 0;
 float imdOK = 0;
 float precharge_enable = 0;
 float precharge_ok = 0;
+static Mpu6500 imu = Mpu6500(37);//cs pin for mpu
 FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable, 0, 1, true, 1, 0};
 FS_CAN::CAN_SIGNAL precharge_ok_signal{&precharge_ok, 1, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_Precharge{2003, {&precharge_enable_signal, &precharge_ok_signal}};
@@ -59,6 +61,9 @@ void setup_task(void *)
             ;
         Serial.printf("my god this sh borked\n");
     }
+    if(!imu.begin()){
+        Serial.printf("imu failed to innit");
+    }
 
     xTaskCreate(CLI_Tool::task, "CLI_Task", 2048, nullptr, tskIDLE_PRIORITY + 1, nullptr);
 
@@ -96,6 +101,8 @@ void frontDAQ(void *)
         }
         Devices::Get().GetRTDButton().read();
         float pedalPos = Devices::Get().GetPedal().getPedalPosition();
+        imu.readSensor();
+        
         Serial.printf(">pedal_postion:%f\n", pedalPos);
         Serial.printf(">sensor1:%f\n>sensor2:%f\n", Devices::Get().GetPedal().appsSensor1Position, Devices::Get().GetPedal().appsSensor2Position);
         Serial.printf(">RTDButton:%f\n", Devices::Get().GetRTDButton().value);
@@ -104,18 +111,20 @@ void frontDAQ(void *)
         Serial.printf(">state:%d\n", static_cast<int>(state));
         Serial.printf(">torqueRequest:%f\n", Devices::Get().GetInverter().getTorqueRequest());
         Serial.printf(">MotorSpeed:%f\n", Devices::Get().GetInverter().motorSpeed);
-        Serial.printf(">InvEnable:%f\n", Devices::Get().GetInverter().inverterEnable);
         Serial.printf(">TorqueLimit:%f\n", Devices::Get().GetInverter().torqueLimit);
         Serial.printf(">packVoltage:%f\n", Devices::Get().GetBMS().packVoltage);
         Serial.printf(">inverterVoltage:%f\n", Devices::Get().GetInverter().dcBusVoltage);
         Serial.printf(">precharge thresh:%f\n", Devices::Get().GetBMS().packVoltage * 0.90);
-        Serial.printf(">inv_torque_feedback:%f\n", Devices::Get().GetInverter().torqueFeedback);
         Serial.printf(">inv_commandedTorque:%f\n", Devices::Get().GetInverter().commandedTorque);
-        Serial.printf(">iq:%f\n", Devices::Get().GetInverter().iq);
         Serial.printf(">INV_DC_Bus_Current:%f\n", Devices::Get().GetInverter().INV_DC_Bus_Current);
         Serial.printf(">INV_Coolant_Temp:%f\n", Devices::Get().GetInverter().INV_Coolant_Temp);
         Serial.printf(">INV_glv_voltage:%f\n", Devices::Get().GetInverter().INV_glv_voltage);
-        
+        Serial.printf(">gyroX:%f\n",imu.getGyroX());
+        Serial.printf(">gyroY:%f\n",imu.getGyroY());
+        Serial.printf(">gyroZ:%f\n",imu.getGyroZ());
+        Serial.printf(">accelX:%f\n",imu.getAccelX());
+        Serial.printf(">accelY:%f\n",imu.getAccelY());
+        Serial.printf(">accelZ:%f\n",imu.getAccelZ());
 
 
         BlackBox::logSensor("state",static_cast<int>(state));
@@ -129,23 +138,17 @@ void frontDAQ(void *)
         BlackBox::logSensor("packVoltage", Devices::Get().GetBMS().packVoltage);   
         BlackBox::logSensor("iq", Devices::Get().GetInverter().iq);
         BlackBox::logSensor("id", Devices::Get().GetInverter().id);
-        BlackBox::logSensor("vq_ff", Devices::Get().GetInverter().vq_ff);
-        BlackBox::logSensor("vd_ff", Devices::Get().GetInverter().vd_ff);
         BlackBox::logSensor("INV_DC_Bus_Current", Devices::Get().GetInverter().INV_DC_Bus_Current);
-        BlackBox::logSensor("INV_Phase_A_Current", Devices::Get().GetInverter().INV_Phase_A_Current);
-        BlackBox::logSensor("INV_Phase_B_Current", Devices::Get().GetInverter().INV_Phase_B_Current);
-        BlackBox::logSensor("INV_Phase_C_Current", Devices::Get().GetInverter().INV_Phase_C_Current);
-        BlackBox::logSensor("INV_Torque_Shudder", Devices::Get().GetInverter().INV_Torque_Shudder);
         BlackBox::logSensor("INV_Motor_Temp", Devices::Get().GetInverter().INV_Motor_Temp);
-        BlackBox::logSensor("INV_Hot_Spot_Temp", Devices::Get().GetInverter().INV_Hot_Spot_Temp);
         BlackBox::logSensor("INV_Coolant_Temp", Devices::Get().GetInverter().INV_Coolant_Temp);
         BlackBox::logSensor("ThermModule1_lowTemp", Devices::Get().GetBMS().lowTemp1);
         BlackBox::logSensor("ThermModule1_highTemp", Devices::Get().GetBMS().highTemp1);
         BlackBox::logSensor("motorSpeed", Devices::Get().GetInverter().motorSpeed);
         BlackBox::logSensor("INV_glv_voltage",  Devices::Get().GetInverter().INV_glv_voltage);
-
-
-
+        BlackBox::logSensor("INV_BMS_Active",  Devices::Get().GetInverter().INV_BMS_Active);
+        BlackBox::logSensor("INV_BMS_Torque_Limiting",  Devices::Get().GetInverter().INV_BMS_Torque_Limiting);
+        BlackBox::logSensor("INV_Limit_Max_Speed",  Devices::Get().GetInverter().INV_Limit_Max_Speed);
+        BlackBox::logSensor("INV_Limit_Coolant_Derating",  Devices::Get().GetInverter().INV_Limit_Coolant_Derating);
         
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
@@ -172,6 +175,9 @@ void rearECU_task(void *)
         Devices::Get().GetPDM().setPin(HSDIN8, HSDEnable[7]);
         imdOK = digitalRead(A0);
         amsOK = digitalRead(A4);
+        Serial.printf(">imdOK:%f\n", imdOK);
+        Serial.printf(">amsOK:%f\n", amsOK);
+
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }

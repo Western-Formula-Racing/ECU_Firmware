@@ -15,6 +15,8 @@ Inverter::Inverter()
     controlCAN.subscribe_to_message(&M166_Current_Info);
     controlCAN.subscribe_to_message(&M162_Temperature_Set_3);
     controlCAN.subscribe_to_message(&M169_Internal_Voltages);
+    controlCAN.subscribe_to_message(&torque_capability_msg);
+    controlCAN.subscribe_to_message(&M170_Internal_States);
 
 }
 

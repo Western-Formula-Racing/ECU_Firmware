@@ -19,4 +19,4 @@ const int PRECHARGE_TIMEOUT = 30000;
 const float PRECHARGE_THRESHOLD = 0.9;
 const float TORQUE_LIMIT = 230.0;
 const float INVERTER_CUTOFF_VOLTAGE = 200.0;
-const float GLV_CUTOFF_VOLTAGE = 18.0;
+const float GLV_CUTOFF_VOLTAGE = 16.0;

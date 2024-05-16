@@ -65,6 +65,19 @@ private:
     FS_CAN::CAN_SIGNAL INV_ref_voltage_signal{&INV_glv_voltage, 48, 16, true, 0.01f, 0};
     FS_CAN::CAN_MSG M169_Internal_Voltages{169, {&INV_ref_voltage_signal}};
 
+    //0x0b1 torque capability
+    FS_CAN::CAN_SIGNAL torque_capability_signal{&INV_torque_capability, 0, 16, true, 1.0f, 0};
+    FS_CAN::CAN_MSG torque_capability_msg{177, {&INV_ref_voltage_signal}};
+    
+    //M170_Internal_States
+    FS_CAN::CAN_SIGNAL INV_BMS_Active_signal{&INV_BMS_Active, 57, 1, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL INV_BMS_Torque_Limiting_signal{&INV_BMS_Torque_Limiting, 58, 1, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL INV_Limit_Max_Speed_signal{&INV_Limit_Max_Speed, 59, 1, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL INV_Limit_Coolant_Derating_signal{&INV_Limit_Coolant_Derating, 62, 1, true, 1.0f, 0};
+    FS_CAN::CAN_MSG M170_Internal_States{170, {&INV_BMS_Active_signal, &INV_BMS_Torque_Limiting_signal, &INV_Limit_Max_Speed_signal, &INV_Limit_Coolant_Derating_signal}};
+
+
+
 
 public:
     // Inverter Status Variables:
@@ -97,6 +110,14 @@ public:
 
     //M169_Internal_Voltages
     float INV_glv_voltage;
+
+    //0x0b1 torque capability
+    float INV_torque_capability;
+    //M170_Internal_States
+    float INV_BMS_Active;
+    float INV_BMS_Torque_Limiting;
+    float INV_Limit_Coolant_Derating;
+    float INV_Limit_Max_Speed;
  
     
     struct INVERTER_FAULTS
