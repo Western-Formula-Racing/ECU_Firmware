@@ -12,6 +12,13 @@ float imdOK = 0;
 float precharge_enable = 0;
 float precharge_ok = 0;
 static Mpu6500 imu = Mpu6500(37);//cs pin for mpu
+float accelX;
+float accelY;
+float accelZ;
+float gyroX;
+float gyroY;
+float gyroZ;
+
 FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable, 0, 1, true, 1, 0};
 FS_CAN::CAN_SIGNAL precharge_ok_signal{&precharge_ok, 1, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_Precharge{2003, {&precharge_enable_signal, &precharge_ok_signal}};
@@ -103,7 +110,14 @@ void frontDAQ(void *)
         Devices::Get().GetRTDButton().read();
         float pedalPos = Devices::Get().GetPedal().getPedalPosition();
         imu.readSensor();
-        
+        accelX = imu.getAccelX();
+        accelY = imu.getAccelY();
+        accelZ = imu.getAccelZ();
+        gyroX = imu.getGyroX() - 344;
+        gyroY = imu.getGyroY() - 71.5;
+        gyroZ = imu.getGyroZ() + 237;
+
+
         Serial.printf(">pedal_postion:%f\n", pedalPos);
         Serial.printf(">sensor1:%f\n>sensor2:%f\n", Devices::Get().GetPedal().appsSensor1Position, Devices::Get().GetPedal().appsSensor2Position);
         Serial.printf(">RTDButton:%f\n", Devices::Get().GetRTDButton().value);
@@ -120,12 +134,12 @@ void frontDAQ(void *)
         Serial.printf(">INV_DC_Bus_Current:%f\n", Devices::Get().GetInverter().INV_DC_Bus_Current);
         Serial.printf(">INV_Coolant_Temp:%f\n", Devices::Get().GetInverter().INV_Coolant_Temp);
         Serial.printf(">INV_glv_voltage:%f\n", Devices::Get().GetInverter().INV_glv_voltage);
-        Serial.printf(">gyroX:%f\n",imu.getGyroX());
-        Serial.printf(">gyroY:%f\n",imu.getGyroY());
-        Serial.printf(">gyroZ:%f\n",imu.getGyroZ());
-        Serial.printf(">accelX:%f\n",imu.getAccelX());
-        Serial.printf(">accelY:%f\n",imu.getAccelY());
-        Serial.printf(">accelZ:%f\n",imu.getAccelZ());
+        Serial.printf(">gyroX:%f\n",gyroX);
+        Serial.printf(">gyroY:%f\n",gyroY);
+        Serial.printf(">gyroZ:%f\n",gyroY);
+        Serial.printf(">accelX:%f\n",accelX);
+        Serial.printf(">accelY:%f\n",accelY);
+        Serial.printf(">accelZ:%f\n",accelZ);
 
 
         BlackBox::logSensor("state",static_cast<int>(state));
@@ -149,12 +163,12 @@ void frontDAQ(void *)
         BlackBox::logSensor("INV_BMS_Torque_Limiting",  Devices::Get().GetInverter().INV_BMS_Torque_Limiting);
         BlackBox::logSensor("INV_Limit_Max_Speed",  Devices::Get().GetInverter().INV_Limit_Max_Speed);
         BlackBox::logSensor("INV_Limit_Coolant_Derating",  Devices::Get().GetInverter().INV_Limit_Coolant_Derating);
-        BlackBox::logSensor("accelX", imu.getAccelX());
-        BlackBox::logSensor("accelY", imu.getAccelY());
-        BlackBox::logSensor("accelZ", imu.getAccelZ());
-        BlackBox::logSensor("gyroX", imu.getGyroX());
-        BlackBox::logSensor("gyroY", imu.getGyroY());
-        BlackBox::logSensor("gyroZ", imu.getGyroZ());
+        BlackBox::logSensor("accelX", accelX);
+        BlackBox::logSensor("accelY", accelY);
+        BlackBox::logSensor("accelZ", accelZ);
+        BlackBox::logSensor("gyroX", gyroX);
+        BlackBox::logSensor("gyroY", gyroY);
+        BlackBox::logSensor("gyroZ", gyroZ);
         
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
