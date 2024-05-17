@@ -169,7 +169,10 @@ void frontDAQ(void *)
         BlackBox::logSensor("gyroX", gyroX);
         BlackBox::logSensor("gyroY", gyroY);
         BlackBox::logSensor("gyroZ", gyroZ);
-        
+        BlackBox::logSensor("imdOK", imdOK);
+        BlackBox::logSensor("amsOK", amsOK);
+
+
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
     }
