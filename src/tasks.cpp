@@ -113,9 +113,9 @@ void frontDAQ(void *)
         accelX = imu.getAccelX();
         accelY = imu.getAccelY();
         accelZ = imu.getAccelZ();
-        gyroX = imu.getGyroX() - 344;
-        gyroY = imu.getGyroY() - 71.5;
-        gyroZ = imu.getGyroZ() + 237;
+        gyroX = imu.getGyroX() - 341;
+        gyroY = imu.getGyroY() - 79.5;
+        gyroZ = imu.getGyroZ() + 204.5;
 
 
         Serial.printf(">pedal_postion:%f\n", pedalPos);
@@ -136,7 +136,7 @@ void frontDAQ(void *)
         Serial.printf(">INV_glv_voltage:%f\n", Devices::Get().GetInverter().INV_glv_voltage);
         Serial.printf(">gyroX:%f\n",gyroX);
         Serial.printf(">gyroY:%f\n",gyroY);
-        Serial.printf(">gyroZ:%f\n",gyroY);
+        Serial.printf(">gyroZ:%f\n",gyroZ);
         Serial.printf(">accelX:%f\n",accelX);
         Serial.printf(">accelY:%f\n",accelY);
         Serial.printf(">accelZ:%f\n",accelZ);
