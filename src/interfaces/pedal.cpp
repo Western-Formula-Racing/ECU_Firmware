@@ -62,7 +62,7 @@ float Pedal::getPedalPosition()
         brakeLatch = true;
     }
 
-    if (pedalDisagreement > APPS_PLAUSIBILITY_THRESHOLD)
+    if (pedalDisagreement > APPS_PLAUSIBILITY_THRESHOLD or sensor1->filteredValue <= 0.01 or sensor2->filteredValue <= 0.01 ) // check for open circuit condition basically
     {
         value = 0;
         plausibilityFault = true;
