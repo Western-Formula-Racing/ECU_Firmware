@@ -17,6 +17,6 @@ const float BRAKE_PLAUSABILITY_THRESHOLD = 5.0;
 const int RTD_TIMER = 2000;
 const int PRECHARGE_TIMEOUT = 30000;
 const float PRECHARGE_THRESHOLD = 0.9;
-const float TORQUE_LIMIT = 230.0;
+const float TORQUE_LIMIT = 180.0;
 const float INVERTER_CUTOFF_VOLTAGE = 200.0;
 const float GLV_CUTOFF_VOLTAGE = 16.0;

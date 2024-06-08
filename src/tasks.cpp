@@ -18,6 +18,8 @@ float accelZ;
 float gyroX;
 float gyroY;
 float gyroZ;
+float rearHeave;
+float rearRoll;
 
 FS_CAN::CAN_SIGNAL precharge_enable_signal{&precharge_enable, 0, 1, true, 1, 0};
 FS_CAN::CAN_SIGNAL precharge_ok_signal{&precharge_ok, 1, 1, true, 1, 0};
@@ -25,11 +27,15 @@ FS_CAN::CAN_MSG VCU_Precharge{2003, {&precharge_enable_signal, &precharge_ok_sig
 FS_CAN::CAN_SIGNAL amsOKSignal{&amsOK, 40, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL imdOKSignal{&imdOK, 48, 8, true, 1, 0};
 FS_CAN::CAN_MSG AccMB_Info{2010, {&amsOKSignal, &imdOKSignal}};
+
+
  
 #ifndef REAR
 FS_CAN::CAN_SIGNAL stateSignal{&stateS, 8, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
+FS_CAN::CAN_SIGNAL rearHeaveSignal{&rearHeave, 0, 16, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL rearRollSignal{&rearRoll, 0, 16, true, 1.0f, 0};
 #endif
 
 #ifdef REAR
@@ -53,7 +59,12 @@ FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
     &HSD7_Enable_Signal,
     &HSD8_Enable_Signal,
     }};
+    FS_CAN::CAN_SIGNAL rearHeaveSignal{&Devices::Get().GetSensors()[5]->value, 0, 16, true, 1.0f, 0};
+    FS_CAN::CAN_SIGNAL rearRollSignal{&Devices::Get().GetSensors()[6]->value, 0, 16, true, 1.0f, 0};
+    
 #endif
+FS_CAN::CAN_MSG VCU_rearLinPots{2013,{&rearHeaveSignal, &rearRollSignal}};
+
 
 void setup_task(void *)
 {
@@ -79,6 +90,7 @@ void setup_task(void *)
     controlCAN.publish_CAN_msg(&VCU_StateInfo, FS_CAN::HUNDRED_MS);
     controlCAN.publish_CAN_msg(&VCU_Precharge, FS_CAN::HUNDRED_MS);
     controlCAN.subscribe_to_message(&AccMB_Info);
+    controlCAN.subscribe_to_message(&VCU_rearLinPots);
     xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 1, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 #endif
@@ -86,6 +98,7 @@ void setup_task(void *)
     controlCAN.subscribe_to_message(&VCU_Precharge);
     controlCAN.subscribe_to_message(&VCU_rearECU_command);
     controlCAN.publish_CAN_msg(&AccMB_Info, FS_CAN::HUNDRED_MS);
+    controlCAN.subscribe_to_message(&VCU_rearLinPots, FS_CAN::TEN_MS);
     xTaskCreate(rearECU_task, "rearECU_task", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 #endif
     vTaskDelete(nullptr);
@@ -171,6 +184,10 @@ void frontDAQ(void *)
         BlackBox::logSensor("gyroZ", gyroZ);
         BlackBox::logSensor("imdOK", imdOK);
         BlackBox::logSensor("amsOK", amsOK);
+        BlackBox::logSensor("rearHeave", rearHeave);
+        BlackBox::logSensor("rearRoll", rearRoll);
+        BlackBox::logSensor("frontHeave", Devices::Get().GetSensors()[5]->value);
+        BlackBox::logSensor("frontRoll", Devices::Get().GetSensors()[5]->value);
 
 
         vTaskDelay(pdMS_TO_TICKS(100));
