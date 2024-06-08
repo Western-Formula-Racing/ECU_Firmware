@@ -4,6 +4,10 @@
 State state = START;
 extern float precharge_enable;
 extern float precharge_ok;
+int hornTimer = 20;
+int hornTicker = hornTimer; 
+bool hornToggle = false;
+
 std::array<state_function_t, 8> states = {
     handle_start,
     handle_precharge_enable,
@@ -84,9 +88,15 @@ State handle_startup_delay()
 {
     State nextState = STARTUP_DELAY;
     Devices::Get().GetInverter().setTorqueRequest(0);
-
     int currentTime = millis();
-    Devices::Get().GetPDM().setPin(HSDIN4,1);
+    hornTicker++;
+    Serial.printf(">hornTicker:%d\n", hornTicker);
+    Serial.printf(">hornToggle:%d\n", hornToggle);
+    if (hornTicker >= hornTimer){
+        hornTicker = 0;
+        hornToggle = !hornToggle;
+        Devices::Get().GetPDM().setPin(HSDIN4,hornToggle);
+    }
     if (Devices::Get().GetRTDButton().value == 1 and Devices::Get().GetPedal().getFrontBreakPressure() > BRAKE_RTD_THRESHOLD and (currentTime - startTime) < RTD_TIMER)
     {
         nextState = STARTUP_DELAY;
