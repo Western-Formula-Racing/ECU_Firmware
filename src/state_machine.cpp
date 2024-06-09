@@ -4,7 +4,7 @@
 State state = START;
 extern float precharge_enable;
 extern float precharge_ok;
-int hornTimer = 20;
+int hornTimer = 10;
 int hornTicker = hornTimer; 
 bool hornToggle = false;
 

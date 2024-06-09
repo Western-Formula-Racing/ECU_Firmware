@@ -349,6 +349,8 @@ BO_ 2010 ACCMB_Status: 8 BMS
 BO_ 2011 VCU_BrakeLight: 1 VCU
  SG_ BrakeLightSignal : 0|1@1+ (1,0) [0|1] "" Vector__XXX
 
+BO_ 2013 VCU_rearLinPots: 8 VCU
+
 
 
 CM_ SG_ 173 INV_Iq_Command "The commanded Q-axis current";
