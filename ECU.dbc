@@ -351,6 +351,9 @@ BO_ 2011 VCU_BrakeLight: 1 VCU
 
 BO_ 2013 VCU_rearLinPots: 8 VCU
 
+BO_ 177 M177_Torque_Capability: 8 INV
+ SG_ INV_Torque_Capability : 0|16@1+ (0.1,0) [0|0] "" Vector__XXX
+
 
 
 CM_ SG_ 173 INV_Iq_Command "The commanded Q-axis current";
