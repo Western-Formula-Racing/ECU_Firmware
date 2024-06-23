@@ -52,11 +52,11 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
     }
     can->write(flex_msg);
     #ifdef REAR
-    SensorMessage_t logging_msg;
-    logging_msg.time = millis();
-    sprintf(logging_msg.sensorName,"%d", flex_msg.id);
-    sprintf(logging_msg.sensorValue,"%d %d %d %d %d %d %d %d", flex_msg.buf[0], flex_msg.buf[1], flex_msg.buf[2], flex_msg.buf[3], flex_msg.buf[4], flex_msg.buf[5], flex_msg.buf[6], flex_msg.buf[7]);
-    BlackBox::log(logging_msg);
+    // SensorMessage_t logging_msg;
+    // logging_msg.time = millis();
+    // sprintf(logging_msg.sensorName,"%d", flex_msg.id);
+    // sprintf(logging_msg.sensorValue,"%d %d %d %d %d %d %d %d", flex_msg.buf[0], flex_msg.buf[1], flex_msg.buf[2], flex_msg.buf[3], flex_msg.buf[4], flex_msg.buf[5], flex_msg.buf[6], flex_msg.buf[7]);
+    // BlackBox::log(logging_msg);
     #endif
 }
 
@@ -156,11 +156,11 @@ void FS_CAN::CAN_RX_ISR(const CAN_message_t &msg)
         CAN_MSG *CAN_msg = CAN_msg_lookup[msg.id];
         int signalCount = 0;
         #ifdef REAR
-        SensorMessage_t logging_msg;
-        logging_msg.time = millis();
-        sprintf(logging_msg.sensorName,"%d", msg.id);
-        sprintf(logging_msg.sensorValue,"%d %d %d %d %d %d %d %d", msg.buf[0], msg.buf[1], msg.buf[2], msg.buf[3], msg.buf[4], msg.buf[5], msg.buf[6], msg.buf[7]);
-        BlackBox::log(logging_msg);
+        // SensorMessage_t logging_msg;
+        // logging_msg.time = millis();
+        // sprintf(logging_msg.sensorName,"%d", msg.id);
+        // sprintf(logging_msg.sensorValue,"%d %d %d %d %d %d %d %d", msg.buf[0], msg.buf[1], msg.buf[2], msg.buf[3], msg.buf[4], msg.buf[5], msg.buf[6], msg.buf[7]);
+        // BlackBox::log(logging_msg);
         #endif
         for (const auto &signal : CAN_msg->signals)
         {
