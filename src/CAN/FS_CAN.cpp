@@ -51,6 +51,13 @@ void FS_CAN::CAN_Tx(CAN_MSG *msg)
         can_setSignal<int16_t>(flex_msg.buf, *signal->data, signal->start_bit, signal->data_length, signal->isIntel, signal->factor, signal->offset);
     }
     can->write(flex_msg);
+    #ifdef REAR
+    SensorMessage_t logging_msg;
+    logging_msg.time = millis();
+    sprintf(logging_msg.sensorName,"%d", flex_msg.id);
+    sprintf(logging_msg.sensorValue,"%d %d %d %d %d %d %d %d", flex_msg.buf[0], flex_msg.buf[1], flex_msg.buf[2], flex_msg.buf[3], flex_msg.buf[4], flex_msg.buf[5], flex_msg.buf[6], flex_msg.buf[7]);
+    BlackBox::log(logging_msg);
+    #endif
 }
 
 void FS_CAN::txCallBack()
