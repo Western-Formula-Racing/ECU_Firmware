@@ -98,7 +98,7 @@ void setup_task(void *)
     controlCAN.subscribe_to_message(&VCU_Precharge);
     controlCAN.subscribe_to_message(&VCU_rearECU_command);
     controlCAN.publish_CAN_msg(&AccMB_Info, FS_CAN::HUNDRED_MS);
-    controlCAN.subscribe_to_message(&VCU_rearLinPots, FS_CAN::TEN_MS);
+    controlCAN.subscribe_to_message(&VCU_rearLinPots);
     xTaskCreate(rearECU_task, "rearECU_task", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 #endif
     vTaskDelete(nullptr);
