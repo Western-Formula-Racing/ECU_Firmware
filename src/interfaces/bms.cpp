@@ -12,6 +12,7 @@ BMS::BMS()
     Serial.println("BMS constructor called");
     controlCAN.subscribe_to_message(&packStateMessage);
     controlCAN.subscribe_to_message(&packFaultsMessage);
+    controlCAN.subscribe_to_message(&BMS_current_limits);
     #ifndef REAR
     controlCAN.subscribe_to_message(&ThermistorModule1_msg);
 

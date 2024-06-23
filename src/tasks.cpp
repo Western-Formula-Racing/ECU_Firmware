@@ -147,12 +147,12 @@ void frontDAQ(void *)
         Serial.printf(">INV_DC_Bus_Current:%f\n", Devices::Get().GetInverter().INV_DC_Bus_Current);
         Serial.printf(">INV_Coolant_Temp:%f\n", Devices::Get().GetInverter().INV_Coolant_Temp);
         Serial.printf(">INV_glv_voltage:%f\n", Devices::Get().GetInverter().INV_glv_voltage);
-        Serial.printf(">gyroX:%f\n",gyroX);
-        Serial.printf(">gyroY:%f\n",gyroY);
-        Serial.printf(">gyroZ:%f\n",gyroZ);
-        Serial.printf(">accelX:%f\n",accelX);
-        Serial.printf(">accelY:%f\n",accelY);
-        Serial.printf(">accelZ:%f\n",accelZ);
+        // Serial.printf(">gyroX:%f\n",gyroX);
+        // Serial.printf(">gyroY:%f\n",gyroY);
+        // Serial.printf(">gyroZ:%f\n",gyroZ);
+        // Serial.printf(">accelX:%f\n",accelX);
+        // Serial.printf(">accelY:%f\n",accelY);
+        // Serial.printf(">accelZ:%f\n",accelZ);
 
 
         BlackBox::logSensor("state",static_cast<int>(state));
@@ -168,28 +168,30 @@ void frontDAQ(void *)
         BlackBox::logSensor("id", Devices::Get().GetInverter().id);
         BlackBox::logSensor("INV_DC_Bus_Current", Devices::Get().GetInverter().INV_DC_Bus_Current);
         BlackBox::logSensor("INV_Coolant_Temp", Devices::Get().GetInverter().INV_Coolant_Temp);
-        BlackBox::logSensor("ThermModule1_lowTemp", Devices::Get().GetBMS().lowTemp1);
+        // BlackBox::logSensor("ThermModule1_lowTemp", Devices::Get().GetBMS().lowTemp1);
         BlackBox::logSensor("ThermModule1_highTemp", Devices::Get().GetBMS().highTemp1);
         BlackBox::logSensor("motorSpeed", Devices::Get().GetInverter().motorSpeed);
         BlackBox::logSensor("INV_glv_voltage",  Devices::Get().GetInverter().INV_glv_voltage);
-        BlackBox::logSensor("INV_BMS_Active",  Devices::Get().GetInverter().INV_BMS_Active);
+        // BlackBox::logSensor("INV_BMS_Active",  Devices::Get().GetInverter().INV_BMS_Active);
         BlackBox::logSensor("INV_BMS_Torque_Limiting",  Devices::Get().GetInverter().INV_BMS_Torque_Limiting);
         BlackBox::logSensor("INV_Limit_Max_Speed",  Devices::Get().GetInverter().INV_Limit_Max_Speed);
         BlackBox::logSensor("INV_Limit_Coolant_Derating",  Devices::Get().GetInverter().INV_Limit_Coolant_Derating);
         BlackBox::logSensor("accelX", accelX);
         BlackBox::logSensor("accelY", accelY);
         BlackBox::logSensor("accelZ", accelZ);
-        BlackBox::logSensor("gyroX", gyroX);
-        BlackBox::logSensor("gyroY", gyroY);
-        BlackBox::logSensor("gyroZ", gyroZ);
+        // BlackBox::logSensor("gyroX", gyroX);
+        // BlackBox::logSensor("gyroY", gyroY);
+        // BlackBox::logSensor("gyroZ", gyroZ);
         BlackBox::logSensor("imdOK", imdOK);
         BlackBox::logSensor("amsOK", amsOK);
-        BlackBox::logSensor("rearHeave", rearHeave);
-        BlackBox::logSensor("rearRoll", rearRoll);
-        BlackBox::logSensor("frontHeave", Devices::Get().GetSensors()[5]->value);
-        BlackBox::logSensor("frontRoll", Devices::Get().GetSensors()[5]->value);
-
-
+        // BlackBox::logSensor("rearHeave", rearHeave);
+        // BlackBox::logSensor("rearRoll", rearRoll);
+        // BlackBox::logSensor("frontHeave", Devices::Get().GetSensors()[5]->value);
+        // BlackBox::logSensor("frontRoll", Devices::Get().GetSensors()[5]->value);
+        BlackBox::logSensor("INV_Torque_Capability", Devices::Get().GetInverter().INV_torque_capability);
+        BlackBox::logSensor("INV_Internal_State_full", Devices::Get().GetInverter().INV_Internal_State_full);
+        BlackBox::logSensor("BMS_DCL", Devices::Get().GetBMS().dcl);
+        BlackBox::logSensor("BMS_CCL", Devices::Get().GetBMS().ccl);
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
     }

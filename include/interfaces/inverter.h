@@ -74,7 +74,8 @@ private:
     FS_CAN::CAN_SIGNAL INV_BMS_Torque_Limiting_signal{&INV_BMS_Torque_Limiting, 58, 1, true, 1.0f, 0};
     FS_CAN::CAN_SIGNAL INV_Limit_Max_Speed_signal{&INV_Limit_Max_Speed, 59, 1, true, 1.0f, 0};
     FS_CAN::CAN_SIGNAL INV_Limit_Coolant_Derating_signal{&INV_Limit_Coolant_Derating, 62, 1, true, 1.0f, 0};
-    FS_CAN::CAN_MSG M170_Internal_States{170, {&INV_BMS_Active_signal, &INV_BMS_Torque_Limiting_signal, &INV_Limit_Max_Speed_signal, &INV_Limit_Coolant_Derating_signal}};
+    FS_CAN::CAN_SIGNAL INV_Internal_State_full_signal{&INV_Internal_State_full, 0, 64, true, 1.0f, 0};
+    FS_CAN::CAN_MSG M170_Internal_States{170, {&INV_BMS_Active_signal, &INV_BMS_Torque_Limiting_signal, &INV_Limit_Max_Speed_signal, &INV_Limit_Coolant_Derating_signal, &INV_Internal_State_full_signal}};
 
 
 
@@ -118,6 +119,7 @@ public:
     float INV_BMS_Torque_Limiting;
     float INV_Limit_Coolant_Derating;
     float INV_Limit_Max_Speed;
+    float INV_Internal_State_full;
  
     
     struct INVERTER_FAULTS
