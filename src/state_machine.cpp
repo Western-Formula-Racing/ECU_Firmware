@@ -133,7 +133,7 @@ State handle_drive()
     }
     if(Devices::Get().GetInverter().INV_glv_voltage <= GLV_CUTOFF_VOLTAGE){
         BlackBox::log(LOG_ERROR, "GLV Voltage too low, undervoltage lockout");
-        nextState = DEVICE_FAULT;
+        nextState = START;
     }
     return nextState;
 }
