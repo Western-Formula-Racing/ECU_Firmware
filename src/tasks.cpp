@@ -93,6 +93,8 @@ void setup_task(void *)
     controlCAN.subscribe_to_message(&VCU_rearLinPots);
     xTaskCreate(frontDAQ, "frontDAQ", 5028, nullptr, tskIDLE_PRIORITY + 1, nullptr);
     xTaskCreate(VCU_stateMachine, "VCU_stateMachine", 1028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
+    Devices::Get().GetPDM().setPin(HSDIN3, 1);
+
 #endif
 #ifdef REAR
     controlCAN.subscribe_to_message(&VCU_Precharge);

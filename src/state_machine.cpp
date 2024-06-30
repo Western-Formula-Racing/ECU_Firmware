@@ -75,7 +75,7 @@ State handle_precharge_ok()
     if (Devices::Get().GetInverter().dcBusVoltage < (Devices::Get().GetBMS().packVoltage * PRECHARGE_THRESHOLD))
     {
         Serial.println("inverter voltage lost unexpectedly");
-        nextState = PRECHARGE_ERROR;
+        nextState = START;
     }
     if(Devices::Get().GetInverter().INV_glv_voltage <= GLV_CUTOFF_VOLTAGE){
         BlackBox::log(LOG_ERROR, "GLV Voltage too low, undervoltage lockout");
