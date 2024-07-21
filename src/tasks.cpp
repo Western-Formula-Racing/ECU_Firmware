@@ -194,6 +194,7 @@ void frontDAQ(void *)
         BlackBox::logSensor("INV_Internal_State_full", Devices::Get().GetInverter().INV_Internal_State_full);
         BlackBox::logSensor("BMS_DCL", Devices::Get().GetBMS().dcl);
         BlackBox::logSensor("BMS_CCL", Devices::Get().GetBMS().ccl);
+        BlackBox::logSensor("RTD_Button", Devices::Get().GetRTDButton().value);
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
     }
