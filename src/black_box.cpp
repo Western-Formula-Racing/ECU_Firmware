@@ -2,8 +2,24 @@
 
 #include <EEPROM.h>
 
+static const int BUFFER_SIZE = 100;
+
+// 2 commas and a newline
+static const int MAX_SENSOR_MESSAGE_SIZE = (sizeof(SensorMessage_t) + 10 + 3);
+
+// 4 bytes for time, 4 bytes for dash and spaces, 10 bytes for log level, 256 bytes for message
+static const int MAX_LOG_MESSAGE_SIZE = (10 + 4 + 10 + 256);
+
 static QueueHandle_t logQueue = NULL;
+static LogMessage_t logBuffer[BUFFER_SIZE];
+static char logBufferString[BUFFER_SIZE * MAX_SENSOR_MESSAGE_SIZE];
+
 static QueueHandle_t sensorQueue = NULL;
+static SensorMessage_t sensorBuffer[BUFFER_SIZE];
+
+static int logBufferIndex = 0;
+static int sensorBufferIndex = 0;
+
 static File logFile = NULL;
 static File sensorFile = NULL;
 
@@ -16,80 +32,85 @@ static void task(void *)
             LogMessage_t msg;
             while (xQueueReceive(logQueue, &msg, 0) == pdTRUE)
             {
-                Serial.print(msg.time);
-                Serial.print(" - ");
+                // Store the message in the active buffer
+                logBuffer[logBufferIndex++] = msg;
 
-                switch (msg.level)
+                // Check if the buffer is full
+                if (logBufferIndex >= BUFFER_SIZE)
                 {
-                case LOG_INFO:
-                    Serial.print("INFO: ");
-                    break;
-                case LOG_WARNING:
-                    Serial.print("WARNING: ");
-                    break;
-                case LOG_ERROR:
-                    Serial.print("ERROR: ");
-                    break;
-                default:
-                    Serial.print("UNKNOWN: ");
-                    break;
-                }
+                    int bufferPosition = 0;
 
-                Serial.println(msg.message);
-
-                if (logFile)
-                {
-                    logFile.print(msg.time);
-                    logFile.print(" - ");
-
-                    switch (msg.level)
+                    // Write the processing buffer to the SD card
+                    for (int i = 0; i < BUFFER_SIZE; i++)
                     {
-                    case LOG_INFO:
-                        logFile.print("INFO: ");
-                        break;
-                    case LOG_WARNING:
-                        logFile.print("WARNING: ");
-                        break;
-                    case LOG_ERROR:
-                        logFile.print("ERROR: ");
-                        break;
-                    default:
-                        logFile.print("UNKNOWN: ");
-                        break;
+                        bufferPosition += snprintf(&logBufferString[bufferPosition], MAX_LOG_MESSAGE_SIZE, "%lu - ", static_cast<unsigned long>(logBuffer[i].time));
+
+                        switch (logBuffer[i].level)
+                        {
+                        case LOG_INFO:
+                            bufferPosition += snprintf(&logBufferString[bufferPosition], MAX_LOG_MESSAGE_SIZE, "INFO: ");
+                            break;
+                        case LOG_WARNING:
+                            bufferPosition += snprintf(&logBufferString[bufferPosition], MAX_LOG_MESSAGE_SIZE, "WARNING: ");
+                            break;
+                        case LOG_ERROR:
+                            bufferPosition += snprintf(&logBufferString[bufferPosition], MAX_LOG_MESSAGE_SIZE, "ERROR: ");
+                            break;
+                        default:
+                            bufferPosition += snprintf(&logBufferString[bufferPosition], MAX_LOG_MESSAGE_SIZE, "UNKNOWN: ");
+                            break;
+                        }
+
+                        bufferPosition += snprintf(&logBufferString[bufferPosition], MAX_LOG_MESSAGE_SIZE, "%s\n", logBuffer[i].message);
                     }
 
-                    logFile.println(msg.message);
+                    logFile.write(logBufferString, bufferPosition);
                     logFile.flush();
+
+                    // Reset the index for the new active buffer
+                    logBufferIndex = 0;
                 }
             }
         }
+
+        // Check if sensorQueue has messages
         if (sensorQueue != NULL)
         {
             SensorMessage_t msg;
             while (xQueueReceive(sensorQueue, &msg, 0) == pdTRUE)
             {
-                if (sensorFile)
+                // Store the message in the active buffer
+                sensorBuffer[sensorBufferIndex++] = msg;
+
+                // Check if the buffer is full
+                if (sensorBufferIndex >= BUFFER_SIZE)
                 {
-                    sensorFile.print(msg.sensorName);
-                    sensorFile.print(",");
-                    sensorFile.print(msg.time);
-                    sensorFile.print(",");
-                    sensorFile.println(msg.sensorValue);
+                    int bufferPosition = 0;
+
+                    // Write the processing buffer to the SD card
+                    for (int i = 0; i < BUFFER_SIZE; i++)
+                    {
+                        bufferPosition += snprintf(&logBufferString[bufferPosition], MAX_SENSOR_MESSAGE_SIZE, "%s,%lu,%s\n", sensorBuffer[i].sensorName, static_cast<unsigned long>(sensorBuffer[i].time), sensorBuffer[i].sensorValue);
+                    }
+
+                    sensorFile.write(logBufferString, bufferPosition);
                     sensorFile.flush();
+
+                    // Reset the index for the new active buffer
+                    sensorBufferIndex = 0;
                 }
             }
         }
-        // vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
-void BlackBox::begin(int queueSize, int taskPriority)
+void BlackBox::begin(int taskPriority)
 {
     // Create the logQueue
-    logQueue = xQueueCreate(queueSize, sizeof(LogMessage_t));
+    logQueue = xQueueCreate(BUFFER_SIZE, sizeof(LogMessage_t));
 
     // Create the sensorQueue
-    sensorQueue = xQueueCreate(queueSize, sizeof(SensorMessage_t));
+    sensorQueue = xQueueCreate(BUFFER_SIZE, sizeof(SensorMessage_t));
 
     // Setup SD card
     if (!SD.begin(BUILTIN_SDCARD))

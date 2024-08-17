@@ -68,7 +68,7 @@ FS_CAN::CAN_MSG VCU_rearLinPots{2013,{&rearHeaveSignal, &rearRollSignal}};
 
 void setup_task(void *)
 {
-    BlackBox::begin(300, tskIDLE_PRIORITY + 1);
+    BlackBox::begin(tskIDLE_PRIORITY + 1);
 
     // Delay to allow the serial port to be opened and queue to be created (for some reason it needs this)
     vTaskDelay(pdMS_TO_TICKS(5000));

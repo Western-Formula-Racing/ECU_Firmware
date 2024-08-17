@@ -10,7 +10,7 @@
 namespace BlackBox
 {
     // Begin the black box task
-    void begin(int queueSize, int taskPriority);
+    void begin(int taskPriority);
 
     // Log a message to the black box
     void log(LogMessage_t msg);
