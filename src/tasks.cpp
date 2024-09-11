@@ -11,7 +11,7 @@ float amsOK = 0;
 float imdOK = 0;
 float precharge_enable = 0;
 float precharge_ok = 0;
-static Mpu6500 imu = Mpu6500(37);//cs pin for mpu
+static Mpu6500 imu = Mpu6500(37); // cs pin for mpu
 float accelX;
 float accelY;
 float accelZ;
@@ -28,8 +28,6 @@ FS_CAN::CAN_SIGNAL amsOKSignal{&amsOK, 40, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL imdOKSignal{&imdOK, 48, 8, true, 1, 0};
 FS_CAN::CAN_MSG AccMB_Info{2010, {&amsOKSignal, &imdOKSignal}};
 
-
- 
 #ifndef REAR
 FS_CAN::CAN_SIGNAL stateSignal{&stateS, 8, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
@@ -39,32 +37,31 @@ FS_CAN::CAN_SIGNAL rearRollSignal{&rearRoll, 0, 16, true, 1.0f, 0};
 #endif
 
 #ifdef REAR
-    float HSDEnable[8];
-    FS_CAN::CAN_SIGNAL HSD1_Enable_Signal{&HSDEnable[0], 0, 8, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL HSD2_Enable_Signal{&HSDEnable[1], 8, 8, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL HSD3_Enable_Signal{&HSDEnable[2], 16, 8, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL HSD4_Enable_Signal{&HSDEnable[3], 24, 8, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL HSD5_Enable_Signal{&HSDEnable[4], 32, 8, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL HSD6_Enable_Signal{&HSDEnable[5], 40, 8, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL HSD7_Enable_Signal{&HSDEnable[6], 48, 8, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL HSD8_Enable_Signal{&HSDEnable[7], 56, 8, true, 1.0f, 0};
-    FS_CAN::CAN_MSG VCU_rearECU_command{2012, 
-    {
-    &HSD1_Enable_Signal,
-    &HSD2_Enable_Signal,
-    &HSD3_Enable_Signal,
-    &HSD4_Enable_Signal,
-    &HSD5_Enable_Signal,
-    &HSD6_Enable_Signal,
-    &HSD7_Enable_Signal,
-    &HSD8_Enable_Signal,
-    }};
-    FS_CAN::CAN_SIGNAL rearHeaveSignal{&Devices::Get().GetSensors()[5]->value, 0, 16, true, 1.0f, 0};
-    FS_CAN::CAN_SIGNAL rearRollSignal{&Devices::Get().GetSensors()[6]->value, 0, 16, true, 1.0f, 0};
-    
-#endif
-FS_CAN::CAN_MSG VCU_rearLinPots{2013,{&rearHeaveSignal, &rearRollSignal}};
+float HSDEnable[8];
+FS_CAN::CAN_SIGNAL HSD1_Enable_Signal{&HSDEnable[0], 0, 8, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL HSD2_Enable_Signal{&HSDEnable[1], 8, 8, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL HSD3_Enable_Signal{&HSDEnable[2], 16, 8, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL HSD4_Enable_Signal{&HSDEnable[3], 24, 8, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL HSD5_Enable_Signal{&HSDEnable[4], 32, 8, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL HSD6_Enable_Signal{&HSDEnable[5], 40, 8, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL HSD7_Enable_Signal{&HSDEnable[6], 48, 8, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL HSD8_Enable_Signal{&HSDEnable[7], 56, 8, true, 1.0f, 0};
+FS_CAN::CAN_MSG VCU_rearECU_command{2012,
+                                    {
+                                        &HSD1_Enable_Signal,
+                                        &HSD2_Enable_Signal,
+                                        &HSD3_Enable_Signal,
+                                        &HSD4_Enable_Signal,
+                                        &HSD5_Enable_Signal,
+                                        &HSD6_Enable_Signal,
+                                        &HSD7_Enable_Signal,
+                                        &HSD8_Enable_Signal,
+                                    }};
+FS_CAN::CAN_SIGNAL rearHeaveSignal{&Devices::Get().GetSensors()[5]->value, 0, 16, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL rearRollSignal{&Devices::Get().GetSensors()[6]->value, 0, 16, true, 1.0f, 0};
 
+#endif
+FS_CAN::CAN_MSG VCU_rearLinPots{2013, {&rearHeaveSignal, &rearRollSignal}};
 
 void setup_task(void *)
 {
@@ -80,7 +77,8 @@ void setup_task(void *)
         Serial.printf("my god this sh borked\n");
     }
     SPI.begin();
-    if(!imu.begin()){
+    if (!imu.begin())
+    {
         Serial.printf("imu failed to innit");
     }
 
@@ -100,7 +98,7 @@ void setup_task(void *)
     controlCAN.subscribe_to_message(&VCU_Precharge);
     controlCAN.subscribe_to_message(&VCU_rearECU_command);
     controlCAN.publish_CAN_msg(&AccMB_Info, FS_CAN::HUNDRED_MS);
-    controlCAN.subscribe_to_message(&VCU_rearLinPots);
+    controlCAN.publish_CAN_msg(&VCU_rearLinPots, FS_CAN::HUNDRED_MS);
     xTaskCreate(rearECU_task, "rearECU_task", 5028, nullptr, tskIDLE_PRIORITY + 2, nullptr);
 #endif
     vTaskDelete(nullptr);
@@ -132,7 +130,6 @@ void frontDAQ(void *)
         gyroY = imu.getGyroY() - 79.5;
         gyroZ = imu.getGyroZ() + 204.5;
 
-
         Serial.printf(">pedal_postion:%f\n", pedalPos);
         Serial.printf(">sensor1:%f\n>sensor2:%f\n", Devices::Get().GetPedal().appsSensor1Position, Devices::Get().GetPedal().appsSensor2Position);
         Serial.printf(">RTDButton:%f\n", Devices::Get().GetRTDButton().value);
@@ -149,6 +146,7 @@ void frontDAQ(void *)
         Serial.printf(">INV_DC_Bus_Current:%f\n", Devices::Get().GetInverter().INV_DC_Bus_Current);
         Serial.printf(">INV_Coolant_Temp:%f\n", Devices::Get().GetInverter().INV_Coolant_Temp);
         Serial.printf(">INV_glv_voltage:%f\n", Devices::Get().GetInverter().INV_glv_voltage);
+        Serial.printf(">PitotTube:%f\n", Devices::Get().GetSensors()[7]->filteredValue);
         // Serial.printf(">gyroX:%f\n",gyroX);
         // Serial.printf(">gyroY:%f\n",gyroY);
         // Serial.printf(">gyroZ:%f\n",gyroZ);
@@ -156,16 +154,15 @@ void frontDAQ(void *)
         // Serial.printf(">accelY:%f\n",accelY);
         // Serial.printf(">accelZ:%f\n",accelZ);
 
-
-        BlackBox::logSensor("state",static_cast<int>(state));
-        BlackBox::logSensor("torqueRequest",Devices::Get().GetInverter().getTorqueRequest());
+        BlackBox::logSensor("state", static_cast<int>(state));
+        // BlackBox::logSensor("torqueRequest",Devices::Get().GetInverter().getTorqueRequest());
         BlackBox::logSensor("inv_torque_request", Devices::Get().GetInverter().commandedTorque);
         BlackBox::logSensor("inv_torque feedback", Devices::Get().GetInverter().torqueFeedback);
-        BlackBox::logSensor("pedal_position",pedalPos);
-        BlackBox::logSensor("apps1",Devices::Get().GetPedal().appsSensor1Position);
-        BlackBox::logSensor("apps2",Devices::Get().GetPedal().appsSensor2Position);
+        BlackBox::logSensor("pedal_position", pedalPos);
+        BlackBox::logSensor("apps1", Devices::Get().GetPedal().appsSensor1Position);
+        BlackBox::logSensor("apps2", Devices::Get().GetPedal().appsSensor2Position);
         BlackBox::logSensor("brake_avg", Devices::Get().GetPedal().avgbrakePressure);
-        BlackBox::logSensor("packVoltage", Devices::Get().GetBMS().packVoltage);   
+        BlackBox::logSensor("packVoltage", Devices::Get().GetBMS().packVoltage);
         BlackBox::logSensor("iq", Devices::Get().GetInverter().iq);
         BlackBox::logSensor("id", Devices::Get().GetInverter().id);
         BlackBox::logSensor("INV_DC_Bus_Current", Devices::Get().GetInverter().INV_DC_Bus_Current);
@@ -173,11 +170,11 @@ void frontDAQ(void *)
         // BlackBox::logSensor("ThermModule1_lowTemp", Devices::Get().GetBMS().lowTemp1);
         BlackBox::logSensor("ThermModule1_highTemp", Devices::Get().GetBMS().highTemp1);
         BlackBox::logSensor("motorSpeed", Devices::Get().GetInverter().motorSpeed);
-        BlackBox::logSensor("INV_glv_voltage",  Devices::Get().GetInverter().INV_glv_voltage);
+        BlackBox::logSensor("INV_glv_voltage", Devices::Get().GetInverter().INV_glv_voltage);
         // BlackBox::logSensor("INV_BMS_Active",  Devices::Get().GetInverter().INV_BMS_Active);
-        BlackBox::logSensor("INV_BMS_Torque_Limiting",  Devices::Get().GetInverter().INV_BMS_Torque_Limiting);
-        BlackBox::logSensor("INV_Limit_Max_Speed",  Devices::Get().GetInverter().INV_Limit_Max_Speed);
-        BlackBox::logSensor("INV_Limit_Coolant_Derating",  Devices::Get().GetInverter().INV_Limit_Coolant_Derating);
+        BlackBox::logSensor("INV_BMS_Torque_Limiting", Devices::Get().GetInverter().INV_BMS_Torque_Limiting);
+        BlackBox::logSensor("INV_Limit_Max_Speed", Devices::Get().GetInverter().INV_Limit_Max_Speed);
+        BlackBox::logSensor("INV_Limit_Coolant_Derating", Devices::Get().GetInverter().INV_Limit_Coolant_Derating);
         BlackBox::logSensor("accelX", accelX);
         BlackBox::logSensor("accelY", accelY);
         BlackBox::logSensor("accelZ", accelZ);
@@ -186,8 +183,8 @@ void frontDAQ(void *)
         // BlackBox::logSensor("gyroZ", gyroZ);
         BlackBox::logSensor("imdOK", imdOK);
         BlackBox::logSensor("amsOK", amsOK);
-        // BlackBox::logSensor("rearHeave", rearHeave);
-        // BlackBox::logSensor("rearRoll", rearRoll);
+        BlackBox::logSensor("rearHeave", rearHeave);
+        BlackBox::logSensor("rearRoll", rearRoll);
         // BlackBox::logSensor("frontHeave", Devices::Get().GetSensors()[5]->value);
         // BlackBox::logSensor("frontRoll", Devices::Get().GetSensors()[5]->value);
         BlackBox::logSensor("INV_Torque_Capability", Devices::Get().GetInverter().INV_torque_capability);
@@ -195,6 +192,7 @@ void frontDAQ(void *)
         BlackBox::logSensor("BMS_DCL", Devices::Get().GetBMS().dcl);
         BlackBox::logSensor("BMS_CCL", Devices::Get().GetBMS().ccl);
         BlackBox::logSensor("RTD_Button", Devices::Get().GetRTDButton().value);
+        BlackBox::logSensor("PitotTube", Devices::Get().GetSensors()[7]->filteredValue);
         vTaskDelay(pdMS_TO_TICKS(100));
         digitalWriteFast(LED_BUILTIN, LOW);
     }
@@ -234,21 +232,24 @@ void VCU_stateMachine(void *)
     {
         stateS = static_cast<float>(state);
         state = states[state]();
-        Devices::Get().GetPDM().setPin(HSDIN7, !amsOK); // first light 
+        Devices::Get().GetPDM().setPin(HSDIN7, !amsOK); // first light
         Devices::Get().GetPDM().setPin(HSDIN5, !imdOK); // second light
-        if (state == DRIVE){
-            Devices::Get().GetPDM().setPin(HSDIN6, 1); // RTD light 
+        if (state == DRIVE)
+        {
+            Devices::Get().GetPDM().setPin(HSDIN6, 1); // RTD light
         }
-        else{
+        else
+        {
             Devices::Get().GetPDM().setPin(HSDIN6, 0);
         }
-         if (Devices::Get().GetInverter().dcBusVoltage >= 60){
-            Devices::Get().GetPDM().setPin(HSDIN8, 1); // HVP light 
+        if (Devices::Get().GetInverter().dcBusVoltage >= 60)
+        {
+            Devices::Get().GetPDM().setPin(HSDIN8, 1); // HVP light
         }
-        else{
+        else
+        {
             Devices::Get().GetPDM().setPin(HSDIN8, 0);
         }
-
 
         vTaskDelay(pdMS_TO_TICKS(10));
     }

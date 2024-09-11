@@ -46,7 +46,7 @@ public:
     PDM &GetPDM(){
         return pdm;
     }
-    std::array<Sensor *, 7> &GetSensors()
+    std::array<Sensor *, 8> &GetSensors()
     {
         return sensors;
     }
@@ -79,9 +79,10 @@ private:
     Sensor sense5;//steering angle
     Sensor sense6;//front heave
     Sensor sense7;//front roll
+    Sensor sense8; //pitot tube
     DigitalSensor rtdButton;
     Pedal pedal;
-    std::array<Sensor *, 7> sensors;
+    std::array<Sensor *, 8> sensors;
     PDM pdm;
     rearECU rearEcu;
 private:
@@ -94,7 +95,8 @@ private:
         sense5(&adc, A3, 0, 1, 2, 2, 1e3, true),
         sense6(&adc, heavePin, 0, 1, 2, 100, 1e3, true),
         sense7(&adc, rollPin, 0, 1, 2, 100, 1e3, true),
-        rtdButton(&adc,36), pedal(&sense1, &sense2, &sense3, &sense4), sensors({&sense1, &sense2, &sense3, &sense4, &sense5, &sense6, &sense7}),
+        sense8(&adc, A0, 0, 1, 2, 100, 1e3, true),
+        rtdButton(&adc,36), pedal(&sense1, &sense2, &sense3, &sense4), sensors({&sense1, &sense2, &sense3, &sense4, &sense5, &sense6, &sense7, &sense8}),
         pdm(), rearEcu()
     {
         Serial.println("Devices:Devices() constructor called");
