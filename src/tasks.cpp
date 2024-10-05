@@ -32,8 +32,8 @@ FS_CAN::CAN_MSG AccMB_Info{2010, {&amsOKSignal, &imdOKSignal}};
 FS_CAN::CAN_SIGNAL stateSignal{&stateS, 8, 8, true, 1, 0};
 FS_CAN::CAN_SIGNAL rtdButtonSignal{&rtdButton, 0, 1, true, 1, 0};
 FS_CAN::CAN_MSG VCU_StateInfo{2002, {&stateSignal, &rtdButtonSignal}};
-FS_CAN::CAN_SIGNAL rearHeaveSignal{&rearHeave, 0, 16, true, 1.0f, 0};
-FS_CAN::CAN_SIGNAL rearRollSignal{&rearRoll, 0, 16, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL rearHeaveSignal{&rearHeave, 0, 16, true, 0.001f, 0};
+FS_CAN::CAN_SIGNAL rearRollSignal{&rearRoll, 0, 16, true, 0.001f, 0};
 #endif
 
 #ifdef REAR
@@ -57,8 +57,8 @@ FS_CAN::CAN_MSG VCU_rearECU_command{2012,
                                         &HSD7_Enable_Signal,
                                         &HSD8_Enable_Signal,
                                     }};
-FS_CAN::CAN_SIGNAL rearHeaveSignal{&Devices::Get().GetSensors()[5]->value, 0, 16, true, 1.0f, 0};
-FS_CAN::CAN_SIGNAL rearRollSignal{&Devices::Get().GetSensors()[6]->value, 0, 16, true, 1.0f, 0};
+FS_CAN::CAN_SIGNAL rearHeaveSignal{&rearHeave, 0, 16, true, 0.001f, 0};
+FS_CAN::CAN_SIGNAL rearRollSignal{&rearRoll, 16, 16, true, 0.001f, 0};
 
 #endif
 FS_CAN::CAN_MSG VCU_rearLinPots{2013, {&rearHeaveSignal, &rearRollSignal}};
@@ -146,7 +146,10 @@ void frontDAQ(void *)
         Serial.printf(">INV_DC_Bus_Current:%f\n", Devices::Get().GetInverter().INV_DC_Bus_Current);
         Serial.printf(">INV_Coolant_Temp:%f\n", Devices::Get().GetInverter().INV_Coolant_Temp);
         Serial.printf(">INV_glv_voltage:%f\n", Devices::Get().GetInverter().INV_glv_voltage);
-        Serial.printf(">PitotTube:%f\n", Devices::Get().GetSensors()[7]->filteredValue);
+        Serial.printf(">FrontHeave:%f\n", Devices::Get().GetSensors()[5]->filteredValue);
+        Serial.printf(">RearHeave:%f\n", rearHeave);
+
+        // Serial.printf(">PitotTube:%f\n", Devices::Get().GetSensors()[5]->filteredValue);
         // Serial.printf(">gyroX:%f\n",gyroX);
         // Serial.printf(">gyroY:%f\n",gyroY);
         // Serial.printf(">gyroZ:%f\n",gyroZ);
@@ -163,8 +166,8 @@ void frontDAQ(void *)
         BlackBox::logSensor("apps2", Devices::Get().GetPedal().appsSensor2Position);
         BlackBox::logSensor("brake_avg", Devices::Get().GetPedal().avgbrakePressure);
         BlackBox::logSensor("packVoltage", Devices::Get().GetBMS().packVoltage);
-        BlackBox::logSensor("iq", Devices::Get().GetInverter().iq);
-        BlackBox::logSensor("id", Devices::Get().GetInverter().id);
+        // BlackBox::logSensor("iq", Devices::Get().GetInverter().iq);
+        // BlackBox::logSensor("id", Devices::Get().GetInverter().id);
         BlackBox::logSensor("INV_DC_Bus_Current", Devices::Get().GetInverter().INV_DC_Bus_Current);
         BlackBox::logSensor("INV_Coolant_Temp", Devices::Get().GetInverter().INV_Coolant_Temp);
         // BlackBox::logSensor("ThermModule1_lowTemp", Devices::Get().GetBMS().lowTemp1);
@@ -173,7 +176,7 @@ void frontDAQ(void *)
         BlackBox::logSensor("INV_glv_voltage", Devices::Get().GetInverter().INV_glv_voltage);
         // BlackBox::logSensor("INV_BMS_Active",  Devices::Get().GetInverter().INV_BMS_Active);
         BlackBox::logSensor("INV_BMS_Torque_Limiting", Devices::Get().GetInverter().INV_BMS_Torque_Limiting);
-        BlackBox::logSensor("INV_Limit_Max_Speed", Devices::Get().GetInverter().INV_Limit_Max_Speed);
+        // BlackBox::logSensor("INV_Limit_Max_Speed", Devices::Get().GetInverter().INV_Limit_Max_Speed);
         BlackBox::logSensor("INV_Limit_Coolant_Derating", Devices::Get().GetInverter().INV_Limit_Coolant_Derating);
         BlackBox::logSensor("accelX", accelX);
         BlackBox::logSensor("accelY", accelY);
@@ -184,13 +187,13 @@ void frontDAQ(void *)
         BlackBox::logSensor("imdOK", imdOK);
         BlackBox::logSensor("amsOK", amsOK);
         BlackBox::logSensor("rearHeave", rearHeave);
-        BlackBox::logSensor("rearRoll", rearRoll);
-        // BlackBox::logSensor("frontHeave", Devices::Get().GetSensors()[5]->value);
+        // BlackBox::logSensor("rearRoll", rearRoll);
+        BlackBox::logSensor("frontHeave", Devices::Get().GetSensors()[5]->value);
         // BlackBox::logSensor("frontRoll", Devices::Get().GetSensors()[5]->value);
-        BlackBox::logSensor("INV_Torque_Capability", Devices::Get().GetInverter().INV_torque_capability);
+        // BlackBox::logSensor("INV_Torque_Capability", Devices::Get().GetInverter().INV_torque_capability);
         BlackBox::logSensor("INV_Internal_State_full", Devices::Get().GetInverter().INV_Internal_State_full);
         BlackBox::logSensor("BMS_DCL", Devices::Get().GetBMS().dcl);
-        BlackBox::logSensor("BMS_CCL", Devices::Get().GetBMS().ccl);
+        // BlackBox::logSensor("BMS_CCL", Devices::Get().GetBMS().ccl);
         BlackBox::logSensor("RTD_Button", Devices::Get().GetRTDButton().value);
         BlackBox::logSensor("PitotTube", Devices::Get().GetSensors()[7]->filteredValue);
         vTaskDelay(pdMS_TO_TICKS(100));
@@ -208,6 +211,8 @@ void rearECU_task(void *)
             sensor->read();
             i++;
         }
+        rearHeave = Devices::Get().GetSensors()[5]->filteredValue;
+        Serial.printf(">rearHeave:%f\n",rearHeave);
         Devices::Get().GetPDM().setPin(HSDIN2, precharge_enable);
         Devices::Get().GetPDM().setPin(HSDIN5, precharge_ok);
         Devices::Get().GetPDM().setPin(HSDIN1, HSDEnable[0]);
